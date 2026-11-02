@@ -749,6 +749,8 @@ body.marshal-view #raceControlPanel .marshal-alarm-control #alarmStatus.alarm-on
 .bs28-next-fields label{font-size:.92rem;font-weight:750;color:#e3f4ff;display:block;min-width:0}
 .bs28-next-fields select{width:100%;margin-top:7px;min-height:48px;border-radius:9px;font-size:1rem}
 .bs28-select-progress{font-size:.91rem;font-weight:700;margin:9px 0;color:#c0dbd0}
+.bs28-waiting-summary{font-size:.88rem;font-weight:800;line-height:1.5;background:rgba(9,57,43,.58);border:1px solid #3e987b;border-radius:9px;padding:10px 12px;color:#bff9e4}
+.bs28-waiting-summary.is-pending{background:rgba(120,83,20,.16);border-color:#9f7936;color:#f3dfb2}
 #bs28SwitchButton{width:100%;min-height:49px;margin:6px 0 10px}
 #bs28SwitchButton:disabled{opacity:.52;cursor:not-allowed}
 @media(max-width:600px){.bs28-next-fields{grid-template-columns:1fr;gap:9px}.bs28-next-panel{padding:11px}}
@@ -778,23 +780,23 @@ body.marshal-view #raceControlPanel .marshal-alarm-control #alarmStatus.alarm-on
 </div>
 <div class="marshal-control-head"><h2>1. Race Control</h2><span class="pill connection-indicator offline" id="connectionIndicator" role="status" title="Not connected to Firebase. Results may remain only on this device.">OFFLINE</span></div>
 <section class="card bs28-section" id="bs28MarshalPanel" style="display:none" aria-label="Group stage selection">
-  <h2 id="bs28MarshalHeading">GROUP ROTATION · V28.1</h2>
-  <small class="muted" style="display:block;margin:-8px 0 12px">v28.1 · GROUP &amp; NEXT SS SELECTOR</small>
+  <h2 id="bs28MarshalHeading">GROUP ROTATION · NEXT STAGE</h2>
+  <small class="muted" style="display:block;margin:-8px 0 12px">v28.4 · AVAILABLE GROUP + AVAILABLE SS</small>
   <p class="muted" id="bs28MarshalInfo">Waiting for group assignment.</p>
   <div id="bs28Selection" class="bs28-next-panel" style="display:none">
-    <h3>GROUP RESULTS SAVED · SELECT NEXT STAGE</h3>
-    <p class="muted">Choose the completed group, then any OPEN, AVAILABLE stage it has not completed. Main Control confirms the assignment and draws the new order automatically.</p>
+    <h3>SELECT AVAILABLE GROUP &amp; SS</h3>
+    <p class="muted">After a group finishes and Main Control confirms its results, select that group and an available SS. The new running order is drawn automatically. Timer START is always manual.</p>
+    <div id="bs28WaitingGroupsSummary" class="bs28-waiting-summary" role="status" aria-live="polite">Checking group completion…</div>
     <div class="bs28-next-fields">
-      <label for="bs28NextGroup">Group Name
+      <label for="bs28NextGroup">Available Group
         <select id="bs28NextGroup" aria-label="Choose completed group"></select>
       </label>
-      <label for="bs28NextSS">Next Available SS
+      <label for="bs28NextSS">Available SS
         <select id="bs28NextSS" aria-label="Choose next available Special Stage"></select>
       </label>
     </div>
     <p id="bs28SelectedGroupProgress" class="bs28-select-progress" aria-live="polite"></p>
-    <button type="button" id="bs28SwitchButton" class="primary">CONTINUE TO SELECTED SS &amp; AUTO DRAW</button>
-    <div id="bs28MarshalCards" class="bs28-card-grid" aria-label="Special Stage availability"></div>
+    <button type="button" id="bs28SwitchButton" class="primary">CONFIRM NEXT SS &amp; AUTO DRAW</button>
   </div>
   <p id="bs28SwitchStatus" class="muted" role="status" aria-live="polite"></p>
   <h3>Official Group Running Order</h3>
@@ -1425,7 +1427,7 @@ $('exportPendingBackup').onclick=()=>{
 $('retrySync').onclick=()=>{if(!online||!connectedToServer){setMsg('Connect to Firebase and wait for ONLINE before retrying pending uploads.',true);return}flushPending()};$('disconnect').onclick=async()=>{const count=eventPendingCount(activeEventId());if(count&&!confirm('There are '+count+' unsynchronized change(s). They will remain in this browser and upload only after reconnecting to Event ID '+activeEventId()+'. Disconnect anyway?'))return;localStorage.removeItem('bs28-test-auto-online');if(dbRef&&sub)dbRef.off('value',sub);online=false;connectedToServer=false;dbRef=null;sub=null;if(auth)await auth.signOut();updateConnectionIndicator();showConnectionToast('offline','Disconnected','You are now offline. Local data is retained.',2500);setMsg(count?'Disconnected. '+count+' change(s) remain queued locally for Event ID '+activeEventId()+'.':'Disconnected; local copy retained.');updateSyncHealth()};window.addEventListener('online',()=>{updateConnectionIndicator();if(online)flushPending()});window.addEventListener('offline',()=>{updateConnectionIndicator();if(hadFirebaseConnection)notifyFirebaseDisconnected();updateSyncHealth()});window.addEventListener('beforeunload',e=>{if(hasPendingForEvent(activeEventId())||pendingRun||running){e.preventDefault();e.returnValue='';}});updateSafetyStatus();clearCorrectionInputs();$('manualTime').value='';render();updateSyncHealth();if(running){acquireWake();tick=setInterval(updateClock,40);updateClock()}if(pendingRun)syncManualOverrideInputs();function ensureMarshalNameForAction(){if(!marshalLinkMode)return true;let name=String(marshalName||localStorage.getItem(marshalNameKey)||'').trim().toLocaleUpperCase('en-US');const input=$('marshalNameInput');if(!name&&input)name=String(input.value||'').trim().toLocaleUpperCase('en-US');if(!name){const status=$('marshalIdentityStatus');if(status)status.textContent='Marshal name is required before starting the timer or recording penalties.';if(input){input.focus();try{input.scrollIntoView({behavior:'smooth',block:'center'})}catch(e){}}return false}if(name.length>60){const status=$('marshalIdentityStatus');if(status)status.textContent='Marshal name must be 60 characters or fewer.';if(input)input.focus();return false}try{localStorage.setItem(marshalNameKey,name)}catch(e){const status=$('marshalIdentityStatus');if(status)status.textContent='Could not save marshal name on this device. Please try again.';return false}marshalName=name;if(input)input.value=name;const status=$('marshalIdentityStatus');if(status)status.textContent='Saved on this device as '+name+'.';if(saveMarshalNameBtn)saveMarshalNameBtn.textContent='Save / update name';return true}document.addEventListener('click',function(e){const action=e.target&&e.target.closest?e.target.closest('#start, #dnf, #penaltyCounters button[data-add-penalty], #penaltyCounters button[data-remove-penalty]'):null;if(action&&!ensureMarshalNameForAction()){e.preventDefault();e.stopImmediatePropagation()}},true);const marshalNameInput=$('marshalNameInput'),marshalNameStatus=$('marshalIdentityStatus'),saveMarshalNameBtn=$('saveMarshalName'),marshalIdentityBadge=$('marshalIdentityBadge'),marshalIdentitySavedView=$('marshalIdentitySavedView'),marshalIdentityDisplayName=$('marshalIdentityDisplayName'),marshalIdentityEditor=$('marshalIdentityEditor'),editMarshalNameBtn=$('editMarshalName');let marshalNameEditing=!String(localStorage.getItem(marshalNameKey)||'').trim();if(marshalNameInput){marshalNameInput.value=marshalName;const refreshMarshalIdentity=()=>{marshalName=String(localStorage.getItem(marshalNameKey)||'').trim().toLocaleUpperCase('en-US');marshalNameInput.value=marshalName;if(marshalIdentityDisplayName)marshalIdentityDisplayName.textContent=marshalName||'MARSHAL NAME';if(marshalNameStatus)marshalNameStatus.textContent=marshalName?'Identity confirmed and saved on this device.':'Enter your name once before starting race control.';if(marshalIdentityBadge){marshalIdentityBadge.textContent=marshalName?'SAVED':'NOT SAVED';marshalIdentityBadge.classList.toggle('saved',!!marshalName);marshalIdentityBadge.classList.toggle('unsaved',!marshalName)}if(marshalIdentitySavedView)marshalIdentitySavedView.classList.toggle('hidden',!marshalName||marshalNameEditing);if(marshalIdentityEditor)marshalIdentityEditor.classList.toggle('hidden',!!marshalName&&!marshalNameEditing);if(editMarshalNameBtn)editMarshalNameBtn.textContent=marshalNameEditing?'CANCEL':'EDIT NAME';if(saveMarshalNameBtn)saveMarshalNameBtn.textContent=marshalName?'SAVE CHANGES':'SAVE NAME'};refreshMarshalIdentity();if(editMarshalNameBtn)editMarshalNameBtn.onclick=()=>{if(marshalNameEditing){marshalNameEditing=false;refreshMarshalIdentity();return}marshalNameEditing=true;refreshMarshalIdentity();marshalNameInput.focus()};saveMarshalNameBtn.onclick=async()=>{const nextName=String(marshalNameInput.value||'').trim().toLocaleUpperCase('en-US');if(!nextName){if(marshalNameStatus)marshalNameStatus.textContent='Please enter your marshal name.';marshalNameInput.focus();return}if(nextName.length>60){if(marshalNameStatus)marshalNameStatus.textContent='Name must be 60 characters or fewer.';return}try{localStorage.setItem(marshalNameKey,nextName)}catch(e){if(marshalNameStatus)marshalNameStatus.textContent='Could not save your marshal name on this device: '+e.message;return}marshalName=nextName;marshalNameEditing=false;refreshMarshalIdentity();if(marshalLinkMode&&!online)await connectFirebase({automatic:false,passwordless:true});else if(online)setMsg('Marshal name updated on this device. It will be attached to the next saved result.')}}if(marshalLinkMode){connectFirebase({automatic:false,passwordless:true})}setupAutoOnline()
 /* v28 marshal SS selection extension inside the existing Marshal closure. */
 const bs28Core=window.BS28;
-let bs28StickyGroup='',bs28NextGroupChoice='',bs28LockRef=null,bs28LockListener=null,bs28Locks={},bs28RequestRef=null,bs28RequestListener=null,bs28RequestState=null,bs28RequestGroup='',bs28Switching=false;
+let bs28StickyGroup='',bs28NextGroupChoice='',bs28GroupUserChosen=false,bs28LockRef=null,bs28LockListener=null,bs28Locks={},bs28RequestRef=null,bs28RequestListener=null,bs28RequestState=null,bs28RequestGroup='',bs28Switching=false;
 const bs28Plan=()=>data?.groupRotationV28||null;
 const bs28IsActive=()=>bs28Plan()?.enabled===true;
 const bs28Esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -1473,9 +1475,9 @@ function bs28RenderMarshal(){
  const stageResultsSaved=!!(stageGroup&&current&&bs28Core.allResultsConfirmed(stageGroup,data,current));
  const stageChoosing=stageGroup?.status==='CHOOSING'&&!current;
  if(stageGroup){
-  $('bs28MarshalHeading').textContent=bs28GroupName(stageGroupId)+' · '+(current||last||'STAGE COMPLETE');
+  $('bs28MarshalHeading').textContent='GROUP ROTATION · V28.3';
   $('bs28MarshalInfo').textContent=ready?
-   `Official draw saved · ${bs28Core.memberIds(stageGroup.members).filter(id=>bs28Core.statusFor(data.results?.[id]?.[stage])).length}/${bs28Core.memberIds(stageGroup.members).length} confirmed results · ${stageGroup.status}`:
+   `CURRENT: ${bs28GroupName(stageGroupId)} · ${current} · ${bs28Core.memberIds(stageGroup.members).filter(id=>bs28Core.statusFor(data.results?.[id]?.[bs28Core.stageIndex(current)])).length}/${bs28Core.memberIds(stageGroup.members).length} saved · ${stageGroup.status}`:
    stageGroup.status==='FINISHED'?'This group has completed all required stages.':
    stageChoosing?'Stage '+(last||'previous')+' complete. Select the group and next OPEN/AVAILABLE stage below.':
    'Select the SS assigned to this group in Race Control.';
@@ -1490,85 +1492,100 @@ function bs28RenderMarshal(){
  if($('drawSpinPanel'))$('drawSpinPanel').style.display='none';
  if($('stageGateSetup'))$('stageGateSetup').style.display='none';
 
- // The Group Name dropdown contains groups that can move, plus groups whose
- // results are already saved but still awaiting Main Control confirmation.
- // The latter may be reviewed, but cannot submit a stage request yet.
- const candidates=Object.entries(plan.groups||{}).filter(([id,g])=>{
-  if(g.type==='CATCHUP'||g.status==='FINISHED')return false;
-  return (g.status==='CHOOSING'&&!g.currentStage)||
-   (!!g.currentStage&&bs28Core.allResultsConfirmed(g,data,g.currentStage));
- }).map(([id])=>id);
- let ownReq=null;try{ownReq=JSON.parse(localStorage.getItem(bs28RequestKey())||'null')}catch(e){}
- if(ownReq?.groupId&&plan.groups?.[ownReq.groupId]&&!candidates.includes(ownReq.groupId))candidates.push(ownReq.groupId);
- if(bs28NextGroupChoice&&!candidates.includes(bs28NextGroupChoice))bs28NextGroupChoice='';
- if(!bs28NextGroupChoice){
-  bs28NextGroupChoice=(ownReq?.groupId&&candidates.includes(ownReq.groupId)?ownReq.groupId:'')||
-   (candidates.includes(stageGroupId)?stageGroupId:'')||
-   candidates.find(id=>plan.groups[id]?.status==='CHOOSING')||candidates[0]||'';
- }
- const groupPicker=$('bs28NextGroup'),selectedGroupId=bs28NextGroupChoice,selectedGroup=plan.groups?.[selectedGroupId];
- const groupOptions=candidates.map(id=>{
-  const g=plan.groups[id],movable=g.status==='CHOOSING'&&!g.currentStage;
-  const state=movable?'READY TO SELECT':g.currentStage?'RESULTS SAVED · VERIFYING':'WAITING FOR ASSIGNMENT';
-  return {value:id,label:bs28GroupName(id)+' — '+state};
+ // Only confirmed groups that have finished their previous SS and do not
+ // yet have a new stage may be selected. Unconfirmed completed groups are
+ // described in the status line, never offered as a misleading selectable
+ // group. The list is EVENT-WIDE, not tied to this phone's SS or marshal.
+ const groupStates=Object.entries(plan.groups||{}).map(([id,g])=>{
+  const members=bs28Core.memberIds(g?.members),total=members.length;
+  const saved=g?.currentStage?members.filter(driver=>
+   bs28Core.statusFor(data.results?.[driver]?.[bs28Core.stageIndex(g.currentStage)])).length:0;
+  const hasRemaining=bs28Core.includedStages(plan).some(st=>!g?.completedStages?.[st]);
+  const ready=!!(total&&hasRemaining&&g.status==='CHOOSING'&&!g.currentStage);
+  const verifying=!!(total&&g?.currentStage&&saved===total&&g.status!=='FINISHED');
+  return {id,g,total,saved,ready,verifying};
  });
+ const readyGroups=groupStates.filter(x=>x.ready).sort((a,b)=>a.id.localeCompare(b.id));
+ const verifyingGroups=groupStates.filter(x=>x.verifying).sort((a,b)=>a.id.localeCompare(b.id));
+ const candidates=readyGroups.map(x=>x.id);
+ const summary=$('bs28WaitingGroupsSummary');
+ if(summary){
+  const readyLabel=readyGroups.map(x=>bs28GroupName(x.id)).join(' · ');
+  const verifyingLabel=verifyingGroups.map(x=>bs28GroupName(x.id)).join(' · ');
+  summary.textContent=readyGroups.length?
+   'AVAILABLE GROUPS: '+readyLabel+(verifyingGroups.length?'  |  WAITING FOR CONFIRMATION: '+verifyingLabel:''):
+   verifyingGroups.length?'RESULTS SAVED · WAITING FOR MAIN CONTROL: '+verifyingLabel:
+   'NO GROUP AVAILABLE YET. Finish and SAVE all drivers in a group first.';
+  summary.classList.toggle('is-pending',!readyGroups.length);
+ }
+ let ownReq=null;try{ownReq=JSON.parse(localStorage.getItem(bs28RequestKey())||'null')}catch(e){}
+ if(bs28NextGroupChoice&&!candidates.includes(bs28NextGroupChoice)){
+  bs28NextGroupChoice='';bs28GroupUserChosen=false;
+ }
+ if(!bs28GroupUserChosen||!bs28NextGroupChoice){
+  bs28NextGroupChoice=(ownReq?.groupId&&candidates.includes(ownReq.groupId)?ownReq.groupId:'')||readyGroups[0]?.id||'';
+ }
+ const groupPicker=$('bs28NextGroup'),selectedGroupId=bs28NextGroupChoice;
+ const selectedGroup=plan.groups?.[selectedGroupId];
+ const groupOptions=readyGroups.length?readyGroups.map(x=>({
+  value:x.id,label:bs28GroupName(x.id)+' — Finished '+(x.g.lastStage||'previous SS')
+ })):[{value:'',label:'No group available to move'}];
  bs28SyncOptions(groupPicker,groupOptions,selectedGroupId);
- $('bs28Selection').style.display=candidates.length?'block':'none';
- // Listen for the selected group's request even when its last assigned stage
- // has already been released or a different SS is in the stage selector.
- bs28StartListeners(selectedGroupId);
-
+ $('bs28Selection').style.display='block';
+ // Follow the actual submitted request even when that group disappears from
+ // the AVAILABLE list after Main Control assigns the destination SS.
+ bs28StartListeners(ownReq?.requestId?ownReq.groupId:selectedGroupId);
  const destSelect=$('bs28NextSS'),previousDest=destSelect.value;
- const options=selectedGroupId?bs28Core.stageNames(plan).map(st=>({stage:st,status:bs28Core.availability(plan,selectedGroupId,st,bs28Locks)})):[];
- const available=options.filter(x=>x.status==='AVAILABLE');
+ const stageChecks=selectedGroupId?bs28Core.stageNames(plan).map(st=>({stage:st,status:bs28Core.availability(plan,selectedGroupId,st,bs28Locks)})):[];
+ const available=stageChecks.filter(x=>x.status==='AVAILABLE');
  const nextOptions=available.length?
-  [{value:'',label:'Select next available SS'},...available.map(x=>({value:x.stage,label:x.stage+' — AVAILABLE'}))]:
-  [{value:'',label:'No available uncompleted SS'}];
+  [{value:'',label:'Choose available SS'},...available.map(x=>({value:x.stage,label:x.stage+' — OPEN & AVAILABLE'}))]:
+  [{value:'',label:selectedGroupId?'No SS available — ask organiser to OPEN one':'Select available group first'}];
  const chosen=available.some(x=>x.stage===previousDest)?previousDest:'';
  bs28SyncOptions(destSelect,nextOptions,chosen);
- $('bs28MarshalCards').innerHTML=options.map(x=>{
-  const owner=plan.stageOwners?.[x.stage];
-  return `<span class="bs28-m-stage ${x.status==='AVAILABLE'?'bs28-m-free':''}"><b>${x.stage}</b><small>${x.status==='BUSY'?'BUSY · GROUP '+bs28Esc(owner||'?'):bs28Esc(x.status)}</small></span>`;
- }).join('');
- const movable=!!(selectedGroup&&selectedGroup.status==='CHOOSING'&&!selectedGroup.currentStage);
- const pendingRequest=bs28RequestState?.status==='pending';
  const accessOK=!!(online&&connectedToServer&&navigator.onLine!==false&&!marshalAccessRevoked&&marshalLinkMode&&marshalSessionVerified);
  const busy=!!(running||pendingRun||savingResult||localStageLock||eventPendingCount(activeEventId())>0);
- const selectedProgress=selectedGroup?.currentStage?
-  `${bs28Core.memberIds(selectedGroup.members).filter(id=>bs28Core.statusFor(data.results?.[id]?.[bs28Core.stageIndex(selectedGroup.currentStage)])).length}/${bs28Core.memberIds(selectedGroup.members).length} results saved on ${selectedGroup.currentStage}`:
-  selectedGroup?.lastStage?`Completed ${selectedGroup.lastStage}`:'';
- $('bs28SelectedGroupProgress').textContent=selectedGroupId?
-  bs28GroupName(selectedGroupId)+' · '+selectedProgress+(movable?' · READY FOR NEXT SS':' · AWAITING CONFIRMATION'):'';
- groupPicker.disabled=!!(busy||pendingRequest||bs28Switching);
- destSelect.disabled=!!(busy||pendingRequest||!available.length);
- $('bs28SwitchButton').disabled=!movable||!available.length||!destSelect.value||!accessOK||busy||pendingRequest||bs28Switching;
+ const movable=!!(selectedGroup&&selectedGroup.status==='CHOOSING'&&!selectedGroup.currentStage);
+ const pendingRequest=selectedGroupId===bs28RequestGroup&&bs28RequestState?.status==='pending';
+ const ownRequestWaiting=!!(ownReq?.requestId&&bs28RequestState?.status!=='accepted'&&bs28RequestState?.status!=='rejected');
+ $('bs28SelectedGroupProgress').textContent=selectedGroupId&&movable?
+  bs28GroupName(selectedGroupId)+' · FINISHED '+(selectedGroup.lastStage||'PREVIOUS SS')+' · READY FOR NEXT SS':
+  (verifyingGroups.length?'Main Control is checking saved results for '+verifyingGroups.map(x=>bs28GroupName(x.id)).join(', ')+'.':'');
+ groupPicker.disabled=!!(!readyGroups.length||running||pendingRun||savingResult||bs28Switching||ownRequestWaiting);
+ destSelect.disabled=!!(!selectedGroupId||busy||ownRequestWaiting||bs28Switching||!available.length);
+ $('bs28SwitchButton').disabled=!!(!movable||!destSelect.value||!accessOK||busy||pendingRequest||ownRequestWaiting||bs28Switching);
  const status=$('bs28SwitchStatus');
- if(!accessOK)status.textContent='Marshal link must be OPEN and Firebase ONLINE before requesting another SS.';
- else if(busy)status.textContent='SAVE and sync the result, stop the timer and release the stage lock before switching.';
- else if(pendingRequest)status.textContent='REQUEST PENDING · Waiting for Main Control automatic coordinator. Do not start a new run.';
- else if(bs28RequestState?.status==='rejected'&&selectedGroupId===bs28RequestGroup)status.textContent='STAGE REQUEST REJECTED: '+String(bs28RequestState.reason||'stage unavailable')+'. Choose another available SS.';
- else if(selectedGroup&&!movable)status.textContent='ALL RESULTS SAVED · Waiting for Main Control to confirm group completion and release the previous stage. Group and SS can be viewed but not submitted yet.';
- else if(movable&&!available.length)status.textContent='NO AVAILABLE SS — wait for another group to finish or ask Main Control to OPEN an uncompleted stage.';
- else if(movable)status.textContent='Choose the group and next available stage, then tap CONTINUE. No PIN needed; START stays manual.';
- else if(stageGroup?.status==='FINISHED')status.textContent='GROUP EVENT COMPLETE. No more required stages.';
- else status.textContent='Continue racing until all group results are confirmed.';
+ if(!accessOK)status.textContent='MARSHAL LINK CLOSED OR OFFLINE · Ask Main Control to open access.';
+ else if(busy)status.textContent='SAVE the current run, release its stage lock, and finish pending uploads first.';
+ else if(ownRequestWaiting)status.textContent='REQUEST SENT · Waiting for Main Control to confirm assignment and save the fresh draw.';
+ else if(!readyGroups.length)status.textContent=verifyingGroups.length?
+  'Results saved. Main Control must confirm completion and release the previous stage before this group becomes AVAILABLE.':
+  'No group ready to move. Groups appear here automatically after their current SS is completed and confirmed.';
+ else if(!available.length)status.textContent='No OPEN and FREE SS remains for '+bs28GroupName(selectedGroupId)+'. Wait for another stage to open.';
+ else if(!destSelect.value)status.textContent='Select the AVAILABLE SS, then press CONFIRM NEXT SS & AUTO DRAW.';
+ else status.textContent='Ready to request '+bs28GroupName(selectedGroupId)+' → '+destSelect.value+'. The timer stays STOPPED until START.';
 
  // After the trusted Main Control has accepted this phone's request, switch
  // its stage selector only. Do not start or restore a stopwatch automatically.
  const reqGroup=ownReq&&plan.groups?.[ownReq.groupId];
+ if(!bs28Switching&&ownReq?.requestId&&bs28RequestState?.requestId===ownReq.requestId&&bs28RequestState.status==='rejected'){
+  localStorage.removeItem(bs28RequestKey());
+  const reason=String(bs28RequestState.reason||'Stage no longer available');
+  status.textContent='REQUEST NOT ACCEPTED: '+reason+'. Please choose another OPEN, AVAILABLE SS.';
+  bs28GroupUserChosen=false;
+ }
  if(!bs28Switching&&ownReq?.requestId&&bs28RequestState?.requestId===ownReq.requestId&&bs28RequestState.status==='accepted'&&
-    selectedGroupId===ownReq.groupId&&reqGroup?.currentStage===ownReq.destination&&!busy){
+    reqGroup?.currentStage===ownReq.destination&&!busy){
   const nextStage=bs28Core.stageIndex(ownReq.destination);
-  if(stage!==nextStage&&nextStage>=0){
-   bs28Switching=true;stage=nextStage;localStorage.setItem('bs28-stage',String(stage));
+  if(nextStage>=0){
+   bs28Switching=true;
+   stage=nextStage;localStorage.setItem('bs28-stage',String(stage));
    localStorage.removeItem(selectedDriverKey);$('manualTime').value='';
    localStorage.setItem(lastClockKey,'0');$('clock').textContent='00:00.00';
    localStorage.removeItem(bs28RequestKey());
-   bs28NextGroupChoice='';
+   bs28NextGroupChoice='';bs28GroupUserChosen=false;
+   status.textContent=ownReq.destination+' READY · New draw saved. Press START manually.';
    setTimeout(()=>{bs28Switching=false;render();bs28RenderMarshal()},0);
-  }else{
-   localStorage.removeItem(bs28RequestKey());bs28NextGroupChoice='';
-   status.textContent=ownReq.destination+' READY · Fresh draw saved. Select an eligible driver and press START manually.';
   }
  }
  const canStart=!!(ready&&plan.stages?.[current]?.included&&plan.stages[current].open&&!plan.stages[current].cancelled&&accessOK&&!pendingRequest);
@@ -1598,7 +1615,7 @@ async function bs28SelectSS(){
  if(!marshalLinkMode||!online||!connectedToServer||!app||navigator.onLine===false||marshalAccessRevoked)return alert('V28: Connect the authorized marshal link while it is OPEN.');
  if(running||pendingRun||savingResult||localStageLock||eventPendingCount(activeEventId())>0)return alert('Finish/save/sync pending result and release its stage lock first.');
  const groupId=$('bs28NextGroup')?.value||'',p=bs28Plan(),g=p?.groups?.[groupId],dest=$('bs28NextSS').value;
- if(!g||!bs28Core.canChoose(p,groupId,dest,bs28Locks))return alert('The selected SS is not available. Check for CLOSED/BUSY/COMPLETED.');
+ if(!g||!bs28Core.canChoose(p,groupId,dest,bs28Locks))return alert('This group is not yet confirmed ready, or the selected SS is CLOSED/BUSY/COMPLETED. Wait for Main Control confirmation.');
  if(!await verifyMarshalSessionOnline())return alert('Marshal session invalid or the link is closed. Ask Main Control to reopen it.');
  if(!confirm('MOVE '+bs28GroupName(groupId)+' to '+dest+'?\n\nMain Control will automatically draw a new driver order. The stopwatch stays STOPPED until you manually press START.'))return;
  const path=app.database().ref('rotationRequests/'+activeEventId()+'/'+groupId),id='req'+Date.now().toString(36)+Math.random().toString(36).slice(2,9);
@@ -1612,14 +1629,14 @@ async function bs28SelectSS(){
 }
 $('bs28NextGroup')?.addEventListener('change',e=>{
  if(running||pendingRun||savingResult)return;
- bs28NextGroupChoice=String(e.target.value||'');
+ bs28NextGroupChoice=String(e.target.value||'');bs28GroupUserChosen=true;
  $('bs28NextSS').value='';
  bs28RenderMarshal();
 });
 $('bs28NextSS')?.addEventListener('change',bs28RenderMarshal);
 $('bs28SwitchButton')?.addEventListener('click',bs28SelectSS);
 
-window.BS28_MARSHAL_READY=true;setInterval(()=>{if(bs28IsActive())bs28RenderMarshal()},1800);bs28RenderMarshal();
+window.BS28_MARSHAL_READY=true;window.BS28_MARSHAL_VERSION="28.4";setInterval(()=>{if(bs28IsActive())bs28RenderMarshal()},1800);bs28RenderMarshal();
 })();
 /* System-wide uppercase for human-readable text fields, including dynamically rendered inputs. */
 (function installUppercaseWordInputs(){
