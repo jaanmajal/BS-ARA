@@ -1655,9 +1655,28 @@ function bs28RenderMarshal(){
    setTimeout(()=>{bs28Switching=false;render();bs28RenderMarshal()},0);
   }
  }
- const canStart=!!(ready&&plan.stages?.[current]?.included&&plan.stages[current].open&&!plan.stages[current].cancelled&&accessOK&&!pendingRequest);
- if(!running&&!pendingRun){$('start').disabled=$('start').disabled||!canStart;$('markDns').disabled=$('markDns').disabled||!canStart;$('prepareManual').disabled=$('prepareManual').disabled||!canStart}
- if(!canStart&&ready&&!running&&!pendingRun)$('runInfo').textContent='Stage '+current+' is CLOSED or not yet authorized. Wait for Main Control to OPEN it.';
+ const selectedDriverId=selected();
+ const stageInfo=plan.stages?.[current]||null;
+ const groupCanRace=!!(stageGroup&&['READY','RACING'].includes(String(stageGroup.status||'')));
+ const canStart=!!(ready&&groupCanRace&&stageInfo?.included===true&&stageInfo.open===true&&stageInfo.cancelled!==true&&accessOK&&!pendingRequest);
+ // Recompute controls from the current authorization state on every refresh.
+ // Do not OR with the previous disabled value: that made a button stay disabled
+ // forever after a stage was temporarily closed or its group was not yet assigned.
+ const runBlocked=!!(running||pendingRun||savingResult);
+ if(!running&&!pendingRun){
+  $('start').disabled=runBlocked||!selectedDriverId||!canStart;
+  $('markDns').disabled=runBlocked||!selectedDriverId||!!result(selectedDriverId,stage)||!canStart;
+  $('prepareManual').disabled=!!running||!selectedDriverId||(!pendingRun&&!canStart);
+ }
+ if(!running&&!pendingRun){
+  if(!ready)$('runInfo').textContent='No group is currently assigned to SS'+(stage+1)+'. Use Group Rotation Control below to select a confirmed waiting group and an OPEN, AVAILABLE SS.';
+  else if(!stageInfo?.included||stageInfo.cancelled)$('runInfo').textContent='SS'+(stage+1)+' is not included in the active race plan. Ask Main Control to check the stage plan.';
+  else if(!stageInfo.open)$('runInfo').textContent='SS'+(stage+1)+' is CLOSED by Main Control. Ask the organiser to OPEN it before starting.';
+  else if(!accessOK)$('runInfo').textContent='Marshal access is closed or the phone is offline. Reconnect using the current authorised marshal link.';
+  else if(pendingRequest)$('runInfo').textContent='A group stage request is waiting for Main Control. Do not start a new run yet.';
+  else if(!groupCanRace)$('runInfo').textContent='The assigned group is not READY to race at SS'+(stage+1)+'. Wait for Main Control confirmation.';
+  else if(!selectedDriverId)$('runInfo').textContent='No eligible driver remains in this group for SS'+(stage+1)+'.';
+ }
  const host=$('bs28RunningOrder');if(host){
   const order=ready?plan.orders?.[stageGroupId]?.[current]?.order||[]:[];
   host.innerHTML=ready?order.map((id,i)=>{
@@ -1703,7 +1722,7 @@ $('bs28NextGroup')?.addEventListener('change',e=>{
 $('bs28NextSS')?.addEventListener('change',bs28RenderMarshal);
 $('bs28SwitchButton')?.addEventListener('click',bs28SelectSS);
 
-window.BS28_MARSHAL_READY=true;window.BS28_MARSHAL_VERSION="28.4";setInterval(()=>{if(bs28IsActive())bs28RenderMarshal()},1800);bs28RenderMarshal();
+window.BS28_MARSHAL_READY=true;window.BS28_MARSHAL_VERSION="28.4.3";render();bs28RenderMarshal();setInterval(()=>{if(bs28IsActive())bs28RenderMarshal()},1800);
 })();
 /* System-wide uppercase for human-readable text fields, including dynamically rendered inputs. */
 (function installUppercaseWordInputs(){
