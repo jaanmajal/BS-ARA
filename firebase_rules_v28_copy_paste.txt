@@ -1,0 +1,106 @@
+{
+  "rules": {
+    "events": {
+      "$eventId": {
+        ".read": true,
+        ".write": "auth != null && auth.uid == 'REPLACE_WITH_ORGANIZER_UID'",
+        "results": {
+          "$driverId": {
+            "$stage": {
+              ".write": "auth != null && (auth.uid == 'REPLACE_WITH_ORGANIZER_UID' || (auth.token.firebase.sign_in_provider == 'anonymous' && root.child('marshalAccessControl').child($eventId).child('enabled').val() == true && root.child('marshalSessions').child($eventId).child(auth.uid).child('enabled').val() == true && root.child('marshalSessions').child($eventId).child(auth.uid).child('token').val() == root.child('marshalAccessControl').child($eventId).child('token').val() && root.child('marshalSessions').child($eventId).child(auth.uid).child('activeLock').child('driverId').val() == $driverId && root.child('marshalSessions').child($eventId).child(auth.uid).child('activeLock').child('stageKey').val() == $stage && root.child('stageLocks').child($eventId).child(root.child('marshalSessions').child($eventId).child(auth.uid).child('activeLock').child('stageName').val()).child('status').val() == 'running' && root.child('stageLocks').child($eventId).child(root.child('marshalSessions').child($eventId).child(auth.uid).child('activeLock').child('stageName').val()).child('authUid').val() == auth.uid && root.child('stageLocks').child($eventId).child(root.child('marshalSessions').child($eventId).child(auth.uid).child('activeLock').child('stageName').val()).child('driverId').val() == $driverId && root.child('stageLocks').child($eventId).child(root.child('marshalSessions').child($eventId).child(auth.uid).child('activeLock').child('stageName').val()).child('runId').val() == root.child('marshalSessions').child($eventId).child(auth.uid).child('activeLock').child('runId').val()))"
+            }
+          }
+        },
+        "penalties": {
+          "$driverId": {
+            "$stage": {
+              ".write": "auth != null && (auth.uid == 'REPLACE_WITH_ORGANIZER_UID' || (auth.token.firebase.sign_in_provider == 'anonymous' && root.child('marshalAccessControl').child($eventId).child('enabled').val() == true && root.child('marshalSessions').child($eventId).child(auth.uid).child('enabled').val() == true && root.child('marshalSessions').child($eventId).child(auth.uid).child('token').val() == root.child('marshalAccessControl').child($eventId).child('token').val() && root.child('marshalSessions').child($eventId).child(auth.uid).child('activeLock').child('driverId').val() == $driverId && root.child('marshalSessions').child($eventId).child(auth.uid).child('activeLock').child('stageKey').val() == $stage && root.child('stageLocks').child($eventId).child(root.child('marshalSessions').child($eventId).child(auth.uid).child('activeLock').child('stageName').val()).child('status').val() == 'running' && root.child('stageLocks').child($eventId).child(root.child('marshalSessions').child($eventId).child(auth.uid).child('activeLock').child('stageName').val()).child('authUid').val() == auth.uid && root.child('stageLocks').child($eventId).child(root.child('marshalSessions').child($eventId).child(auth.uid).child('activeLock').child('stageName').val()).child('driverId').val() == $driverId && root.child('stageLocks').child($eventId).child(root.child('marshalSessions').child($eventId).child(auth.uid).child('activeLock').child('stageName').val()).child('runId').val() == root.child('marshalSessions').child($eventId).child(auth.uid).child('activeLock').child('runId').val()))"
+            }
+          }
+        },
+        "dnfRosterCount": {
+          ".write": "auth != null && (auth.uid == 'REPLACE_WITH_ORGANIZER_UID' || (auth.token.firebase.sign_in_provider == 'anonymous' && root.child('marshalAccessControl').child($eventId).child('enabled').val() == true && root.child('marshalSessions').child($eventId).child(auth.uid).child('enabled').val() == true && root.child('marshalSessions').child($eventId).child(auth.uid).child('token').val() == root.child('marshalAccessControl').child($eventId).child('token').val() && newData.isNumber() && newData.val() >= 1 && newData.val() <= 999 && (!data.exists() || data.val() == newData.val())))"
+        },
+        "groupRotationV28": {
+          ".write": "auth != null && auth.uid == 'REPLACE_WITH_ORGANIZER_UID'"
+        }
+      }
+    },
+    "marshalAccessControl": {
+      "$eventId": {
+        ".read": "auth != null && auth.uid == 'REPLACE_WITH_ORGANIZER_UID'",
+        ".write": "auth != null && auth.uid == 'REPLACE_WITH_ORGANIZER_UID'",
+        "enabled": {
+          ".read": "auth != null"
+        }
+      }
+    },
+    "marshalSessions": {
+      "$eventId": {
+        ".read": "auth != null && auth.uid == 'REPLACE_WITH_ORGANIZER_UID'",
+        ".write": "auth != null && auth.uid == 'REPLACE_WITH_ORGANIZER_UID'",
+        "$uid": {
+          ".read": "auth != null && (auth.uid == $uid || auth.uid == 'REPLACE_WITH_ORGANIZER_UID')",
+          ".write": "auth != null && (auth.uid == 'REPLACE_WITH_ORGANIZER_UID' || (auth.token.firebase.sign_in_provider == 'anonymous' && auth.uid == $uid && root.child('marshalAccessControl').child($eventId).child('enabled').val() == true && newData.child('token').val() == root.child('marshalAccessControl').child($eventId).child('token').val()))",
+          "activeLock": {
+            ".write": "auth != null && auth.token.firebase.sign_in_provider == 'anonymous' && auth.uid == $uid && root.child('marshalAccessControl').child($eventId).child('enabled').val() == true && root.child('marshalSessions').child($eventId).child($uid).child('enabled').val() == true && root.child('marshalSessions').child($eventId).child($uid).child('token').val() == root.child('marshalAccessControl').child($eventId).child('token').val() && ((!newData.exists() && data.child('authUid').val() == auth.uid) || (newData.child('authUid').val() == auth.uid && (!data.exists() || data.child('authUid').val() == auth.uid)))"
+          }
+        }
+      }
+    },
+    "controlSessions": {
+      "$eventId": {
+        ".read": "auth != null && auth.uid == 'REPLACE_WITH_ORGANIZER_UID'",
+        ".write": "auth != null && auth.uid == 'REPLACE_WITH_ORGANIZER_UID'"
+      }
+    },
+    "stageLocks": {
+      "$eventId": {
+        ".read": "auth != null && (auth.uid == 'REPLACE_WITH_ORGANIZER_UID' || (auth.token.firebase.sign_in_provider == 'anonymous' && root.child('marshalAccessControl').child($eventId).child('enabled').val() == true && root.child('marshalSessions').child($eventId).child(auth.uid).child('enabled').val() == true && root.child('marshalSessions').child($eventId).child(auth.uid).child('token').val() == root.child('marshalAccessControl').child($eventId).child('token').val()))",
+        ".write": "auth != null && auth.uid == 'REPLACE_WITH_ORGANIZER_UID'",
+        "$stage": {
+          ".write": "auth != null && (auth.uid == 'REPLACE_WITH_ORGANIZER_UID' || (auth.token.firebase.sign_in_provider == 'anonymous' && root.child('marshalAccessControl').child($eventId).child('enabled').val() == true && root.child('marshalSessions').child($eventId).child(auth.uid).child('enabled').val() == true && root.child('marshalSessions').child($eventId).child(auth.uid).child('token').val() == root.child('marshalAccessControl').child($eventId).child('token').val() && ((!data.exists() && newData.child('authUid').val() == auth.uid) || (data.child('authUid').val() == auth.uid && (!newData.exists() || newData.child('authUid').val() == auth.uid)))) || (auth.token.firebase.sign_in_provider == 'anonymous' && root.child('marshalAccessControl').child($eventId).child('enabled').val() == true && root.child('marshalSessions').child($eventId).child(auth.uid).child('enabled').val() == true && root.child('marshalSessions').child($eventId).child(auth.uid).child('token').val() == root.child('marshalAccessControl').child($eventId).child('token').val() && data.exists() && !newData.exists() && root.child('stageResetAuthorizations').child($eventId).child($stage).child('authUid').val() == auth.uid && (root.child('stageResetAuthorizations').child($eventId).child($stage).child('runId').val() == data.child('runId').val() || (!data.child('runId').exists() && root.child('stageResetAuthorizations').child($eventId).child($stage).child('runId').val() == '__LEGACY__')) && root.child('stageResetAuthorizations').child($eventId).child($stage).child('pinHash').val() == '8d969eef6ecad3c29a3a629280e686cf0c3f5d5a86aff3ca12020c923adc6c92' && root.child('stageResetAuthorizations').child($eventId).child($stage).child('issuedAt').isNumber() && root.child('stageResetAuthorizations').child($eventId).child($stage).child('issuedAt').val() >= now - 90000 && root.child('stageResetAuthorizations').child($eventId).child($stage).child('issuedAt').val() <= now))"
+        }
+      }
+    },
+    "stageResetAuthorizations": {
+      "$eventId": {
+        "$stage": {
+          ".read": "auth != null && (auth != null && auth.uid == 'REPLACE_WITH_ORGANIZER_UID' || (auth.token.firebase.sign_in_provider == 'anonymous' && data.child('authUid').val() == auth.uid))",
+          ".write": "auth != null && (auth != null && auth.uid == 'REPLACE_WITH_ORGANIZER_UID' || (auth.token.firebase.sign_in_provider == 'anonymous' && root.child('marshalAccessControl').child($eventId).child('enabled').val() == true && root.child('marshalSessions').child($eventId).child(auth.uid).child('enabled').val() == true && root.child('marshalSessions').child($eventId).child(auth.uid).child('token').val() == root.child('marshalAccessControl').child($eventId).child('token').val() && ((newData.exists() && root.child('stageLocks').child($eventId).child($stage).exists() && newData.child('authUid').val() == auth.uid && (newData.child('runId').val() == root.child('stageLocks').child($eventId).child($stage).child('runId').val() || (!root.child('stageLocks').child($eventId).child($stage).child('runId').exists() && newData.child('runId').val() == '__LEGACY__')) && newData.child('pinHash').val() == '8d969eef6ecad3c29a3a629280e686cf0c3f5d5a86aff3ca12020c923adc6c92' && newData.child('issuedAt').isNumber() && newData.child('issuedAt').val() >= now - 15000 && newData.child('issuedAt').val() <= now) || (!newData.exists() && data.child('authUid').val() == auth.uid))))"
+        }
+      }
+    },
+    "stageUnlockV5Check": {
+      ".read": "auth != null",
+      ".write": false
+    },
+    "stageUnlockV7Check": {
+      "$eventId": {
+        ".read": "auth != null && (auth.uid == 'REPLACE_WITH_ORGANIZER_UID' || (auth.token.firebase.sign_in_provider == 'anonymous' && root.child('marshalAccessControl').child($eventId).child('enabled').val() == true && root.child('marshalSessions').child($eventId).child(auth.uid).child('enabled').val() == true && root.child('marshalSessions').child($eventId).child(auth.uid).child('token').val() == root.child('marshalAccessControl').child($eventId).child('token').val()))",
+        ".write": false
+      }
+    },
+    "marshalRecoveryInbox": {
+      "$eventId": {
+        ".read": "auth != null && auth.uid == 'REPLACE_WITH_ORGANIZER_UID'",
+        ".write": "auth != null && auth.uid == 'REPLACE_WITH_ORGANIZER_UID'",
+        "$uid": {
+          ".read": "auth != null && (auth.uid == 'REPLACE_WITH_ORGANIZER_UID' || (auth.uid == $uid && auth.token.firebase.sign_in_provider == 'anonymous' && root.child('marshalAccessControl').child($eventId).child('enabled').val() == true && root.child('marshalSessions').child($eventId).child($uid).child('enabled').val() == true && root.child('marshalSessions').child($eventId).child($uid).child('token').val() == root.child('marshalAccessControl').child($eventId).child('token').val()))",
+          "$ticketId": {
+            ".write": "auth != null && auth.token.firebase.sign_in_provider == 'anonymous' && auth.uid == $uid && root.child('marshalAccessControl').child($eventId).child('enabled').val() == true && root.child('marshalSessions').child($eventId).child($uid).child('enabled').val() == true && root.child('marshalSessions').child($eventId).child($uid).child('token').val() == root.child('marshalAccessControl').child($eventId).child('token').val() && !data.exists() && newData.exists() && newData.child('eventId').val() == $eventId && newData.child('marshalUid').val() == auth.uid && newData.child('status').val() == 'pending' && newData.child('driverId').isString() && newData.child('stageIndex').isNumber() && newData.child('stageIndex').val() >= 0 && newData.child('stageIndex').val() <= 19 && (newData.child('result').child('status').val() == 'finish' || newData.child('result').child('status').val() == 'dnf' || newData.child('result').child('status').val() == 'dns') && newData.child('result').child('at').isNumber() && newData.child('submittedAt').isNumber() && newData.child('submittedAt').val() >= now - 90000 && newData.child('submittedAt').val() <= now + 5000"
+          }
+        }
+      }
+    },
+    "rotationRequests": {
+      "$eventId": {
+        ".read": "auth != null && auth.uid == 'REPLACE_WITH_ORGANIZER_UID' || (auth != null && auth.token.firebase.sign_in_provider == 'anonymous' && root.child('marshalAccessControl').child($eventId).child('enabled').val() == true && root.child('marshalSessions').child($eventId).child(auth.uid).child('enabled').val() == true && root.child('marshalSessions').child($eventId).child(auth.uid).child('token').val() == root.child('marshalAccessControl').child($eventId).child('token').val())",
+        ".write": "auth != null && auth.uid == 'REPLACE_WITH_ORGANIZER_UID'",
+        "$groupId": {
+          ".write": "auth != null && auth.token.firebase.sign_in_provider == 'anonymous' && root.child('marshalAccessControl').child($eventId).child('enabled').val() == true && root.child('marshalSessions').child($eventId).child(auth.uid).child('enabled').val() == true && root.child('marshalSessions').child($eventId).child(auth.uid).child('token').val() == root.child('marshalAccessControl').child($eventId).child('token').val() && newData.exists() && newData.child('authUid').val() == auth.uid && newData.child('groupId').val() == $groupId && newData.child('status').val() == 'pending' && newData.child('requestId').isString() && newData.child('destination').isString() && root.child('events').child($eventId).child('groupRotationV28').child('enabled').val() == true && root.child('events').child($eventId).child('groupRotationV28').child('groups').child($groupId).child('status').val() == 'CHOOSING' && newData.child('visitIndex').val() == root.child('events').child($eventId).child('groupRotationV28').child('groups').child($groupId).child('visitIndex').val() && root.child('events').child($eventId).child('groupRotationV28').child('stages').child(newData.child('destination').val()).child('open').val() == true && root.child('events').child($eventId).child('groupRotationV28').child('stages').child(newData.child('destination').val()).child('included').val() == true && !root.child('events').child($eventId).child('groupRotationV28').child('stageOwners').child(newData.child('destination').val()).exists() && !root.child('events').child($eventId).child('groupRotationV28').child('groups').child($groupId).child('completedStages').child(newData.child('destination').val()).exists() && (!data.exists() || data.child('status').val() != 'pending')"
+        }
+      }
+    }
+  }
+}

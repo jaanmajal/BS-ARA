@@ -1,0 +1,433 @@
+<!doctype html><!-- v27.6.8: Android results vertical scrolling and horizontal detail-table swipes. --><!-- v27.6.6: updated penalty schedule, DNF minimum Gate-1 scoring, frozen DNF roster base, and official tie-break order. -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#070b10"><link rel="icon" type="image/png" sizes="128x128" href="logo.svg"><link rel="apple-touch-icon" href="logo.svg">
+<title>BS-STYLE POINT RC TIME ATTACK - Public Results v27.6.8</title>
+<style>
+:root{color-scheme:dark;--bg:#06090d;--panel:#0d151d;--panel2:#111d27;--panel3:#17242e;--line:#263541;--text:#f4f6f8;--muted:#9eabb7;--yellow:#ffd000;--red:#ef3c32;--green:#27d17f;--blue:#245c82;--shadow:0 12px 34px #0008;font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+*{box-sizing:border-box}html{background:var(--bg);scroll-behavior:smooth}body{margin:0;color:var(--text);background:radial-gradient(ellipse at 50% -20%,#293744 0,#0a1016 42%,var(--bg) 78%);min-height:100vh}button,input,select{font:inherit}button{cursor:pointer}button:focus-visible,input:focus-visible,select:focus-visible,tr:focus-visible{outline:2px solid var(--yellow);outline-offset:2px}.shell{max-width:1600px;margin:0 auto;padding:16px 18px 10px}.hero{position:relative;overflow:hidden;display:grid;grid-template-columns:minmax(0,1fr) auto;gap:18px;align-items:center;min-height:144px;padding:24px 26px;border:1px solid #34404a;border-radius:16px;background:linear-gradient(90deg,#090e13f5 0%,#0a1119e8 55%,#0a1119cf 100%),repeating-linear-gradient(135deg,#26333d 0 1px,transparent 1px 12px);box-shadow:var(--shadow)}.hero:before{content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(170deg,transparent 0 58%,#ffb0000b 59% 60%,transparent 61%),linear-gradient(10deg,transparent 0 70%,#fff05 71% 72%,transparent 73%)}.hero-copy,.event-meta{position:relative;z-index:1}.event-kicker{color:var(--yellow);font-size:11px;font-weight:900;letter-spacing:.22em;text-transform:uppercase;margin-bottom:5px}.hero h1{font-size:clamp(30px,4vw,58px);line-height:.98;letter-spacing:-.045em;text-transform:uppercase;font-weight:1000;margin:0}.hero h1 span{display:block;color:var(--red);font-style:italic;letter-spacing:-.04em;margin-top:5px}.hero-sub{margin:12px 0 0;color:#c1cbd3;font-size:12px;font-weight:750;letter-spacing:.13em;text-transform:uppercase}.event-meta{display:grid;gap:8px;min-width:220px}.meta-chip{display:flex;align-items:center;gap:10px;padding:10px 13px;border:1px solid #3a4148;background:#060a0ee8;border-radius:10px}.meta-chip .symbol{font-size:21px}.meta-chip strong{display:block;font-size:12px;letter-spacing:.04em}.meta-chip small{display:block;color:var(--muted);font-size:10px;margin-top:2px}.toolbar{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin:12px 0 10px;padding:10px;border:1px solid var(--line);border-radius:13px;background:#090f15e8}.tabs{display:flex;gap:6px;flex:1;min-width:290px;overflow-x:auto;padding:1px}.tab{flex:1;min-width:65px;border:1px solid #243441;border-radius:8px;background:#111d27;color:#cbd4dc;padding:11px 15px;font-size:12px;font-weight:900;letter-spacing:.04em;text-transform:uppercase;white-space:nowrap}.tab.active{background:var(--yellow);border-color:#ffe15b;color:#11150d;box-shadow:0 0 0 1px #ffd00033,0 5px 18px #ffd00022}.tools{display:flex;align-items:center;gap:8px;flex-wrap:wrap}.search-wrap{position:relative}.search-wrap input,.tools select{height:40px;background:#0d1720;border:1px solid #2b3b48;border-radius:8px;color:var(--text);padding:0 12px;font-size:12px}.search-wrap input{width:230px;padding-left:34px}.search-wrap:before{content:"⌕";position:absolute;left:12px;top:7px;color:#aeb9c2;font-size:20px;line-height:22px}.tools select{min-width:145px}.connection{display:flex;align-items:center;gap:8px;padding:9px 12px;border:1px solid #244637;border-radius:8px;background:#0c2018;min-width:125px}.dot{width:9px;height:9px;border-radius:50%;background:#7c8791;box-shadow:0 0 0 4px #7c87911b}.connection.online{color:#9bf5c4;border-color:#246b48;background:#0a2016}.connection.online .dot{background:var(--green);box-shadow:0 0 0 4px #27d17f1e}.connection.offline{color:#ffc2bd;border-color:#73302e;background:#251111}.connection.offline .dot{background:#ff5148}.connection strong{display:block;font-size:11px;font-weight:900}.connection small{display:block;color:var(--muted);font-size:9px;margin-top:2px}.stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:9px;margin-bottom:12px}.stat{border:1px solid var(--line);border-radius:11px;background:linear-gradient(145deg,#111d27,#0b1219);padding:13px 15px;min-width:0}.stat .label{color:var(--muted);font-size:10px;text-transform:uppercase;font-weight:850;letter-spacing:.1em}.stat .value{font-size:25px;font-weight:950;letter-spacing:-.03em;margin-top:4px}.stat .value.yellow{color:var(--yellow)}.stat .value.green{color:var(--green)}.stat .value.red{color:#ff6c63}.content-grid{display:grid;grid-template-columns:minmax(0,1.45fr) minmax(360px,.9fr);gap:12px;align-items:stretch}.panel{min-width:0;border:1px solid var(--line);border-radius:13px;background:linear-gradient(160deg,#101a23,#091017);overflow:hidden;box-shadow:var(--shadow)}.panel-head{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:15px 16px;border-bottom:1px solid var(--line);background:#111b24}.panel-head h2{margin:0;font-size:14px;text-transform:uppercase;letter-spacing:.07em}.panel-head p{margin:4px 0 0;color:var(--muted);font-size:11px}.head-actions{display:flex;gap:7px;align-items:center}.tiny-btn{border:1px solid #304351;background:#0b141b;color:#dbe4eb;border-radius:7px;padding:7px 9px;font-size:11px;font-weight:800}.tiny-btn:hover{border-color:var(--yellow);color:var(--yellow)}.table-scroll{overflow:auto;max-width:100%}table{width:100%;border-collapse:collapse;font-size:12px}thead th{position:sticky;top:0;background:#0d151d;color:#9facb7;text-transform:uppercase;letter-spacing:.08em;font-size:9px;font-weight:900;padding:12px 10px;border-bottom:1px solid #2b3945;white-space:nowrap;text-align:left}tbody td{padding:10px;border-bottom:1px solid #1f2b35;vertical-align:middle;white-space:nowrap}tbody tr{cursor:pointer;transition:background .12s}tbody tr:hover{background:#17242d}tbody tr.selected{background:#28240c;border-top:1px solid #b99300;border-bottom:1px solid #b99300}tbody tr.selected td:first-child{box-shadow:inset 3px 0 var(--yellow)}tbody tr:last-child td{border-bottom:0}.rank{width:42px;color:#c6d0d8;font-weight:900}.rank.top1{color:var(--yellow)}.rank.top2{color:#d7e0e7}.rank.top3{color:#df8d50}.driver-cell{display:flex;align-items:center;gap:9px;min-width:120px}.driver-avatar{width:31px;height:31px;flex:0 0 31px;border-radius:7px;background:linear-gradient(145deg,#344653,#111a21);border:1px solid #40505c;display:grid;place-items:center;font-size:10px;font-weight:900;color:#e5edf2}.driver-name{font-weight:850;color:#f4f6f8}.driver-num{display:block;font-size:10px;color:#a8b4be;margin-top:2px}.points{font-weight:950;color:var(--yellow);font-size:14px}.subcell{display:block;color:#8f9eaa;font-size:9px;margin-top:3px}.status-badge{display:inline-flex;align-items:center;justify-content:center;gap:5px;border-radius:5px;padding:5px 8px;font-size:9px;font-weight:950;letter-spacing:.03em;text-transform:uppercase;min-width:69px}.status-finish{color:#62e8a0;background:#073822;border:1px solid #185a3a}.status-dnf{color:#ff9b91;background:#351514;border:1px solid #70302d}.status-dns{color:#c6b8ff;background:#251e40;border:1px solid #4b3b77}.status-pending{color:#c5ced7;background:#18232d;border:1px solid #354652}.stage-cell-main{font-weight:800}.stage-cell-sub{display:block;color:var(--muted);font-size:9px;margin-top:3px}.deduction{color:#ff7168}.neutral{color:#b6c0c8}.empty{padding:28px 16px;text-align:center;color:var(--muted);font-size:13px}.detail{height:100%;display:flex;flex-direction:column}.detail-hero{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:12px;align-items:center;padding:17px 16px;background:linear-gradient(120deg,#1a252d,#0b1219 70%);border-bottom:1px solid var(--line)}.detail-number{background:var(--red);color:white;font-size:18px;font-weight:1000;padding:10px 12px;transform:skew(-8deg);border-radius:4px;white-space:nowrap}.detail-name{font-size:20px;font-weight:950;line-height:1.1;overflow-wrap:anywhere}.detail-meta{color:var(--muted);font-size:11px;margin-top:5px}.detail-total{text-align:right}.detail-total strong{display:block;font-size:25px;color:var(--yellow);line-height:1}.detail-total small{font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em}.detail-stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:7px;padding:12px}.mini-stat{padding:10px 8px;background:#0a1219;border:1px solid #253541;border-radius:8px;text-align:center;min-width:0}.mini-stat span{display:block;color:var(--muted);font-size:9px;text-transform:uppercase;font-weight:850}.mini-stat strong{display:block;color:var(--yellow);font-size:17px;margin-top:5px;overflow-wrap:anywhere}.detail-section{padding:0 12px 12px}.section-title{display:flex;align-items:center;justify-content:space-between;gap:8px;margin:2px 2px 9px;font-size:12px;font-weight:900;text-transform:uppercase;letter-spacing:.06em}.performance{display:grid;gap:8px}.performance-row{display:grid;grid-template-columns:40px minmax(30px,1fr) 37px;gap:8px;align-items:center;font-size:10px}.performance-row .stage-name{font-weight:900;color:#dbe4eb}.bar-track{height:8px;background:#1d2b36;border-radius:99px;overflow:hidden}.bar-fill{height:100%;border-radius:99px;background:linear-gradient(90deg,#e33b32,#ffd000)}.performance-row .bar-value{text-align:right;font-weight:900;color:var(--yellow)}.detail-table{width:100%;font-size:10px}.detail-table th{padding:8px 6px;font-size:8px}.detail-table td{padding:8px 6px;white-space:normal}.detail-table .num{text-align:right}.last-updated{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;padding:11px 14px;color:var(--muted);font-size:10px;border-top:1px solid var(--line);background:#080e13}.live-indicator{display:inline-flex;align-items:center;gap:6px}.live-indicator .dot{width:7px;height:7px}.brand-footer{display:flex;justify-content:center;align-items:center;gap:9px;padding:18px 0 6px;color:#a9b0b5}.brand-footer img{width:42px;height:42px;object-fit:contain;border-radius:6px}.brand-footer .brand-name{font-size:10px;font-weight:950;letter-spacing:.16em;text-transform:uppercase}.brand-footer small{display:block;text-align:center;font-size:8px;color:#6f7c85;letter-spacing:.2em;margin-top:3px}.footer-caption{text-align:center;color:#66747f;font-size:9px;letter-spacing:.1em;padding:2px 0 14px}.error-message{padding:12px 14px;margin:10px 0;border:1px solid #773a35;background:#271311;color:#ffb7b1;border-radius:9px;font-size:12px}.hidden{display:none!important}
+@media(max-width:1050px){.content-grid{grid-template-columns:minmax(0,1fr)}.detail{min-height:360px}.event-meta{min-width:195px}.hero{min-height:125px}.table-scroll table{min-width:760px}}
+@media(max-width:700px){
+ #driverDetail{display:none!important}
+.shell{padding:8px}.hero{grid-template-columns:minmax(0,1fr);padding:17px 15px;gap:12px}.hero h1{font-size:clamp(29px,8vw,43px)}.hero-sub{font-size:9px;line-height:1.5}.event-meta{display:flex;min-width:0;flex-wrap:wrap}.meta-chip{flex:1;min-width:140px;padding:8px}.meta-chip .symbol{font-size:17px}.toolbar{padding:7px}.tabs{min-width:100%;width:100%}.tab{padding:10px 11px;min-width:56px}.tools{width:100%;display:grid;grid-template-columns:minmax(0,1fr) minmax(120px,.75fr)}.search-wrap input{width:100%}.connection{grid-column:1/-1;justify-content:center}.stats{grid-template-columns:repeat(2,minmax(0,1fr));gap:7px}.stat{padding:10px}.stat .value{font-size:22px}.panel-head{padding:12px}.panel-head h2{font-size:12px}.content-grid{gap:9px}.table-scroll table{min-width:700px}tbody td{padding:9px 8px}.detail-hero{grid-template-columns:auto minmax(0,1fr);padding:13px}.detail-total{grid-column:1/-1;text-align:left;display:flex;align-items:baseline;gap:8px}.detail-total strong{font-size:24px}.detail-stats{grid-template-columns:repeat(2,minmax(0,1fr))}.brand-footer{padding-top:15px}.brand-footer img{width:35px;height:35px}}
+@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto;transition:none!important}}
+.late-entry-badge{display:inline-block;margin-left:5px;padding:2px 6px;border-radius:999px;border:1px solid #b7791f;background:#34250d;color:#ffe3a3;font-size:9px;font-weight:900;letter-spacing:.04em;white-space:nowrap;vertical-align:middle}
+
+.stage-status-panel{margin:0 0 12px;border:1px solid var(--line);border-radius:13px;background:linear-gradient(160deg,#101a23,#091017);overflow:hidden;box-shadow:var(--shadow)}
+.stage-status-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(235px,1fr));gap:9px;padding:11px}
+.stage-status-card{border:1px solid #263541;border-radius:10px;background:#0a1219;min-width:0;overflow:hidden}
+.stage-status-card.open{border-color:#246b48;background:linear-gradient(145deg,#0c2418,#0a1219)}
+.stage-status-card.closed{border-color:#4b3535;background:linear-gradient(145deg,#211416,#0a1219)}
+.stage-status-head{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:10px 11px;border-bottom:1px solid #263541}
+.stage-status-name{font-size:12px;font-weight:950;letter-spacing:.08em}
+.stage-state{display:inline-flex;align-items:center;gap:5px;padding:5px 7px;border-radius:6px;font-size:9px;font-weight:950;letter-spacing:.08em;text-transform:uppercase;white-space:nowrap}
+.stage-state.open{background:#073822;border:1px solid #185a3a;color:#62e8a0}
+.stage-state.closed{background:#351514;border:1px solid #70302d;color:#ff9b91}
+.stage-status-reason{padding:9px 11px;color:var(--muted);font-size:10px;line-height:1.45}
+.pending-list{list-style:none;padding:0 10px 10px;margin:0;display:grid;gap:5px}
+.pending-list li{display:flex;align-items:center;gap:8px;padding:7px 8px;border:1px solid #243441;border-radius:7px;background:#0d1720;font-size:11px;min-width:0}
+.pending-position{display:grid;place-items:center;flex:0 0 24px;height:24px;border-radius:6px;background:#172b3c;color:#ffd000;font-weight:950;font-size:10px}
+.pending-driver{font-weight:850;overflow-wrap:anywhere}
+.pending-empty{margin:0 10px 10px;padding:10px;border-radius:7px;background:#0c2018;border:1px solid #246b48;color:#9bf5c4;font-size:10px;font-weight:800;line-height:1.45}
+.tab:disabled{opacity:.38;cursor:not-allowed;filter:saturate(.45)}
+.stage-closed-hint{font-size:10px;color:#ffb0a8;margin-left:5px}
+@media(max-width:700px){.stage-status-grid{grid-template-columns:1fr;padding:8px}.stage-status-head{padding:9px}.pending-list li{font-size:12px}}
+
+
+/* Responsive results polish: phone cards, ordered pending list, wide-screen readability */
+.shell{width:100%;max-width:1920px;margin-inline:auto;padding:clamp(8px,1.1vw,24px)}
+.content-grid{align-items:start;gap:clamp(10px,1vw,18px)}
+.content-grid>.panel:first-child{grid-column:1;grid-row:1}
+.content-grid>#driverDetail{grid-column:2;grid-row:1}
+.content-grid>.stage-status-panel{grid-column:1/-1;grid-row:2;margin:0}
+.mobile-board{display:none}
+.stage-status-panel .panel-head p{max-width:72ch;line-height:1.45}
+.stage-status-grid{grid-template-columns:repeat(auto-fit,minmax(min(100%,260px),1fr));gap:12px;padding:clamp(8px,1vw,14px)}
+.stage-status-card{min-width:0}
+.pending-list{max-height:440px;overflow:auto;overscroll-behavior:contain}
+.pending-list li{min-height:40px}
+.toolbar{align-items:stretch}
+.tabs{min-width:0}
+.tools{min-width:0}
+@media(min-width:1600px){
+  .shell{max-width:2200px;padding:26px 32px 14px}
+  .hero{min-height:180px;padding:30px 34px;border-radius:20px}
+  .hero h1{font-size:clamp(54px,3.1vw,76px)}
+  .hero-sub{font-size:14px}
+  .toolbar{padding:14px;gap:14px}
+  .tab{font-size:14px;padding:14px 20px}
+  .search-wrap input,.tools select{height:48px;font-size:14px}
+  .stats{gap:14px;margin-bottom:16px}
+  .stat{padding:18px 20px;border-radius:14px}
+  .stat .label{font-size:12px}
+  .stat .value{font-size:32px}
+  .content-grid{gap:16px}
+  .panel-head{padding:19px 21px}
+  .panel-head h2{font-size:16px}
+  .panel-head p{font-size:13px}
+  table{font-size:14px}
+  thead th{font-size:11px;padding:15px 13px}
+  tbody td{padding:14px 13px}
+  .stage-status-name{font-size:14px}
+  .stage-status-reason{font-size:12px}
+  .pending-list li{font-size:13px;padding:10px}
+}
+@media(min-width:2200px){.shell{max-width:2500px}}
+@media(max-width:1050px){
+  .content-grid{grid-template-columns:minmax(0,1fr)}
+  .content-grid>.panel:first-child,.content-grid>#driverDetail,.content-grid>.stage-status-panel{grid-column:1;grid-row:auto}
+  .content-grid>.stage-status-panel{order:2}
+  .content-grid>#driverDetail{order:3}
+  .content-grid>.panel:first-child{order:1}
+  .detail{min-height:0}
+  .stage-status-grid{grid-template-columns:repeat(auto-fit,minmax(min(100%,280px),1fr))}
+}
+@media(max-width:700px){
+  .shell{padding:8px 8px 14px}
+  .hero{border-radius:14px;padding:17px 14px;min-height:0}
+  .hero h1{font-size:clamp(28px,8.5vw,42px)}
+  .hero-sub{font-size:9px;letter-spacing:.09em}
+  .event-meta{width:100%}
+  .toolbar{display:flex;flex-direction:column;gap:9px;padding:8px;margin:8px 0}
+  .tabs{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));width:100%;min-width:0;overflow:visible;gap:6px}
+  .tab{min-width:0;width:100%;padding:10px 4px;font-size:10px;line-height:1.25;white-space:normal;letter-spacing:0;border-radius:8px}
+  .tools{width:100%;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:7px}
+  .search-wrap{grid-column:1/-1;min-width:0}
+  .search-wrap input,.tools select{width:100%;min-width:0;height:44px;font-size:13px}
+  .connection{width:100%;min-width:0;justify-content:flex-start}
+  .stats{grid-template-columns:repeat(2,minmax(0,1fr));gap:7px;margin-bottom:9px}
+  .stat{padding:10px;border-radius:10px}
+  .stat .label{font-size:9px;letter-spacing:.07em}
+  .stat .value{font-size:22px}
+  .content-grid{display:flex;flex-direction:column;gap:10px}
+  .content-grid>.panel:first-child{order:1;width:100%}
+  .content-grid>.stage-status-panel{order:2;width:100%}
+  .content-grid>#driverDetail{order:3;width:100%}
+  .panel,.stage-status-panel{border-radius:12px}
+  .panel-head{padding:12px 11px;gap:8px}
+  .panel-head h2{font-size:11px;letter-spacing:.055em}
+  .panel-head p{font-size:10px;line-height:1.35}
+  .head-actions{gap:5px}
+  .tiny-btn{font-size:10px;padding:7px}
+  .table-scroll{display:none}
+  .mobile-board{display:grid;gap:8px;padding:8px}
+  .mobile-driver-card{display:block;width:100%;text-align:left;padding:12px;border:1px solid #293b49;border-radius:12px;background:linear-gradient(145deg,#111d27,#0a1219);color:var(--text);box-shadow:0 5px 14px #0003}
+  .mobile-driver-card:active{transform:scale(.995)}
+  .mobile-driver-card.selected{border-color:var(--yellow);box-shadow:0 0 0 1px #ffd00055,inset 3px 0 var(--yellow)}
+  .mobile-card-top{display:grid;grid-template-columns:34px minmax(0,1fr) auto;gap:9px;align-items:center}
+  .mobile-rank{display:grid;place-items:center;width:32px;height:34px;border-radius:8px;background:#1a2b3a;border:1px solid #344858;color:#cbd7e1;font-weight:950;font-size:12px}
+  .mobile-rank.top1{color:var(--yellow);border-color:#8b7000}
+  .mobile-driver-main{min-width:0}
+  .mobile-driver-main strong{display:block;font-size:14px;line-height:1.2;overflow-wrap:anywhere}
+  .mobile-driver-main small{display:block;color:var(--muted);font-size:10px;margin-top:4px}
+  .mobile-total{text-align:right;white-space:nowrap}
+  .mobile-total strong{display:block;font-size:22px;line-height:1;color:var(--yellow);font-weight:1000}
+  .mobile-total small{display:block;font-size:8px;color:var(--muted);letter-spacing:.08em;margin-top:4px}
+  .mobile-stage-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px;margin-top:10px}
+  .mobile-stage-chip{min-width:0;padding:8px;border:1px solid #263945;border-radius:8px;background:#0a131d}
+  .mobile-stage-chip .stage-label{display:block;color:#9eabb7;font-size:9px;font-weight:900;letter-spacing:.06em;text-transform:uppercase}
+  .mobile-stage-chip strong{display:block;font-size:12px;line-height:1.25;margin-top:4px;overflow-wrap:anywhere}
+  .mobile-stage-chip small{display:block;color:#aab8c4;font-size:9px;margin-top:3px;overflow-wrap:anywhere}
+  .mobile-stage-chip.finish{border-color:#1e6141;background:#0b2117}
+  .mobile-stage-chip.dnf{border-color:#6b302c;background:#251211}
+  .mobile-stage-chip.pending{border-color:#2a3b49}
+  .mobile-result-line{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-top:10px;padding-top:9px;border-top:1px solid #273746}
+  .mobile-result-main{font-size:18px;font-weight:950;font-variant-numeric:tabular-nums}
+  .mobile-result-sub{color:var(--muted);font-size:10px;margin-top:3px}
+  .detail-hero{grid-template-columns:auto minmax(0,1fr);padding:12px;gap:9px}
+  .detail-number{font-size:16px;padding:9px 10px}
+  .detail-name{font-size:18px}
+  .detail-meta{font-size:10px;line-height:1.4}
+  .detail-total{grid-column:1/-1;text-align:left;display:flex;align-items:baseline;gap:8px}
+  .detail-total strong{font-size:23px}
+  .detail-stats{grid-template-columns:repeat(2,minmax(0,1fr));gap:6px;padding:9px}
+  .mini-stat{padding:9px 7px}
+  .mini-stat span{font-size:8px}
+  .mini-stat strong{font-size:16px}
+  .detail-section{padding:0 9px 10px}
+  .section-title{font-size:10px;flex-wrap:wrap}
+  .performance-row{grid-template-columns:34px minmax(25px,1fr) 30px;gap:6px}
+  .stage-status-panel .panel-head{align-items:flex-start}
+  .stage-status-panel .panel-head .pill{font-size:9px;white-space:nowrap}
+  .stage-status-grid{grid-template-columns:1fr;gap:7px;padding:8px}
+  .stage-status-head{padding:10px}
+  .stage-status-name{font-size:11px}
+  .stage-status-reason{font-size:10px;padding:8px 10px}
+  .pending-list{max-height:none;padding:0 8px 8px}
+  .pending-list li{min-height:38px;font-size:11px;padding:7px}
+  .last-updated{font-size:9px;padding:9px 10px}
+  .brand-footer{padding-top:12px}
+}
+@media(max-width:360px){
+  .tabs{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .mobile-card-top{grid-template-columns:30px minmax(0,1fr) auto;gap:6px}
+  .mobile-driver-main strong{font-size:12px}
+  .mobile-total strong{font-size:19px}
+  .mobile-stage-chip{padding:6px}
+}
+@media(max-width:700px){.detail-table{min-width:640px}.detail-section .table-scroll{border:1px solid #223541;border-radius:8px}}
+@media(prefers-reduced-motion:reduce){.mobile-driver-card:active{transform:none}}
+
+
+/* v27.5.10: mobile stage results collapse by default; desktop keeps details expanded */
+.mobile-driver-card{padding:0;overflow:hidden}
+.mobile-card-select{display:block;width:100%;text-align:left;padding:12px;border:0;border-radius:0;background:transparent;color:inherit}
+.mobile-card-select:focus-visible{outline:2px solid var(--yellow);outline-offset:-3px}
+.mobile-card-stage-details{margin:0 10px 10px;border-top:1px solid #273746;padding-top:8px}
+.mobile-card-stage-details>summary{display:flex;align-items:center;justify-content:space-between;gap:8px;list-style:none;cursor:pointer;padding:6px 2px;color:#cbd8e4;font-size:10px;font-weight:900;text-transform:uppercase;letter-spacing:.05em}
+.mobile-card-stage-details>summary::-webkit-details-marker{display:none}
+.mobile-card-stage-details>summary:after{content:"＋";font-size:15px;color:var(--yellow)}
+.mobile-card-stage-details[open]>summary:after{content:"−"}
+.mobile-card-stage-details .mobile-stage-grid{margin-top:5px}
+.mobile-detail-collapse>summary{display:none}
+.mobile-detail-collapse>.collapse-body{display:block}
+@media(max-width:700px){
+ .mobile-card-stage-details:not([open])>.mobile-stage-grid{display:none}
+ .mobile-detail-collapse>summary{display:flex;align-items:center;justify-content:space-between;gap:8px;list-style:none;cursor:pointer;padding:10px 2px;margin:0;color:#f2f6fa;font-size:11px;font-weight:950;text-transform:uppercase;letter-spacing:.055em;border-top:1px solid #273746}
+ .mobile-detail-collapse>summary::-webkit-details-marker{display:none}
+ .mobile-detail-collapse>summary:after{content:"＋";font-size:16px;color:var(--yellow);flex:0 0 auto}
+ .mobile-detail-collapse[open]>summary:after{content:"−"}
+ .mobile-detail-collapse:not([open])>.collapse-body{display:none}
+ .mobile-detail-collapse>.collapse-body{display:block;padding-bottom:8px}
+ .mobile-detail-collapse .section-title{margin:0}
+ .mobile-stage-chip{padding:7px;min-width:0}
+ .mobile-stage-chip strong{font-size:11px}
+ .mobile-stage-chip small{font-size:8px;line-height:1.3}
+}
+
+
+/* v27.5.27: consistent tactile click feedback across the whole system */
+button,
+input[type="button"],
+input[type="submit"],
+input[type="reset"],
+[role="button"] {
+  transition: transform 110ms ease, filter 110ms ease, box-shadow 110ms ease;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+button:not(:disabled):active,
+input[type="button"]:not(:disabled):active,
+input[type="submit"]:not(:disabled):active,
+input[type="reset"]:not(:disabled):active,
+[role="button"]:active {
+  transform: scale(0.97);
+  filter: brightness(0.92);
+}
+button:focus-visible,
+input[type="button"]:focus-visible,
+input[type="submit"]:focus-visible,
+input[type="reset"]:focus-visible,
+[role="button"]:focus-visible {
+  outline: 3px solid currentColor;
+  outline-offset: 2px;
+}
+@media (prefers-reduced-motion: reduce) {
+  button, input[type="button"], input[type="submit"], input[type="reset"], [role="button"] {
+    transition: none !important;
+  }
+}
+/* v27.6.8 Android touch scrolling: viewport owns vertical scrolling; nested
+   result lists should never trap downward swipes on Android browsers/WebViews. */
+html{height:auto;min-height:100%;overflow-y:auto;overscroll-behavior-y:auto}
+body{height:auto;min-height:100vh;overflow-x:clip;overflow-y:visible;touch-action:auto}
+.table-scroll{max-width:100%;-webkit-overflow-scrolling:touch;touch-action:auto}
+@media(max-width:700px){
+ html{height:auto!important;overflow-x:clip;overflow-y:auto!important;scroll-behavior:auto}
+ body{height:auto!important;min-height:100vh;overflow-x:clip!important;overflow-y:visible!important;touch-action:auto}
+ .shell,.content-grid,.stage-status-panel,.stage-status-grid,#mobileBoard,#driverDetail,.detail{height:auto;max-height:none;overflow-y:visible}
+ .pending-list{max-height:none!important;overflow:visible!important;overscroll-behavior:auto!important;touch-action:pan-y}
+ .mobile-board,.mobile-driver-card,.mobile-card-select,.mobile-card-stage-details>summary,.mobile-detail-collapse>summary{touch-action:pan-y pinch-zoom}
+ /* Mobile leaderboard uses cards, but the opened driver-detail table needs
+    its own HORIZONTAL swipe region; its VERTICAL movement follows the page. */
+ .detail-section .table-scroll{display:block!important;width:100%;max-width:100%;overflow-x:auto!important;overflow-y:hidden!important;-webkit-overflow-scrolling:touch;touch-action:auto}
+ .detail-section .detail-table{min-width:640px}
+}
+</style>
+
+<style id="bs28-css">
+.bs28-section{border:1px solid #45698c!important;background:linear-gradient(155deg,#17243a,#101c30)!important}
+.bs28-section h2{margin:0 0 12px}.bs28-section h3{margin:18px 0 10px;font-size:1.05rem}
+.bs28-coordinator{border:1px solid #396b5c;background:rgba(20,131,99,.12);border-radius:11px;padding:12px;margin:8px 0;font-weight:700}
+.bs28-card-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:10px;margin:12px 0}
+.bs28-stage,.bs28-group{border:1px solid #3d5169;border-radius:12px;background:rgba(255,255,255,.045);padding:14px;display:flex;flex-direction:column;gap:8px}
+.bs28-stage span,.bs28-group small{font-size:.9rem;color:#b7c8df}.bs28-actions{display:flex;gap:8px;flex-wrap:wrap}.bs28-actions button{flex:1;min-height:38px}
+.bs28-stage select,.bs28-section select{width:100%;max-width:100%;margin-top:6px;min-height:42px}
+.bs28-order{margin:8px 0}.bs28-order-row{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px 8px;border-bottom:1px solid #3c4b5d}.bs28-order-row small{color:#bccddd}
+.bs28-m-stage{display:flex;flex-direction:column;gap:5px;border:1px solid #4a5463;background:rgba(255,255,255,.04);border-radius:10px;padding:11px}
+.bs28-m-free{border-color:#3ba980}.bs28-m-stage small{color:#d4e1f2}
+@media(max-width:520px){.bs28-card-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.bs28-stage,.bs28-group{padding:9px}.bs28-section h3{margin-top:14px}.bs28-section button{min-height:42px}}
+</style>
+</head>
+<body>
+<main class="shell">
+  <header class="hero">
+    <div class="hero-copy">
+      <div class="event-kicker">Borneo RC Safari · BS Solo</div>
+      <h1>BS-STYLE POINT <span>RC TIME ATTACK</span></h1>
+      <p class="hero-sub">Points Championship · One device per stage · One attempt · Automatic DNF</p>
+    </div>
+    <div class="event-meta" aria-label="Firebase event information">
+      <div class="meta-chip"><span class="symbol">⌁</span><div><small>FIREBASE EVENT ID</small><strong id="eventMetaId">—</strong></div></div>
+    </div>
+  </header>
+
+  <section class="toolbar" aria-label="Results controls">
+    <nav class="tabs" id="tabs" aria-label="Leaderboard view">
+      <button class="tab active" data-view="overall" aria-pressed="true">Overall</button>
+      <button class="tab" data-view="stage:0" aria-pressed="false">SS1</button>
+      <button class="tab" data-view="stage:1" aria-pressed="false">SS2</button>
+      <button class="tab" data-view="stage:2" aria-pressed="false">SS3</button>
+      <button class="tab" data-view="stage:3" aria-pressed="false">SS4</button>
+    </nav>
+    <div class="tools">
+      <div class="search-wrap"><input id="search" type="search" placeholder="Search driver..." aria-label="Search driver"></div>
+      <select id="statusFilter" aria-label="Filter by status"><option value="all">All status</option><option value="FINISH">FINISH</option><option value="DNF">DNF</option><option value="DNS">DNS</option><option value="PENDING">Pending</option></select>
+      <select id="sortBy" aria-label="Sort results"><option value="points">Sort by points</option><option value="number">Sort by driver number</option><option value="time">Sort by time</option></select>
+    </div>
+    <div class="connection offline" id="connection" role="status" aria-live="polite"><span class="dot"></span><div><strong id="connectionTitle">CONNECTING</strong><small id="connectionDetail">Firebase status</small></div></div>
+  </section>
+
+  <section class="stats" aria-label="Competition summary">
+    <div class="stat"><div class="label">Registered drivers</div><div class="value" id="driverCount">—</div></div>
+    <div class="stat"><div class="label">Completed overall</div><div class="value green" id="completeCount">—</div></div>
+    <div class="stat"><div class="label">Pending drivers</div><div class="value" id="pendingCount">—</div></div>
+    <div class="stat"><div class="label">Stage finishes</div><div class="value yellow" id="stageFinishCount">—</div></div>
+  </section>
+
+  <div id="message" class="error-message hidden" role="alert"></div>
+  <section class="content-grid">
+    <article class="panel">
+      <div class="panel-head"><div><h2 id="tableTitle">Overall points leaderboard</h2><p id="tableSubtitle">Ranked by total net points across configured stages</p></div><div class="head-actions"><span class="pill" id="rowCount">0 drivers</span><button class="tiny-btn" id="refresh" type="button">↻ Refresh</button></div></div>
+      <div class="table-scroll"><table><thead id="tableHead"></thead><tbody id="board"><tr><td class="empty">Waiting for live results…</td></tr></tbody></table></div>
+      <div id="mobileBoard" class="mobile-board" aria-label="Mobile leaderboard"></div>
+      <div class="last-updated"><span id="eventLabel">Event ID: —</span><span id="lastUpdated">Waiting for Firebase data</span></div>
+    </article>
+  <section class="stage-status-panel" aria-labelledby="stageStatusHeading">
+    <div class="panel-head"><div><h2 id="stageStatusHeading">Special Stage Status &amp; Pending Drivers</h2><p>Only stages with a saved draw and locked running order are OPEN. Completed drivers disappear from each pending list.</p></div><span class="pill" id="openStageCount">0 stages open</span></div>
+    <div id="stageStatusGrid" class="stage-status-grid"><div class="empty">Waiting for draw and lock status from Firebase…</div></div>
+  </section>
+    <aside class="panel detail" id="driverDetail" aria-live="polite">
+      <div class="panel-head"><div><h2>Driver performance</h2><p>Tap a driver in the leaderboard to view details</p></div><span class="pill" id="detailStageCount">— stages</span></div>
+      <div id="detailContent" class="empty">Select a driver to see their stage times, penalty deductions, gate progress and points.</div>
+    </aside>
+  </section>
+
+  <p class="footer-caption" style="line-height:1.5;margin:8px 0 12px">Penalty reference: Touch -15 pts | Special Gate -5 pts | Outrack -10 pts | Roll Over -5 pts (crawler stops with all four tyres off the ground) | Jump Gate = DNF.</p>
+  <p class="footer-caption" style="line-height:1.5;margin:8px 0 12px">Penalty reference: Touch -15 pts | Special Gate -5 pts | Outrack -10 pts | Roll Over -5 pts (crawler stops with all four tyres off the ground) | Jump Gate = DNF.</p>
+  <section class="card" aria-label="Group rotation overview"><h2>GROUP ROTATION · LIVE</h2><p class="muted">Stages may be OPEN, CLOSED or CANCELLED. Completed historical records remain viewable.</p><div id="bs28PublicGroups" class="bs28-card-grid"><div class="muted">Waiting for group assignments…</div></div></section>
+<footer>
+    <div class="brand-footer"><img src="logo.svg" alt="TEC-ARTS CRAWLER logo"><div><div class="brand-name">TEC-ARTS CRAWLER</div><small>BORNEO SABAH · CRAWL HARD, COMPETE HARDER</small></div></div>
+    <div class="footer-caption">BS-STYLE POINT RC TIME ATTACK · PUBLIC LIVE RESULTS</div>
+  </footer>
+</main>
+<script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-database-compat.js"></script>
+<script src="firebase-config.js"></script><script src="bs28-core.js"></script>
+<script>
+(()=>{'use strict';
+const $=id=>document.getElementById(id);
+const config=window.RC_FIREBASE_CONFIG||{};
+const requestedEvent=new URLSearchParams(window.location.search).get('event');
+const eventId=requestedEvent&&/^[a-zA-Z0-9-]{1,80}$/.test(requestedEvent)?requestedEvent:(window.RC_EVENT_ID||'bs28-test');
+const defaultCutoffs=[600000,720000,900000,600000];
+let app=null,dbRef=null,connectionRef=null,connected=false,lastDataAt=null,selectedDriverId=null,currentView='overall',mobileExpandedStageDetails=new Set(),data={drivers:{},results:{},dnfRosterCount:null,cutoffs:defaultCutoffs.slice(),gateTotals:[10,10,10,10],penaltyRules:[],penalties:{},lateEntries:{},drawOrders:{},drawLocks:{}};
+const positionPoints=[100,95,90,87,84,81,78,75,72,69,66,63,60,58,56,54,52,50,48,46,45,44,43,42,41,40,39,38,37,36,35,34,33,32,31,30,29,28,27,26];
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const fmt=ms=>{ms=Math.max(0,Math.floor(Number(ms)||0));return String(Math.floor(ms/60000)).padStart(2,'0')+':'+String(Math.floor(ms%60000/1000)).padStart(2,'0')+'.'+String(Math.floor(ms%1000/10)).padStart(2,'0')};
+const pointsForPlace=place=>positionPoints[Math.max(0,Number(place)-1)]??26;
+function numericArray(value,fallback){if(Array.isArray(value))return value.slice();if(value&&typeof value==='object')return Object.keys(value).sort((a,b)=>Number(a)-Number(b)).map(k=>value[k]);return fallback.slice()}
+function normalizeData(value){const d=value&&typeof value==='object'?value:{};const cutoffs=numericArray(d.cutoffs,defaultCutoffs);const cleanCutoffs=cutoffs.length?cutoffs:defaultCutoffs.slice();const gates=numericArray(d.gateTotals,cleanCutoffs.map(()=>10));const drivers=d.drivers&&typeof d.drivers==='object'?d.drivers:{};const rawOrders=d.drawOrders&&typeof d.drawOrders==='object'?d.drawOrders:{};const drawOrders={};const drawLocks={};for(let s=0;s<cleanCutoffs.length;s++){const raw=rawOrders[s];const list=Array.isArray(raw)?raw:(raw&&typeof raw==='object'?Object.keys(raw).sort((a,b)=>Number(a)-Number(b)).map(k=>raw[k]):[]);drawOrders[s]=[...new Set(list.map(String).filter(id=>!!drivers[id]))];drawLocks[s]=d.drawLocks?.[s]===true}const results=d.results&&typeof d.results==='object'?d.results:{};const savedRosterCount=Number(d.dnfRosterCount);const dnfRosterCount=Number.isInteger(savedRosterCount)&&savedRosterCount>0?savedRosterCount:null;return {drivers,results,dnfRosterCount,cutoffs:cleanCutoffs,gateTotals:cleanCutoffs.map((_,i)=>{const n=Number(gates[i]);return Number.isInteger(n)&&n>0&&n<=999?n:10}),penaltyRules:Array.isArray(d.penaltyRules)?d.penaltyRules:(d.penaltyRules&&typeof d.penaltyRules==='object'?Object.values(d.penaltyRules):[]),penalties:d.penalties&&typeof d.penalties==='object'?d.penalties:{},lateEntries:d.lateEntries&&typeof d.lateEntries==='object'?d.lateEntries:{},drawOrders,drawLocks,groupRotationV28:d.groupRotationV28||null}}
+const result=(id,s)=>data.results?.[id]?.[s]||null;
+const gateTotalForStage=s=>{const n=Number(data.gateTotals?.[s]);return Number.isInteger(n)&&n>=1&&n<=999?n:10};
+const penaltyItems=(id,s)=>{const v=data.penalties?.[id]?.[s];return Array.isArray(v)?v:(v&&typeof v==='object'?Object.values(v):[])};
+function legacyPenaltyPoints(name,legacyValue){const n=String(name||'').trim().toLowerCase();if(/jump\s*gate/.test(n))return 0;if(/touch/.test(n))return 15;if(/outrack|out\s*track|off[\s-]*track/.test(n))return 10;if(/gate/.test(n)||/roll[\s-]?over|rollover/.test(n))return 5;return Math.max(0,Math.round(Math.abs(Number(legacyValue)||0)))}
+function penaltyTotal(id,s){return penaltyItems(id,s).reduce((sum,p)=>sum+(Number.isFinite(Number(p.points))?Math.max(0,Number(p.points)):legacyPenaltyPoints(p.name,p.seconds))*(Number(p.count)||1),0)}
+const rawTime=(id,s,r=result(id,s))=>r?.status==='finish'?Math.max(0,Number(r.ms)||0):null;
+function dnfBase(){const frozen=Number(data.dnfRosterCount);const registered=Number.isInteger(frozen)&&frozen>0?frozen:Object.keys(data.drivers).length;return registered?Math.max(20,pointsForPlace(registered)-20):20}
+function dnfProgress(r,s){const total=Math.max(1,Number(r?.totalGates)||gateTotalForStage(s));const raw=r?.gatesCleared;if(raw===undefined||raw===null||raw==='')return dnfBase();const cleared=Math.min(total,Math.max(0,Math.floor(Number(raw)||0)));return Math.round(dnfBase()*cleared/total)}
+function gateOneFloor(s){return Math.round(dnfBase()/gateTotalForStage(s))}
+function stagePoints(id,s){const r=result(id,s);if(!r)return null;if(r.status==='dns')return 0;const deduction=penaltyTotal(id,s),floor=gateOneFloor(s);if(r.status==='dnf')return Math.max(floor,dnfProgress(r,s)-deduction);if(r.status!=='finish')return null;const mine=rawTime(id,s,r);const faster=Object.keys(data.drivers).filter(other=>other!==id&&result(other,s)?.status==='finish'&&rawTime(other,s,result(other,s))<mine).length;return Math.max(floor,pointsForPlace(faster+1)-deduction)}
+function resultStatusPriority(r){return r?.status==='finish'?3:r?.status==='dnf'?2:r?.status==='dns'?1:0}
+function bs28ScoreStage(s){const p=data.groupRotationV28;return !p?.enabled||!!(p.stages?.["SS"+(s+1)]?.included&&!p.stages["SS"+(s+1)].cancelled)}
+function totalPoints(id){return data.cutoffs.reduce((sum,_,s)=>sum+(bs28ScoreStage(s)?stagePoints(id,s)??0:0),0)}
+function recordedCount(id){return data.cutoffs.reduce((n,_,s)=>n+(bs28ScoreStage(s)&&result(id,s)?1:0),0)}
+function finishStageCount(id){return data.cutoffs.reduce((n,_,s)=>n+(bs28ScoreStage(s)&&result(id,s)?.status==='finish'?1:0),0)}
+function totalRawTime(id){return data.cutoffs.reduce((sum,_,s)=>sum+(bs28ScoreStage(s)&&result(id,s)?.status==='finish'?(rawTime(id,s)||0):0),0)}
+function overallStatus(id){return data.cutoffs.some((_,s)=>bs28ScoreStage(s))&&data.cutoffs.every((_,s)=>!bs28ScoreStage(s)||!!result(id,s))?'FINISH':'PENDING'}
+function statusClass(status){return status==='FINISH'?'status-finish':status==='DNF'?'status-dnf':status==='DNS'?'status-dns':'status-pending'}
+function statusBadge(status){return `<span class="status-badge ${statusClass(status)}">${status==='FINISH'?'⚑ ':status==='DNF'?'✕ ':status==='DNS'?'— ':''}${esc(status)}</span>`}
+function stageProgress(r,s){if(!r)return '—';if(r.status==='dnf'){const total=Number(r.totalGates)||gateTotalForStage(s);return `${r.gatesCleared===undefined||r.gatesCleared===null?'?':r.gatesCleared}/${total} gates`}if(r.status==='dns')return 'Did not start';return fmt(rawTime('',s,r))}
+function driversSorted(){return Object.entries(data.drivers).sort((a,b)=>String(a[1]?.num??'').localeCompare(String(b[1]?.num??''),undefined,{numeric:true})||String(a[1]?.name??'').localeCompare(String(b[1]?.name??'')))}
+function allDriverRecords(){return driversSorted().map(([id,d])=>({id,d,total:totalPoints(id),last:stagePoints(id,data.cutoffs.length-1)??-1,recorded:recordedCount(id),finishes:finishStageCount(id),time:totalRawTime(id),status:overallStatus(id)}))}
+function getFilteredRows(){const q=$('search').value.trim().toLowerCase(),filter=$('statusFilter').value,sort=$('sortBy').value;let rows=allDriverRecords().filter(r=>{const searchable=(`#${r.d.num||''} ${r.d.name||''}`).toLowerCase();if(q&&!searchable.includes(q))return false;if(currentView==='overall'){if(filter==='FINISH'&&r.status!=='FINISH')return false;if(filter==='PENDING'&&r.status!=='PENDING')return false;if(filter==='DNF'&&!data.cutoffs.some((_,s)=>result(r.id,s)?.status==='dnf'))return false;if(filter==='DNS'&&!data.cutoffs.some((_,s)=>result(r.id,s)?.status==='dns'))return false}else{const s=Number(currentView.split(':')[1]),rr=result(r.id,s),stageStatus=rr?String(rr.status||'').toUpperCase():'PENDING';if(filter!=='all'&&stageStatus!==filter)return false}return true});
+ if(currentView==='overall'){rows.sort((a,b)=>sort==='number'?String(a.d.num).localeCompare(String(b.d.num),undefined,{numeric:true}):sort==='time'?a.time-b.time||b.total-a.total:b.total-a.total||b.finishes-a.finishes||b.last-a.last||a.time-b.time||String(a.d.num).localeCompare(String(b.d.num),undefined,{numeric:true}))}
+ else{const s=Number(currentView.split(':')[1]);rows.sort((a,b)=>{if(sort==='number')return String(a.d.num).localeCompare(String(b.d.num),undefined,{numeric:true});if(sort==='time'){const at=rawTime(a.id,s),bt=rawTime(b.id,s);return (at===null?Infinity:at)-(bt===null?Infinity:bt)}const ap=stagePoints(a.id,s),bp=stagePoints(b.id,s);return (bp??-1)-(ap??-1)||resultStatusPriority(result(b.id,s))-resultStatusPriority(result(a.id,s))||((rawTime(a.id,s)??Infinity)-(rawTime(b.id,s)??Infinity))||String(a.d.num).localeCompare(String(b.d.num),undefined,{numeric:true})})}
+ return rows}
+function tableHeader(){if(currentView==='overall'){return `<tr><th>#</th><th>Driver</th>${data.cutoffs.map((_,s)=>`<th>SS${s+1}</th>`).join('')}<th>Total</th><th>Status</th></tr>`}const s=Number(currentView.split(':')[1]);return `<tr><th>#</th><th>Driver</th><th>Result / time</th><th>Gates</th><th>Penalty</th><th>Net points</th><th>Status</th></tr>`}
+function stageCell(id,s){const r=result(id,s);if(!r)return `<td><span class="neutral">—</span><span class="subcell">Pending</span></td>`;const pts=stagePoints(id,s),pen=penaltyTotal(id,s);if(r.status==='dnf')return `<td><span class="stage-cell-main error">DNF</span><span class="stage-cell-sub">${esc(stageProgress(r,s))}</span><span class="stage-cell-sub">${pts} pts</span></td>`;if(r.status==='dns')return `<td><span class="stage-cell-main">DNS</span><span class="stage-cell-sub">0 pts</span></td>`;return `<td><span class="stage-cell-main">${fmt(rawTime(id,s,r))}</span><span class="stage-cell-sub">${pts} pts${pen?` · <span class="deduction">−${pen}</span>`:''}</span></td>`}
+function renderMobileBoard(rows){
+ const host=$('mobileBoard');if(!host)return;
+ if(!rows.length){host.innerHTML=`<div class="empty">${Object.keys(data.drivers).length?'No drivers match the selected search/filter.':'No drivers registered for this event yet.'}</div>`;return}
+ host.innerHTML=rows.map((r,i)=>{
+  const rankClass=i===0?'top1':i===1?'top2':i===2?'top3':'';
+  const late=data.lateEntries?.[r.id]?'<span class="late-entry-badge">LATE ENTRY</span>':'';
+  if(currentView==='overall'){
+   const chips=data.cutoffs.map((_,s)=>{
+    const rr=result(r.id,s),pts=stagePoints(r.id,s),pen=penaltyTotal(r.id,s);let cls='pending',main='PENDING',sub=pts===null?'No result':pts+' pts';
+    if(rr?.status==='finish'){cls='finish';main=fmt(rawTime(r.id,s,rr));sub=(pts===null?'—':pts+' pts')+(pen?' · −'+pen:'')}
+    else if(rr?.status==='dnf'){cls='dnf';main='DNF';sub=stageProgress(rr,s)+' · '+(pts===null?'—':pts+' pts')+(pen?' · −'+pen:'')}
+    else if(rr?.status==='dns'){cls='dnf';main='DNS';sub=(pts===null?'0':pts)+' pts'}
+    return `<div class="mobile-stage-chip ${cls}"><span class="stage-label">SS${s+1}</span><strong>${esc(main)}</strong><small>${esc(sub)}</small></div>`
+   }).join('');
+   const isOpen=mobileExpandedStageDetails.has(r.id);
+   return `<article class="mobile-driver-card ${selectedDriverId===r.id?'selected':''}"><button type="button" class="mobile-card-select" data-driver-id="${esc(r.id)}" aria-label="View ${esc(r.d.name||'driver')} performance"><div class="mobile-card-top"><span class="mobile-rank ${rankClass}">${i+1}</span><span class="mobile-driver-main"><strong>${esc(r.d.name||'Unnamed driver')} ${late}</strong><small>${esc(r.status)} overall · ${r.recorded}/${data.cutoffs.length} stages recorded</small></span><span class="mobile-total"><strong>${r.total}</strong><small>TOTAL PTS</small></span></div></button><details class="mobile-card-stage-details" data-mobile-stage-details-id="${esc(r.id)}" ${isOpen?'open':''}><summary>Stage results <span>${r.recorded}/${data.cutoffs.length} recorded</span></summary><div class="mobile-stage-grid">${chips}</div></details></article>`
+  }
+  const st=Number(currentView.split(':')[1]),rr=result(r.id,st),pen=penaltyTotal(r.id,st),pts=stagePoints(r.id,st);let main='PENDING',sub='Awaiting result';
+  if(rr?.status==='finish'){main=fmt(rawTime(r.id,st,rr));sub='FINISH'}else if(rr?.status==='dnf'){main='DNF';sub=stageProgress(rr,st)}else if(rr?.status==='dns'){main='DNS';sub='Did not start'}
+  return `<article class="mobile-driver-card ${selectedDriverId===r.id?'selected':''}"><button type="button" class="mobile-card-select" data-driver-id="${esc(r.id)}" aria-label="View ${esc(r.d.name||'driver')} performance"><div class="mobile-card-top"><span class="mobile-rank ${rankClass}">${i+1}</span><span class="mobile-driver-main"><strong>${esc(r.d.name||'Unnamed driver')} ${late}</strong><small>${esc(r.status)} overall · ${r.recorded}/${data.cutoffs.length} stages recorded</small></span><span class="mobile-total"><strong>${pts===null?'—':pts}</strong><small>SS${st+1} PTS</small></span></div><div class="mobile-result-line"><div><div class="mobile-result-main">${esc(main)}</div><div class="mobile-result-sub">${esc(sub)}${pen?' · penalty −'+pen+' pts':''}</div></div>${statusBadge(rr?String(rr.status).toUpperCase():'PENDING')}</div></button></article>`
+ }).join('');
+ host.querySelectorAll('details[data-mobile-stage-details-id]').forEach(el=>el.addEventListener('toggle',()=>{const id=el.dataset.mobileStageDetailsId;if(!id)return;if(el.open)mobileExpandedStageDetails.add(id);else mobileExpandedStageDetails.delete(id)}));
+}
+function renderTable(){const rows=getFilteredRows();$('tableHead').innerHTML=tableHeader();$('rowCount').textContent=`${rows.length} / ${Object.keys(data.drivers).length} drivers`;$('tableTitle').textContent=currentView==='overall'?'Overall points leaderboard':`SS${Number(currentView.split(':')[1])+1} stage results`;$('tableSubtitle').textContent=currentView==='overall'?'Highest total net points ranks first':'Ranked by net stage points; FINISH wins ties';$('sortBy').options[0].textContent=currentView==='overall'?'Sort by total points':'Sort by net points';
+ if(!rows.length){$('board').innerHTML=`<tr><td class="empty" colspan="${currentView==='overall'?data.cutoffs.length+4:7}">${Object.keys(data.drivers).length?'No drivers match the selected search/filter.':'No drivers registered for this event yet.'}</td></tr>`;renderMobileBoard([]);return}
+ $('board').innerHTML=rows.map((r,i)=>{const rankClass=i===0?'top1':i===1?'top2':i===2?'top3':'';let cells='';if(currentView==='overall'){cells=data.cutoffs.map((_,s)=>stageCell(r.id,s)).join('')+`<td><span class="points">${r.total}</span></td><td>${statusBadge(r.status)}</td>`}else{const s=Number(currentView.split(':')[1]),rr=result(r.id,s),pen=penaltyTotal(r.id,s),pts=stagePoints(r.id,s);cells=`<td>${rr?rr.status==='finish'?`<span class="stage-cell-main">${fmt(rawTime(r.id,s,rr))}</span>`:`<span class="stage-cell-main">${esc(String(rr.status).toUpperCase())}</span>`:'<span class="neutral">—</span>'}</td><td>${rr?.status==='dnf'?esc(stageProgress(rr,s)):'—'}</td><td class="${pen?'deduction':'neutral'}">${pen?'−'+pen:'0'}</td><td><span class="points">${pts===null?'—':pts}</span></td><td>${statusBadge(rr?String(rr.status).toUpperCase():'PENDING')}</td>`}return `<tr data-driver-id="${esc(r.id)}" tabindex="0" role="button" aria-label="View ${esc(r.d.name)} performance" class="${selectedDriverId===r.id?'selected':''}"><td class="rank ${rankClass}">${i+1}</td><td><div class="driver-cell"><div><span class="driver-name">${esc(r.d.name||'Unnamed driver')}</span>${data.lateEntries?.[r.id]?`<span class="late-entry-badge">LATE ENTRY · SS${Number(data.lateEntries[r.id].targetStage)+1}</span>`:''}</div></div></td>${cells}</tr>`}).join('');renderMobileBoard(rows)}
+function renderDriverDetail(){const oldPoints=$('detailContent').querySelector('.stage-points-collapse');const oldDetails=$('detailContent').querySelector('.stage-details-collapse');const previousPointsOpen=oldPoints?oldPoints.open:undefined;const previousDetailsOpen=oldDetails?oldDetails.open:undefined;const rows=allDriverRecords();if(!rows.length){$('detailStageCount').textContent='No drivers';$('detailContent').className='empty';$('detailContent').textContent='Driver details will appear after drivers are registered in Race Control.';return}const overallRows=rows.slice().sort((a,b)=>b.total-a.total||b.finishes-a.finishes||b.last-a.last||a.time-b.time||String(a.d.num).localeCompare(String(b.d.num),undefined,{numeric:true}));let r=overallRows.find(x=>x.id===selectedDriverId);if(!r){r=overallRows[0];selectedDriverId=r.id}const d=r.d;const overallRank=Math.max(1,overallRows.findIndex(x=>x.id===r.id)+1);$('detailStageCount').textContent=`${r.recorded}/${data.cutoffs.length} recorded`;
+ const maxPts=Math.max(1,...data.cutoffs.map((_,s)=>stagePoints(r.id,s)||0));const bars=data.cutoffs.map((_,s)=>{const pts=stagePoints(r.id,s)||0;return `<div class="performance-row"><span class="stage-name">SS${s+1}</span><div class="bar-track"><div class="bar-fill" style="width:${Math.max(0,Math.min(100,pts/maxPts*100))}%"></div></div><span class="bar-value">${pts}</span></div>`}).join('');
+ const details=data.cutoffs.map((_,s)=>{const rr=result(r.id,s),pen=penaltyTotal(r.id,s),pts=stagePoints(r.id,s);const time=rr?.status==='finish'?fmt(rawTime(r.id,s,rr)):rr?.status==='dnf'?stageProgress(rr,s):rr?.status==='dns'?'DNS':'—';return `<tr><td><strong>SS${s+1}</strong></td><td>${esc(time)}</td><td class="${pen?'deduction':'neutral'}">${pen?'−'+pen:'0'}</td><td class="num"><strong style="color:var(--yellow)">${pts===null?'—':pts}</strong></td><td>${statusBadge(rr?String(rr.status).toUpperCase():'PENDING')}</td></tr>`}).join('');
+ $('detailContent').className='';$('detailContent').innerHTML=`<div class="detail-hero"><div class="detail-number">#${overallRank}</div><div><div class="detail-name">${esc(d.name||'Unnamed driver')}</div><div class="detail-meta">Race #${esc(d.num||'—')} · BS-STYLE POINT RC TIME ATTACK · ${esc(r.status)} overall${data.lateEntries?.[r.id]?' · LATE ENTRY SS'+(Number(data.lateEntries[r.id].targetStage)+1):''}</div></div><div class="detail-total"><strong>${r.total}</strong><small>Total points</small></div></div><div class="detail-stats"><div class="mini-stat"><span>Total points</span><strong>${r.total}</strong></div><div class="mini-stat"><span>Stage finishes</span><strong>${r.finishes}/${data.cutoffs.length}</strong></div><div class="mini-stat"><span>Results saved</span><strong>${r.recorded}/${data.cutoffs.length}</strong></div><div class="mini-stat"><span>Overall status</span><strong style="font-size:12px;color:${r.status==='FINISH'?'var(--green)':'var(--muted)'}">${r.status}</strong></div></div><details class="detail-section mobile-detail-collapse stage-points-collapse"><summary><span>Stage points</span><span class="muted" style="font-size:9px;font-weight:600;letter-spacing:0;text-transform:none">Net points after deductions</span></summary><div class="collapse-body"><div class="performance">${bars}</div></div></details><details class="detail-section mobile-detail-collapse stage-details-collapse"><summary><span>Stage details</span><span class="muted" style="font-size:9px;font-weight:600;letter-spacing:0;text-transform:none">Raw time / gate progress</span></summary><div class="collapse-body"><div class="table-scroll"><table class="detail-table"><thead><tr><th>Stage</th><th>Time / progress</th><th>Penalty</th><th class="num">Points</th><th>Status</th></tr></thead><tbody>${details}</tbody></table></div></div></details>`;
+ const newPoints=$('detailContent').querySelector('.stage-points-collapse');const newDetails=$('detailContent').querySelector('.stage-details-collapse');if(previousPointsOpen!==undefined&&newPoints)newPoints.open=previousPointsOpen;if(previousDetailsOpen!==undefined&&newDetails)newDetails.open=previousDetailsOpen;}
+function stageHasSavedResult(s){return Object.keys(data.drivers||{}).some(id=>!!result(id,s))}
+function drawStateForStage(s){if(data.groupRotationV28?.enabled){const p=data.groupRotationV28,st='SS'+(s+1),v=p.stages?.[st],groups=Object.entries(p.groups||{}).filter(([,g])=>g.currentStage===st),orders=groups.flatMap(([g])=>p.orders?.[g]?.[st]?.order||[]);return {order:orders,hasDraw:!!orders.length,current:true,locked:true,open:!!(v?.included&&!v.cancelled),reason:v?.cancelled?'CANCELLED · excluded from official scoring':!v?.open?'CLOSED · no new groups allowed':'OPEN for group racing'};}const registered=Object.keys(data.drivers||{}).map(String);const order=Array.isArray(data.drawOrders?.[s])?data.drawOrders[s].map(String):[];const unique=[...new Set(order.filter(id=>!!data.drivers[id]))];const hasDraw=unique.length>0;const current=hasDraw&&unique.length===registered.length&&registered.every(id=>unique.includes(id));const locked=data.drawLocks?.[s]===true||stageHasSavedResult(s);const open=hasDraw&&current&&locked;let reason='';if(!hasDraw)reason='CLOSED · draw has not been made yet.';else if(!current)reason='CLOSED · draw does not match the current driver list. Organiser must redraw and lock it.';else if(!locked)reason='CLOSED · draw is ready but the organiser has not locked it.';else reason='OPEN · draw is complete and locked.';return {order:unique,hasDraw,current,locked,open,reason}}
+function pendingDriversForStage(s){const state=drawStateForStage(s);if(!state.open)return [];return state.order.map((id,index)=>({id,d:data.drivers[id],position:index+1})).filter(x=>!!x.d&&!result(x.id,s))}
+function renderStageStatus(){const host=$('stageStatusGrid');if(!host)return;const count=Math.max(4,data.cutoffs.length);let openCount=0;const cards=[];for(let s=0;s<count;s++){if(s>=data.cutoffs.length){cards.push(`<article class="stage-status-card closed"><div class="stage-status-head"><span class="stage-status-name">SS${s+1}</span><span class="stage-state closed">CLOSED</span></div><div class="stage-status-reason">This stage is not configured in the current event.</div></article>`);continue}const state=drawStateForStage(s);if(state.open)openCount++;const pending=pendingDriversForStage(s);const status=state.open?'OPEN':'CLOSED';let list='';if(state.open){list=pending.length?`<ol class="pending-list">${pending.map(({d},i)=>`<li><span class="pending-position">${i+1}</span><span class="pending-driver">#${esc(d.num||'—')} · ${esc(d.name||'Unnamed driver')}</span></li>`).join('')}</ol>`:`<div class="pending-empty">✓ All drivers have a saved result for SS${s+1}.</div>`}cards.push(`<article class="stage-status-card ${state.open?'open':'closed'}"><div class="stage-status-head"><span class="stage-status-name">SS${s+1} · ${gateTotalForStage(s)} GATES</span><span class="stage-state ${state.open?'open':'closed'}">${status}</span></div><div class="stage-status-reason">${esc(state.reason)}${state.open?` ${pending.length} pending driver${pending.length===1?'':'s'}.`:''}</div>${list}</article>`)}host.innerHTML=cards.join('');$('openStageCount').textContent=openCount+' stage'+(openCount===1?'':'s')+' open'}
+function renderTabs(){const count=Math.max(4,data.cutoffs.length);if(currentView.startsWith('stage:')){const s=Number(currentView.split(':')[1]);if(!Number.isInteger(s)||s>=data.cutoffs.length||!drawStateForStage(s).open)currentView='overall'}const views=[['overall','Overall',true],...Array.from({length:count},(_,s)=>{const state=s<data.cutoffs.length?drawStateForStage(s):{open:false};return [`stage:${s}`,`SS${s+1} · ${state.open?'OPEN':'CLOSED'}`,!!state.open]})];$('tabs').innerHTML=views.map(([view,label,enabled])=>`<button class="tab ${currentView===view?'active':''}" data-view="${view}" aria-pressed="${currentView===view?'true':'false'}" ${enabled?'':'disabled title="This stage is closed until its draw is complete and locked."'}>${label}</button>`).join('')}
+function renderSummary(){const rows=allDriverRecords();$('driverCount').textContent=rows.length;$('completeCount').textContent=rows.filter(r=>r.status==='FINISH').length;$('pendingCount').textContent=rows.filter(r=>r.status==='PENDING').length;$('stageFinishCount').textContent=rows.reduce((sum,r)=>sum+r.finishes,0);$('eventLabel').textContent='EVENT ID · '+eventId;$('eventMetaId').textContent=eventId;$('lastUpdated').textContent=lastDataAt?'Last data update · '+lastDataAt.toLocaleTimeString([], {hour:'2-digit',minute:'2-digit',second:'2-digit'}):'Waiting for Firebase data'}
+
+function bs28RenderPublic(){
+ const host=$('bs28PublicGroups');if(!host)return;
+ const p=data.groupRotationV28;if(!p?.enabled){host.textContent='Group race has not started.';return}
+ host.innerHTML=Object.entries(p.groups||{}).filter(([,g])=>g.type!=='CATCHUP').map(([gid,g])=>{
+  const st=g.currentStage,ids=Object.keys(g.members||{}).filter(id=>g.members[id]),done=st?ids.filter(id=>!!result(id,BS28.stageIndex(st))).length:0,
+  order=p.orders?.[gid]?.[st]?.order||[],name=id=>{const d=data.drivers[id]||{};return '#'+esc(d.num||'?')+' '+esc(d.name||id)},
+  upcoming=order.filter(id=>ids.includes(id)&&!result(id,BS28.stageIndex(st))).map(name);
+  return `<div class="bs28-group"><strong>GROUP ${esc(gid)} · ${esc(g.status||'WAITING')}</strong><div>${st?esc(st)+' · '+done+'/'+ids.length+' SAVED':'Awaiting marshal selection'}</div><small>Completed: ${Object.entries(g.completedStages||{}).filter(([s,x])=>x).map(([s])=>s).join(', ')||'None'}</small><small>${upcoming.length?'NEXT · '+upcoming.join(' / '):'No remaining drivers at this stage'}</small></div>`;
+ }).join('');
+}
+
+function render(){renderTabs();renderSummary();renderStageStatus();renderTable();renderDriverDetail();bs28RenderPublic()}
+function setConnection(state,detail){const el=$('connection');el.classList.toggle('online',state==='online');el.classList.toggle('offline',state!=='online');$('connectionTitle').textContent=state==='online'?'ONLINE':state==='connecting'?'CONNECTING':state==='error'?'ERROR':'OFFLINE';$('connectionDetail').textContent=detail|| (state==='online'?'Firebase connected':'Live updates unavailable')}
+function showMessage(text){$('message').textContent=text;$('message').classList.remove('hidden')}
+$('tabs').addEventListener('click',e=>{const b=e.target.closest('[data-view]');if(!b||b.disabled)return;currentView=b.dataset.view;renderTable();renderTabs();renderStageStatus()});
+$('search').addEventListener('input',renderTable);$('statusFilter').addEventListener('change',renderTable);$('sortBy').addEventListener('change',renderTable);
+$('board').addEventListener('click',e=>{const tr=e.target.closest('tr[data-driver-id]');if(!tr)return;selectedDriverId=tr.dataset.driverId;renderTable();renderDriverDetail()});$('mobileBoard').addEventListener('click',e=>{const card=e.target.closest('[data-driver-id]');if(!card)return;selectedDriverId=card.dataset.driverId;renderTable();renderDriverDetail()});$('mobileBoard').addEventListener('keydown',e=>{if(e.key!=='Enter'&&e.key!==' ')return;const card=e.target.closest('[data-driver-id]');if(!card)return;e.preventDefault();selectedDriverId=card.dataset.driverId;renderTable();renderDriverDetail()});
+$('board').addEventListener('keydown',e=>{if(e.key!=='Enter'&&e.key!==' ')return;const tr=e.target.closest('tr[data-driver-id]');if(!tr)return;e.preventDefault();selectedDriverId=tr.dataset.driverId;renderTable();renderDriverDetail()});
+$('refresh').addEventListener('click',()=>{if(!dbRef){showMessage('Firebase is not configured. Check that firebase-config.js is present in the repository root.');return}setConnection('connecting','Refreshing event data…');dbRef.once('value').then(s=>{if(s.exists()){data=normalizeData(s.val());lastDataAt=new Date();render();setConnection(connected?'online':'offline',connected?'Live updates enabled':'Data refreshed; currently offline')}else{$('board').innerHTML=`<tr><td class="empty" colspan="8">No event data found for Event ID ${esc(eventId)}.</td></tr>`;setConnection('offline','Event not initialized')}}).catch(e=>{setConnection('error','Database read failed');showMessage(e.message+' Check Firebase Realtime Database rules.')})});
+window.addEventListener('online',()=>setConnection(connected?'online':'connecting',connected?'Firebase connected':'Network restored; checking Firebase…'));window.addEventListener('offline',()=>setConnection('offline','Device network is offline'));
+if(!config.apiKey||!config.authDomain||!config.databaseURL||!config.projectId){setConnection('error','Firebase config missing');showMessage('Firebase configuration is missing. Keep firebase-config.js beside results.html in the GitHub repository root.');$('board').innerHTML='<tr><td class="empty" colspan="8">Cannot load results until Firebase is configured.</td></tr>';renderSummary()}else{try{app=firebase.initializeApp(config,'bs28-test-public-results-'+Math.random().toString(36).slice(2,8));dbRef=app.database().ref('events/'+eventId);connectionRef=app.database().ref('.info/connected');connectionRef.on('value',snap=>{connected=snap.val()===true;setConnection(connected?'online':'offline',connected?'Firebase connected · live updates enabled':'Firebase disconnected · waiting to reconnect')});dbRef.on('value',snap=>{if(snap.exists()){data=normalizeData(snap.val());lastDataAt=new Date();$('message').classList.add('hidden');render()}else{data=normalizeData(null);render();showMessage('No data exists for Event ID “'+eventId+'” yet. Connect Race Control to the same Firebase project and Event ID to initialize this event.');lastDataAt=null;renderSummary()}},e=>{setConnection('error','Database access denied');showMessage(e.message+' Check the Firebase Realtime Database rules and confirm that the public results page can read /events/'+eventId+'.')});setConnection('connecting','Connecting to Firebase…')}catch(e){setConnection('error','Firebase initialization failed');showMessage(e.message)}}
+})();
+</script>
+</body>
+</html>
