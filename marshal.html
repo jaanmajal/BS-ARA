@@ -1511,9 +1511,37 @@ function bs28SyncOptions(select,options,value){
  if(select.value!==value)select.value=value;
 }
 
+// A prior stage lock can survive locally after an online result was saved.
+// Reconcile it ONLY against the exact Firebase-saved runId. This prevents
+// a stale device flag from blocking the next group's SS selection.
+let bs28LockCheckBusy=false,bs28LastLockCheck=0;
+function bs28CheckSavedLocalLock(){
+ if(bs28LockCheckBusy||!localStageLock||!marshalLinkMode||!online||!connectedToServer||
+    running||pendingRun||savingResult||!app||!auth?.currentUser)return;
+ if(Date.now()-bs28LastLockCheck<6000)return;
+ bs28LastLockCheck=Date.now();bs28LockCheckBusy=true;
+ const old={...localStageLock},eid=activeEventId(),si=bs28Core.stageIndex(old.stage);
+ (async()=>{
+  if(si<0||old.eventId!==eid||!old.runId||!old.driverId)return;
+  const saved=(await app.database().ref('events/'+eid+'/results/'+old.driverId+'/'+si).once('value')).val();
+  if(!bs28Core.statusFor(saved)||String(saved.runId||'')!==String(old.runId))return;
+  const lockRef=app.database().ref('stageLocks/'+eid+'/'+old.stage);
+  const remote=(await lockRef.once('value')).val();
+  if(remote&&String(remote.runId||'')===String(old.runId)&&String(remote.authUid||'')===String(auth.currentUser.uid)){
+    await releaseStageLockAfterConfirmedSave(old.driverId,si);
+  }else if(!remote||String(remote.runId||'')!==String(old.runId)){
+    // No longer owns that run; only clear this device's stale lock marker.
+    if(localStageLock?.runId===old.runId){localStageLock=null;localStorage.removeItem(stageLockLocalKey(eid))}
+  }
+ })().catch(e=>console.warn('BS28: local saved-run reconciliation deferred',e)).finally(()=>{
+  bs28LockCheckBusy=false;
+  if(!localStageLock)bs28RenderMarshal();
+ });
+}
 function bs28RenderMarshal(){
  const panel=$('bs28MarshalPanel');if(!panel)return;
  const plan=bs28Plan();panel.style.display='block';
+ bs28CheckSavedLocalLock();
  if(!plan?.enabled){
   bs28StopListeners();
   $('bs28MarshalHeading').textContent='GROUP ROTATION · NOT STARTED';
@@ -1615,9 +1643,9 @@ function bs28RenderMarshal(){
  else if(busy)status.textContent='SAVE the current run, release its stage lock, and finish pending uploads first.';
  else if(ownRequestWaiting)status.textContent='REQUEST SENT · Waiting for Main Control to confirm assignment and save the fresh draw.';
  else if(!readyGroups.length)status.textContent=verifyingGroups.length?
-  'Results saved. Main Control must confirm completion and release the previous stage before this group becomes AVAILABLE.':
+  'All results saved; waiting for Main Control to verify/release the last run lock. Ask organiser to check the previous SS if this persists.':
   'No group ready to move. Groups appear here automatically after their current SS is completed and confirmed.';
- else if(!available.length)status.textContent='No OPEN and FREE SS remains for '+bs28GroupName(selectedGroupId)+'. Wait for another stage to open.';
+ else if(!available.length)status.textContent='No OPEN and FREE SS for '+bs28GroupName(selectedGroupId)+'. Check for CLOSED, BUSY or old run locks in the stage cards. Ask Main Control to reopen or safely release a completed run.';
  else if(!destSelect.value)status.textContent='Select the AVAILABLE SS, then press CONFIRM NEXT SS & AUTO DRAW.';
  else status.textContent='Ready to request '+bs28GroupName(selectedGroupId)+' → '+destSelect.value+'. The timer stays STOPPED until START.';
 
