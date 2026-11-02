@@ -2,6 +2,14 @@
 
 **NEW SYSTEM ONLY.** Do not upload this package over v27. It uses a new GitHub repository, Firebase project, and browser-storage namespace. No migration of `bs1` is included or required.
 
+## Current Firebase connection status (BS-ARA)
+- **Web App project configured:** `bs-ara-v28`, with the supplied Web App API key, Auth domain, Messaging Sender ID, Storage Bucket, App ID, and Measurement ID.
+- **Realtime Database URL:** CONFIGURED from your Firebase Console screenshot: `https://bs-ara-v28-default-rtdb.asia-southeast1.firebasedatabase.app`.
+- **Organiser email/password:** NOT provided. Create an email/password user in Firebase Authentication. Never upload its password to GitHub or share it here.
+- **Organiser UID:** NOT provided. Replace `REPLACE_WITH_ORGANIZER_UID` in Firebase Rules v28 before publishing them.
+- **Marshal access:** Enable Anonymous sign-in in Firebase Authentication and OPEN marshal access in Main Control after connecting.
+- **Google Analytics:** optional. `measurementId` is saved in the config but the website does not need to load Analytics to use Authentication or Realtime Database.
+
 ## Files in GitHub repository root
 - `index.html`: Main Control, organiser login, driver registration, group draw, stage OPEN/CLOSE/CANCEL and automatic coordinator.
 - `marshal.html`: mobile marshal timer, 6-digit stage force-unlock, group-only driver list, next-driver reminder, choose any uncompleted open/free SS, request a fresh draw.
@@ -11,13 +19,13 @@
 - `firebase_rules_v28.json`: publish in Firebase Realtime Database > Rules (NOT in website root required for runtime).
 
 ## New Firebase project setup (Spark free plan)
-1. Create a fresh Firebase project such as `bs-style-v28` and remain on Spark.
-2. Add a **Web app**. Copy its `apiKey`, `authDomain`, `projectId` into `firebase-config.js`.
-3. Create a Realtime Database (not Firestore). Paste its **exact databaseURL** into `firebase-config.js`. Set the RTDB region supported by your project.
+1. Use the newly created **bs-ara-v28** Firebase project on Spark (free).
+2. Add a **Web app**. The user-supplied Web App configuration is already installed in `firebase-config.js`: `apiKey`, `authDomain`, `projectId`, `storageBucket`, `messagingSenderId`, `appId`, and `measurementId`.
+3. Realtime Database URL is already configured in `firebase-config.js`: `https://bs-ara-v28-default-rtdb.asia-southeast1.firebasedatabase.app`. Upload the updated file to the repository root; no manual URL entry is needed.
 4. Firebase Authentication > Sign-in method: enable Email/Password and Anonymous sign-in.
-5. Create a dedicated organiser account under Firebase Authentication > Users, then copy the user's UID (not their email or password).
-6. In **both** `firebase_rules_v28.json` and `firebase_rules_v28_copy_paste.txt`, replace every `REPLACE_WITH_ORGANIZER_UID` with that exact UID. Publish the JSON in RTDB > Rules. Do not publish with placeholder UID.
-7. GitHub: create a **new repository** (for example `BS-STYLE-RC-V28`) and upload the root website files from this package. Settings > Pages > Deploy from branch `main` / root.
+5. Create a dedicated organiser account under Firebase Authentication > Users. Enter its email/password only into **Main Control**, using the same v27-style fields. Copy the user's **UID** from Authentication > Users, or from Main Control after successful Authentication sign-in. The Web App API key is NOT an admin login or password.
+6. In `firebase_rules_v28.json` (or its TXT copy), replace **every** `REPLACE_WITH_ORGANIZER_UID` with that exact UID. Publish the JSON in RTDB > Rules. Do not publish with placeholder UID.
+7. GitHub: upload/replace the root website files in the **existing new** `jaanmajal/BS-ARA` repository. Settings > Pages > Deploy from branch `main` / root. Do not edit the old BS-STYLE repo.
 8. Open the new Main Control page over HTTPS, connect with the new organiser account and Event ID `bs28-test`.
 9. Register test drivers, initialize Group Rotation, OPEN enough SS, draw 2–4 balanced groups, choose distinct starting SS and start the race.
 10. In Main Control, **OPEN Marshal Access** using the existing marshal link control; share the new marshal link from this new repository. Keep the coordinator laptop online and awake.

@@ -1,0 +1,20 @@
+BS-ARA v28 - FIREBASE SETUP (separate from old BS-STYLE project)
+
+Already filled in firebase-config.js:
+  Project ID: bs-ara-v28
+  Auth Domain: bs-ara-v28.firebaseapp.com
+  Web App: API key / App ID / Messaging Sender ID / Storage Bucket / Measurement ID
+
+Realtime Database URL is CONFIGURED:
+  https://bs-ara-v28-default-rtdb.asia-southeast1.firebasedatabase.app
+
+Still needed before the site works online:
+1. Upload this updated firebase-config.js to the ROOT of jaanmajal/BS-ARA on GitHub.
+2. Authentication > Sign-in method: turn on Email/Password and Anonymous.
+3. Authentication > Users: create an organiser email/password account; copy its UID.
+4. Firebase Rules v28: replace all REPLACE_WITH_ORGANIZER_UID with the UID; publish under Realtime Database > Rules.
+5. Main Control: Connect / sign in with your organiser email/password and Event ID bs28-test.
+6. OPEN marshal access from Main Control and test a marshal phone with a NEW test event.
+
+Important: Web App configuration is NOT a login credential. Do not share passwords or upload them to GitHub.
+Old v27 project and database remain untouched.
