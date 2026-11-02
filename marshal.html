@@ -802,6 +802,48 @@ body.marshal-view #bs28MarshalPanel.bs28-rotation-below{
  #bs28RotationDetails .bs28-rotation-body{padding:3px 11px 13px;}
 }
 </style>
+
+<style id="bs2854-auto-draw-popup-css">
+.bs-draw-pop{position:fixed;inset:0;z-index:100002;background:rgba(2,7,19,.88);display:flex;align-items:center;
+ justify-content:center;padding:13px;backdrop-filter:blur(7px);-webkit-backdrop-filter:blur(7px)}
+.bs-draw-dialog{width:min(100%,450px);max-height:min(92vh,92dvh);overflow:auto;overscroll-behavior:contain;
+ background:linear-gradient(160deg,#162d4b 0%,#0f1b31 86%);border:2px solid #55cbb2;
+ border-radius:20px;box-shadow:0 22px 68px #000a,0 0 0 3px #0b443b55;color:#f5f9ff;padding:18px;
+ text-align:center;font-family:inherit}
+.bs-draw-dialog button{font-family:inherit}
+.bs-draw-dialog .bs-draw-eyebrow{font-size:11px;letter-spacing:.12em;font-weight:900;color:#b4ffe0;text-transform:uppercase;margin:3px 0 8px}
+.bs-draw-dialog .bs-draw-title{font-size:clamp(21px,5vw,28px);font-weight:950;margin:0 0 8px;line-height:1.16}
+.bs-draw-stagebar{display:flex;align-items:center;justify-content:center;gap:10px;border:1px solid #447aaf;
+ border-radius:12px;background:#0c2440;padding:13px 8px;margin:10px 0 13px;font-weight:900}
+.bs-draw-stagebar .bs-draw-stage{font-size:clamp(24px,7vw,34px);color:#fff}
+.bs-draw-stagebar .bs-draw-group{font-size:15px;color:#a7f3d0}
+.bs-draw-wheel{padding:19px 10px;border:1px solid #59769a;border-radius:13px;background:#172a46;margin:12px 0;min-height:106px;
+ display:flex;flex-direction:column;justify-content:center;gap:10px;transition:border-color .2s,background .2s}
+.bs-draw-wheel .bs-draw-wheel-label{font-size:12px;color:#d3e8ff;font-weight:800;letter-spacing:.08em}
+.bs-draw-wheel .bs-draw-wheel-name{font-size:clamp(19px,6vw,28px);font-weight:900;line-height:1.18;overflow-wrap:anywhere;color:#fff}
+.bs-draw-pop:not(.bs-draw-revealed) .bs-draw-wheel{border-color:#eab45e;animation:bs-draw-pulse .32s ease-in-out infinite alternate}
+.bs-draw-pop.bs-draw-revealed .bs-draw-wheel{border-color:#42d49c;background:#10372e;animation:none}
+@keyframes bs-draw-pulse{from{box-shadow:inset 0 0 0 0 #f8b5481a}to{box-shadow:inset 0 0 20px 2px #f8b54844}}
+.bs-draw-reveal{display:none;text-align:left;margin-top:10px}
+.bs-draw-pop.bs-draw-revealed .bs-draw-reveal{display:block}
+.bs-draw-first{display:flex;align-items:center;gap:12px;padding:15px;border-radius:12px;
+ border:1px solid #4ade80;background:linear-gradient(125deg,#13513b,#10342a)}
+.bs-draw-number{font-weight:950;font-size:24px;min-width:66px;border-radius:9px;color:#f4fffc;background:#0e7656;padding:13px 8px;text-align:center}
+.bs-draw-first-text{flex:1;min-width:0}
+.bs-draw-first-text small{display:block;font-size:12px;color:#cbffe4;font-weight:800;margin-bottom:3px}
+.bs-draw-first-name{display:block;font-size:clamp(19px,5vw,24px);font-weight:950;overflow-wrap:anywhere}
+.bs-draw-order-heading{font-size:12px;color:#d4ebff;font-weight:900;margin:15px 0 6px;letter-spacing:.04em}
+.bs-draw-order{margin:0;list-style:none;padding:0;max-height:140px;overflow-y:auto;display:grid;gap:4px}
+.bs-draw-order li{font-size:12px;background:#132a46;border:1px solid #304960;border-radius:6px;padding:7px 9px;color:#e5f0fd}
+.bs-draw-order li:first-child{color:#9ef8c6;border-color:#299b72;font-weight:900}
+.bs-draw-footnote{font-size:11px;color:#bfcfe3;line-height:1.45;margin:10px 0 5px}
+.bs-draw-action{margin:13px 0 2px;width:100%;border:none;border-radius:12px;background:#2563eb!important;
+ color:white!important;min-height:52px;font-weight:900;font-size:16px;cursor:pointer}
+.bs-draw-action:focus-visible{outline:3px solid #d9fff2;outline-offset:2px}
+@media(prefers-reduced-motion:reduce){.bs-draw-pop:not(.bs-draw-revealed) .bs-draw-wheel{animation:none}}
+@media(max-width:420px){.bs-draw-dialog{padding:13px;border-radius:15px}.bs-draw-wheel{padding:12px 8px;min-height:90px}
+.bs-draw-first{padding:10px}.bs-draw-number{font-size:20px;min-width:60px}}
+</style>
 </head><body class="marshal-view">
 <header><div class="brand"><img src="logo.svg" alt="TECH-ARTS CRAWLER logo" class="brand-logo"><div><h1>BS-STYLE POINT RC TIME ATTACK</h1><small>BORNEO SABAH • CRAWL HARD • COMPETE HARDER</small></div></div><span class="pill" id="status">Local mode</span></header>
 <div id="syncHealth" class="sync-health offline" role="status" aria-live="polite">OFFLINE - local safety active; uploads wait until Firebase reconnects.</div><div class="sync-controls"><button id="exportPendingBackup" type="button">Export backup</button><button id="retrySync" type="button">Retry pending sync</button><button id="sendRecovery" type="button" style="background:#8b5e19;border-color:#bd9136;color:#fff">SEND QUEUED RESULT FOR ORGANISER REVIEW</button></div>
@@ -828,6 +870,8 @@ body.marshal-view #bs28MarshalPanel.bs28-rotation-below{
 <div class="row timer-selectors"><div><label for="stageSelect">Special Stage</label><select id="stageSelect"></select></div><div><label for="driver">Driver</label><select id="driver"></select></div></div>
 <div class="driver-selection-hint">Choose any driver without a saved result in this SS. The next-driver reminder follows the top remaining driver in the SS running order.</div>
 <div id="runInfo" class="muted">Ready</div>
+<div id="bs28AssignmentNotice" role="status" aria-live="polite" style="display:none;padding:10px 12px;margin:9px 0;border:1px solid #3cbb83;border-radius:10px;background:#113426;color:#d1ffe5;font-weight:700"></div>
+<div id="bs28DrawPendingNotice" role="status" aria-live="polite" style="display:none;padding:10px 12px;margin:9px 0;border:1px solid #d49b3c;border-radius:10px;background:#332710;color:#ffe1a6;font-weight:750"></div>
 <div id="nextDriverReady" class="next-driver-ready hidden" role="status" aria-live="polite" aria-atomic="true"><span class="next-driver-icon" aria-hidden="true">📣</span><div class="next-driver-text"><span class="next-driver-kicker">NEXT DRIVER · GET READY</span><strong id="nextDriverReadyName">—</strong><small id="nextDriverReadyMeta">Next in the stage running order</small></div></div>
 <div class="marshal-clock-stage"><div class="marshal-clock-caption">OFFICIAL RACE TIME</div><div class="clock" id="clock">00:00.00</div></div>
 <div class="row buttons marshal-primary-controls"><button class="start" id="start">▶ START</button><button class="stop" id="stop" disabled>■ STOP</button></div>
@@ -858,7 +902,7 @@ body.marshal-view #bs28MarshalPanel.bs28-rotation-below{
     <div class="bs28-rotation-body">
 
   <h2 id="bs28MarshalHeading">GROUP ROTATION · NEXT STAGE</h2>
-  <small class="muted" style="display:block;margin:-8px 0 12px">v28.5 · FREE GROUP/SS SELECTION</small>
+  <small class="muted" style="display:block;margin:-8px 0 12px">v28.5.2 · INSTANT GROUP HANDOFF</small>
   <p class="muted" id="bs28MarshalInfo">Waiting for group assignment.</p>
   <div id="bs28Selection" class="bs28-next-panel" style="display:none">
     <h3>SELECT AVAILABLE GROUP &amp; SS</h3>
@@ -1459,7 +1503,9 @@ async function addPenaltyTap(ruleId){const target=penaltyTarget(),id=target.id,s
 async function removePenaltyTap(ruleId,ruleName){const target=penaltyTarget(),id=target.id,s=target.s;if(!id||!data.drivers[id]){$('quickPenaltyStatus').textContent='Select a driver first.';return}if(!canEditPenaltyCounters(id,s)){$('quickPenaltyStatus').textContent='This result is already saved. Penalty counts are locked.';return}if(marshalLinkMode&&(!localStageLock||localStageLock.eventId!==activeEventId()||localStageLock.stage!=='SS'+(s+1)||localStageLock.driverId!==String(id))){if(!await acquireStageLock(id,s))return}const arr=appliedPenalties(id,s),nameKey=String(ruleName||'').trim().toLowerCase();let idx=-1;for(let i=arr.length-1;i>=0;i--){const p=arr[i];if(String(p.ruleId||'')===String(ruleId)||(!p.ruleId&&String(p.name||'').trim().toLowerCase()===nameKey)){idx=i;break}}if(idx<0){$('quickPenaltyStatus').textContent='No recorded tap of this type to remove.';return}const before=clone(arr[idx]);let after=null;if((Number(arr[idx].count)||1)>1){arr[idx].count=(Number(arr[idx].count)||1)-1;after=clone(arr[idx])}else arr.splice(idx,1);if(!arr.length&&data.penalties[id])delete data.penalties[id][s];recordHistory('penalty tap removed',id,s,before,after);await sync('penalties/'+id+'/'+s,arr.length?arr:null);$('quickPenaltyStatus').textContent=`Removed 1 ${ruleName} tap • #${data.drivers[id].num} ${data.drivers[id].name} • SS${s+1}`}
 $('penaltyCounters').onclick=async e=>{const add=e.target.closest('[data-add-penalty]');const remove=e.target.closest('[data-remove-penalty]');if(!add&&!remove)return;if(Date.now()<penaltyTapCooldownUntil){$('quickPenaltyStatus').textContent='Please wait briefly between penalty taps. The extra tap was ignored to prevent double registration.';return}const target=penaltyTarget();lastPenaltyTapIndicator={action:add?'add':'remove',ruleId:add?add.dataset.addPenalty:remove.dataset.removePenalty,driverId:target.id,stage:target.s};if(penaltyTapIndicatorTimer)clearTimeout(penaltyTapIndicatorTimer);penaltyTapIndicatorTimer=setTimeout(()=>{lastPenaltyTapIndicator=null;renderPenaltyCounters()},1100);beginPenaltyTapCooldown();if(add){await addPenaltyTap(add.dataset.addPenalty);renderPenaltyCounters();return}if(remove){await removePenaltyTap(remove.dataset.removePenalty,remove.dataset.penaltyName);renderPenaltyCounters()}};
 $('saveStageSetupAll').onclick=()=>{if(!requireAdmin())return;if(running||pendingRun)return alert('Finish reviewing and save the current result first');const cutoffInputs=[...document.querySelectorAll('.stage-cutoff-input')];const gateInputs=[...document.querySelectorAll('.stage-gate-input')];if(cutoffInputs.length!==data.cutoffs.length||gateInputs.length!==data.gateTotals.length)return alert('Stage setup rows are not ready yet. Please try again.');const nextCutoffs=[];const nextGates=[];for(let s=0;s<data.cutoffs.length;s++){const minutes=Number(cutoffInputs[s].value);const total=Number(gateInputs[s].value);if(!Number.isInteger(minutes)||minutes<1||minutes>999)return alert('Enter a whole-number cutoff between 1 and 999 minutes for SS'+(s+1));if(!Number.isInteger(total)||total<1||total>999)return alert('Enter a whole-number total gate count between 1 and 999 for SS'+(s+1));if(total!==gateTotalForStage(s)&&Object.keys(data.drivers||{}).some(id=>!!result(id,s)))return alert('Total gate markers for SS'+(s+1)+' cannot be changed after a result has been saved for that SS.');nextCutoffs.push(minutes*60000);nextGates.push(total)}const oldCutoffs=[...data.cutoffs],oldGates=[...data.gateTotals];data.cutoffs=nextCutoffs;data.gateTotals=nextGates;for(let s=0;s<data.cutoffs.length;s++){if(oldCutoffs[s]!==nextCutoffs[s])recordHistory('stage cutoff changed','SS'+(s+1),s,Math.ceil((oldCutoffs[s]||0)/60000),Math.ceil(nextCutoffs[s]/60000));if((oldGates[s]??10)!==nextGates[s])recordHistory('stage total gate markers changed','SS'+(s+1),s,oldGates[s]??10,nextGates[s])}persist();render();sendOrQueue('cutoffs',data.cutoffs);sendOrQueue('gateTotals',data.gateTotals);extendAdminAfterCorrection()};$('add').onclick=()=>{if(running||pendingRun)return alert('Finish reviewing and save the current result first');if(data.cutoffs.some((_,si)=>!!data.drawLocks?.[si]||hasStageResults(si)))return alert('Driver registration is closed because a draw is locked or a stage result has been saved. Register all drivers before drawing and locking the running order.');const num=$('num').value.trim(),name=$('name').value.trim().toLocaleUpperCase('en-US');$('name').value=name;if(!num||!name)return alert('Enter number and name');if(Object.values(data.drivers).some(d=>d.num===num))return alert('Race number already exists');const id='d'+Date.now().toString(36)+Math.random().toString(36).slice(2,7);data.drivers[id]={num,name};sync('drivers/'+id,data.drivers[id]);$('num').value='';$('name').value=''};$('roster').onclick=async e=>{const editButton=e.target.closest('[data-edit-driver]');if(editButton){const id=editButton.dataset.editDriver;if(!id||!data.drivers[id])return;if(running||pendingRun)return alert('Finish and save the active run before editing driver details.');if(!requireAdmin())return;const current=clone(data.drivers[id]);const proposed=prompt('Correct driver name for race #'+current.num+':',String(current.name||''));if(proposed===null)return;const name=proposed.trim().toLocaleUpperCase('en-US');if(!name)return alert('Driver name cannot be blank.');if(name===String(current.name||''))return;if(!requireAdmin())return;const updated={...current,name};data.drivers[id]=updated;recordHistory('driver name corrected',id,stage,current,updated);try{persist()}catch(err){data.drivers[id]=current;return alert('Could not save the corrected name locally. No Firebase update was sent. '+err.message)}render();const outcome=await sendOrQueue('drivers/'+id,updated);if(outcome.online)setMsg('Driver name updated and verified by Firebase.');else if(outcome.queued)setMsg('Driver name updated locally and queued for Firebase sync.');else setMsg('WARNING: driver name changed locally but the sync queue could not be saved. Export a JSON backup immediately.',true);return}const removeButton=e.target.closest('[data-remove]');const id=removeButton?.dataset.remove;if(!id||running||pendingRun)return;if(!requireAdmin())return;if(data.cutoffs.some((_,si)=>!!data.drawLocks?.[si]||hasStageResults(si)))return alert('Driver removal is closed because a draw is locked or a stage result has been saved. Use the correction workflow for result changes.');if(!confirm('Remove driver and ALL their results?'))return;if(!requireAdmin())return;delete data.drivers[id];delete data.results[id];if(data.penalties)delete data.penalties[id];for(const si of Object.keys(data.drawOrders||{})){data.drawOrders[si]=(data.drawOrders[si]||[]).filter(driverId=>driverId!==id);sendOrQueue('drawOrders/'+si,data.drawOrders[si])}sendOrQueue('drivers/'+id,null);sendOrQueue('results/'+id,null);sendOrQueue('penalties/'+id,null);persist();render()};$('drawStageSelect').onchange=()=>{if(drawSpinning)return;drawStage=Number($('drawStageSelect').value)||0;localStorage.setItem('bs28-draw-stage',String(drawStage));renderDrawSection()};$('spinDraw').onclick=spinDrawOrder;$('lockDrawOrder').onclick=lockDrawOrder;$('unlockDrawOrder').onclick=unlockDrawOrder;$('addLateDriver').onclick=addLateDriverToSelectedStage;$('clearAllRaceData').onclick=clearAllRaceDataForNewRace;$('start').onclick=async()=>{if(marshalLinkMode&&!ensureMarshalNameForAction())return;if(bs28IsActive()&&!await bs28ValidateStart(selected(),stage))return;const id=selected();if(!id||running||pendingRun)return;const activeDraw=drawOrderState(stage);if(activeDraw.exists&&!activeDraw.current)return alert('The SS'+(stage+1)+' draw no longer matches the registered drivers. Redraw and lock the order before racing.');if(activeDraw.exists&&!activeDraw.locked)return alert('Lock the SS'+(stage+1)+' draw order before starting the timer.');let overwriteAuthorized=false;if(result(id,stage)){if(!requireAdmin())return;if(!confirm('This driver already has a result for this stage. Start a replacement attempt?'))return;if(!requireAdmin())return;overwriteAuthorized=true;clearPreviousPenaltiesForNewAttempt(id,stage)}if(marshalLinkMode&&!await acquireStageLock(id,stage))return;$('manualTime').value='';localStorage.setItem(selectedDriverKey,id);localStorage.setItem(lastClockKey,'0');running={id,s:stage,startAt:Date.now(),overwriteAuthorized,stageLockRunId:localStageLock?.runId||null};try{localStorage.setItem(activeRunKey,JSON.stringify({...running,eventId:runEventId()}))}catch(e){alert('WARNING: active run could not be saved in browser storage. Refresh/reopen recovery may not be available. '+e.message)}acquireWake();$('clock').textContent='00:00.00';tick=setInterval(updateClock,40);render()};$('stop').onclick=()=>{if(running&&!pendingRun){const cutoff=data.cutoffs[running.s];const elapsed=Math.min(Math.max(0,Math.floor((Date.now()-running.startAt)/10)*10),cutoff);$('clock').textContent=fmt(elapsed);prepareRunResult(elapsed>=cutoff?'dnf':'finish',elapsed)}};$('faultRestartButton').onclick=restartFaultedAttempt;$('confirmStop').onclick=()=>{if(!pendingRun||!(pendingRun.requiresStopConfirmation||pendingRun.source==='timer')||pendingRun.confirmed)return;const previous=pendingRun;pendingRun={...pendingRun,confirmed:true,confirmedAt:Date.now()};try{localStorage.setItem(pendingRunKey,JSON.stringify(pendingRun))}catch(e){pendingRun=previous;return alert('Could not save confirmation locally. The run remains pending. Export a backup and try again. '+e.message)}if(running){clearInterval(tick);tick=null;running=null;releaseWake()}try{localStorage.removeItem(activeRunKey)}catch(e){}render();setMsg('Stop time confirmed and timer locked at the captured STOP time. Review penalties, then press SAVE RESULT.');};$('resumeRun').onclick=()=>{if(!pendingRun||pendingRun.source!=='timer'||pendingRun.status!=='finish'||pendingRun.confirmed)return;const stopped=clone(pendingRun);const fallbackElapsed=Math.max(0,Number(stopped.ms)||0)+Math.max(0,Date.now()-(Number(stopped.at)||Date.now()));pendingRun=null;try{localStorage.removeItem(pendingRunKey)}catch(e){}stage=stopped.s;localStorage.setItem('bs28-stage',String(stage));localStorage.setItem(selectedDriverKey,stopped.id);if(!running){const savedStartAt=Number(stopped.startAt);running={id:stopped.id,s:stopped.s,startAt:Number.isFinite(savedStartAt)&&savedStartAt>0?savedStartAt:Date.now()-fallbackElapsed,overwriteAuthorized:!!stopped.overwriteAuthorized}}try{localStorage.setItem(activeRunKey,JSON.stringify({...running,eventId:runEventId()}))}catch(e){}acquireWake();if(!tick)tick=setInterval(updateClock,40);render();updateClock();setMsg('Run resumed for '+(data.drivers[stopped.id]?.name||'driver')+'. The timer includes all time since the original START, including the review period.');};$('dnf').onclick=()=>{if(running&&confirm('Mark this run DNF for a time-out or Jump Gate violation? Enter gates cleared before SAVE RESULT.'))prepareRunResult('dnf',data.cutoffs[running.s])};$('markDns').onclick=async()=>{if(bs28IsActive()&&!await bs28ValidateStart(selected(),stage))return;if(running||pendingRun)return alert('Finish or resolve the current run before recording DNS.');if(marshalLinkMode&&!ensureMarshalNameForAction())return;const id=selected();if(!id||!data.drivers[id])return alert('Select a registered driver first.');if(result(id,stage))return alert('A result already exists for this driver and stage. Use the organiser correction workflow if it needs changing.');const driver=data.drivers[id];if(marshalLinkMode&&!await acquireStageLock(id,stage))return;if(!confirm('Record DNS — DID NOT START — for #'+driver.num+' '+driver.name+' in SS'+(stage+1)+'?\n\nThis records 0 points and does not start the timer.'))return;setPendingRun({id,s:stage,status:'dns',ms:0,source:'dns'});await commitPendingRun()};$('saveResult').onclick=reviewPendingRun;$('prepareManual').onclick=async()=>{if(bs28IsActive()&&!await bs28ValidateStart(selected(),stage))return;return prepareManualResult()};$('correct').onclick=saveCorrection;function download(name,text,type){const a=document.createElement('a'),u=URL.createObjectURL(new Blob([text],{type}));a.href=u;a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(u),1000)}$('snapshotDownload').onclick=()=>{if(!snapshots.length)return alert('No safety snapshots yet');download('rc-v12-safety-'+Date.now()+'.json',JSON.stringify({snapshots,pending},null,2),'application/json')};$('historyDownload').onclick=()=>download('rc-v12-correction-history.json',JSON.stringify(history,null,2),'application/json');$('export').onclick=()=>download('rc-race-backup-'+activeEventId()+'.json',JSON.stringify({...clone(data),_syncBackup:{eventId:activeEventId(),exportedAt:new Date().toISOString(),pendingChanges:pending.filter(item=>queueEventId(item)===activeEventId()).map(clone)}},null,2),'application/json');$('csv').onclick=()=>{const q=x=>'"'+String(x).replaceAll('"','""')+'"';const rows=[['Race #','Driver',...data.cutoffs.map((_,i)=>'SS'+(i+1)+' raw time / net points'),'Total points','Status']];Object.entries(data.drivers).forEach(([id,d])=>{const rs=data.cutoffs.map((_,s)=>result(id,s));rows.push([d.num,d.name,...rs.map((r,s)=>!r?'':r.status==='dnf'?'DNF '+(r.gatesCleared===undefined?'?':r.gatesCleared)+'/'+(Number(r.totalGates)||gateTotalForStage(s))+' gates / '+stagePoints(id,s)+' pts':r.status==='dns'?'DNS / 0 pts':fmt(rawElapsedMs(id,s,r))+' / '+stagePoints(id,s)+' net pts / '+penaltyPointDeductions(id,s)+' penalty pts'),totalPoints(id),rs.length>0&&rs.every(r=>!!r)?'FINISH':'PENDING'])});download('rc-results.csv',rows.map(r=>r.map(q).join(',')).join('\r\n'),'text/csv')};$('import').onchange=async e=>{try{const x=JSON.parse(await e.target.files[0].text());if(!x.drivers||!x.results||!Array.isArray(x.cutoffs)||x.cutoffs.length<1)throw Error('Invalid backup');if(online)throw Error('Disconnect online sync before importing');if(!confirm('Replace ALL local event data?'))return;safetySnapshot('before import');data=normalizeData(x);persist();render();const backupEvent=String(x._syncBackup?.eventId||'');if(backupEvent&&backupEvent!==activeEventId()){setMsg('Backup belongs to Event ID '+backupEvent+'. Set that Event ID before queueing this backup for upload.',true)}else if(confirm('Queue this imported backup for upload to Event ID '+activeEventId()+'? Existing online records that differ will require confirmation; online-only records not in this backup will be preserved.')){let ok=queueLocalStateForSync(data,activeEventId());if(backupEvent&&Array.isArray(x._syncBackup?.pendingChanges)){for(const item of x._syncBackup.pendingChanges){if(item&&typeof item.path==='string'&&!enqueue(item.path,item.value,backupEvent))ok=false}}setMsg(ok?'Imported backup queued for Firebase sync. Connect and review any conflicts.':'Backup imported, but the sync queue could not be fully persisted. Export JSON backup immediately.',!ok)}}catch(err){alert(err.message)}};const builtInConfig=window.RC_FIREBASE_CONFIG||{apiKey:'',authDomain:'',databaseURL:'',projectId:''};for(const k of ['apiKey','authDomain','databaseURL','projectId']){$(k).value=builtInConfig[k]||''}const eventStorageKey='bs28-test-event-id';const savedEventId=localStorage.getItem(eventStorageKey);const requestedEventId=new URLSearchParams(window.location.search).get('event');const validRequestedEventId=requestedEventId&&/^[a-zA-Z0-9-]{1,80}$/.test(requestedEventId);$('eventId').value=(validRequestedEventId?requestedEventId:savedEventId)||window.RC_EVENT_ID||'bs28-test';$('eventId').readOnly=!!marshalLinkMode;$('eventId').disabled=online;if(marshalLinkMode){for(const credentialId of ['email','password']){const field=$(credentialId),wrap=field?.parentElement;if(wrap)wrap.style.display='none'}const help=document.querySelector('.marshal-connection-help');if(help)help.textContent='Event-specific marshal link detected. Connecting automatically without a Firebase password. Save your name before starting or recording penalties.';}$('eventId').addEventListener('input',updatePublicResultsLink);$('eventId').addEventListener('change',()=>{const value=$('eventId').value.trim(),previous=localStorage.getItem(eventStorageKey)||window.RC_EVENT_ID||'bs28-test';if(!/^[a-zA-Z0-9-]{1,80}$/.test(value)){setMsg('Event ID must contain 1-80 letters, numbers or hyphens.',true);$('eventId').value=previous;return}if(value!==previous&&eventPendingCount(previous)>0){if(!confirm('There are '+eventPendingCount(previous)+' unsynchronized change(s) for Event ID '+previous+'. They will remain queued on this device and must be synced by reconnecting to that same Event ID. Switch Event ID anyway?')){$('eventId').value=previous;return}}localStorage.setItem(eventStorageKey,value);updatePublicResultsLink();setMsg('Event ID saved on this device. Use the same ID on all race-control devices and in the public results link.');updateSyncHealth()});$('email').value='';$('password').value='';updatePublicResultsLink();const copyMarshalBtn=$('copyMarshalLink');if(copyMarshalBtn)copyMarshalBtn.onclick=async()=>{const shareUrl=$('marshalLink')?.href;if(!shareUrl)return;try{await navigator.clipboard.writeText(shareUrl);setMsg('Marshal link copied. Share it with the marshal for Event ID '+activeEventId()+'.')}catch(e){prompt('Copy this marshal link:',shareUrl)}};async function connectFirebase(options={}){const automatic=!!options.automatic,passwordless=!!(marshalLinkMode&&options.passwordless!==false);if(connecting)return;connecting=true;if(running&&!automatic){connecting=false;return alert('Stop timer first');}if(online){connecting=false;return alert('Already connected. Disconnect before changing the Event ID or reconnecting.');}showConnectionToast('loading','Connecting…',automatic?'Restoring saved Firebase session.':'Signing in and checking Firebase connection.');try{if(typeof firebase==='undefined')throw Error('Firebase SDK did not load. Check internet connection.');const config={};for(const k of ['apiKey','authDomain','databaseURL','projectId']){config[k]=$(k).value.trim();if(!config[k])throw Error('Missing '+k)}const eventId=$('eventId').value.trim();if(!/^[a-zA-Z0-9-]{1,80}$/.test(eventId))throw Error('Event ID: letters, numbers and dashes only');localStorage.setItem(eventStorageKey,eventId);updatePublicResultsLink();// Firebase configuration is supplied by firebase-config.js. Only the Event ID is saved locally; organizer email/password are never persisted.
-const appName='bs28-test-marshal-auth';if(!app){try{app=firebase.app(appName)}catch(_){app=firebase.initializeApp(config,appName)}}auth=app.auth();await auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL);let credential={user:auth.currentUser};if(passwordless&&credential.user&&!credential.user.isAnonymous){await auth.signOut();credential={user:null}}if(!credential.user){if(passwordless){credential=await auth.signInAnonymously()}else{if(automatic)throw Error('Saved Firebase session is no longer available. Sign in again to restore automatic online mode.');credential=await auth.signInWithEmailAndPassword($('email').value.trim(),$('password').value)}}if(passwordless){if(!marshalLinkToken){showMarshalAccessBlocked('This marshal link is missing its event token. Copy the current event-specific link from the organiser page.');throw Error('Marshal link token missing.')}if(!auth.currentUser||!auth.currentUser.isAnonymous)throw Error('Marshal links require anonymous Firebase sign-in.');marshalGateRef=app.database().ref('marshalSessions/'+eventId+'/'+auth.currentUser.uid);try{await marshalGateRef.update({token:marshalLinkToken,enabled:true,marshalName:String(marshalName||localStorage.getItem(marshalNameKey)||'').trim(),updatedAt:Date.now()});const session=(await marshalGateRef.once('value')).val();if(!session||session.enabled!==true||session.token!==marshalLinkToken)throw Error('Firebase did not confirm this marshal session.')}catch(e){dbRef=null;showMarshalAccessBlocked('Marshal access is closed or this link is invalid for Event ID '+eventId+'. Ask the organiser to reopen access and copy the current link.');throw Error('Marshal access closed or invalid for Event ID '+eventId+': '+e.message)}marshalAccessRevoked=false;marshalSessionVerified=true;try{localStorage.setItem(marshalSessionVerifiedKey(eventId),JSON.stringify({token:marshalLinkToken,verifiedAt:Date.now()}))}catch(e){}if(marshalGateSub)marshalGateRef.off('value',marshalGateSub);marshalGateSub=snap=>{const current=snap.val();if(!current||current.enabled!==true||current.token!==marshalLinkToken)showMarshalAccessBlocked('The organiser closed marshal access for Event ID '+eventId+'. This link is now disabled.')};marshalGateRef.on('value',marshalGateSub)}dbRef=app.database().ref('events/'+eventId);const snap=await dbRef.once('value');if(!snap.exists()){if(passwordless){dbRef=null;throw Error('This Event ID has not been initialized in Firebase yet. Ask the organiser to connect the main page first.')}if(automatic){dbRef=null;showConnectionToast('error','Connection failed','This Event ID has no Firebase data yet. Check the Event ID or connect manually.',4000);setMsg('Automatic sign-in restored, but this Event ID has no Firebase data yet. Check the Event ID or connect manually to initialize it.',true);connecting=false;return}const localHasRecords=Object.keys(data.drivers||{}).length>0||Object.values(data.results||{}).some(byStage=>byStage&&Object.keys(byStage).length>0)||Object.keys(data.penalties||{}).length>0||Object.keys(data.drawOrders||{}).length>0||Object.keys(data.drawLocks||{}).length>0||Object.keys(data.lateEntries||{}).length>0;if(hasPendingForEvent(eventId)){dbRef=null;hideConnectionToast();connecting=false;setMsg('This Event ID has pending local uploads. Reconnect to the same event that owns those changes before creating or switching events.',true);return}const createMessage=localHasRecords?'No Firebase event exists for '+eventId+', and this device contains local race data. OK = save a safety snapshot and create an EMPTY event; Cancel = stop and check the Event ID. Local drivers/results will NOT be copied into the new event.':'No Firebase event exists for '+eventId+'. Create a new EMPTY event?';if(!confirm(createMessage)){dbRef=null;hideConnectionToast();connecting=false;return}if(localHasRecords){safetySnapshot('before initializing empty Firebase event '+eventId+'; local race data preserved in safety snapshot');const previous=data;data=window.RC_DRY_RUN_MODE?fresh():{...fresh(),cutoffs:clone(previous.cutoffs),gateTotals:clone(previous.gateTotals),penaltyRules:clone(previous.penaltyRules),penaltySetupInitialized:true};try{localStorage.setItem(key,JSON.stringify(data))}catch(e){data=previous;dbRef=null;throw new Error('Could not safely prepare empty local event. No Firebase event was written. Export a backup and check browser storage. '+e.message)}render()}await dbRef.set(data)}else{const remoteData=normalizeData(snap.val());if(hasPendingForEvent(eventId)){safetySnapshot('local data preserved while queued changes upload');setMsg('Preserving local data because this Event ID has queued changes. They will be uploaded and verified before the online copy is reloaded.')}else{const localHasRecords=Object.keys(data.drivers||{}).length>0||Object.values(data.results||{}).some(byStage=>byStage&&Object.keys(byStage).length>0);if(localHasRecords&&stableStringify(normalizeData(data))!==stableStringify(remoteData)){safetySnapshot('before Firebase connection - local and online data differ');if(!automatic&&!passwordless){const useRemote=confirm('This device has local data that differs from Firebase, but no pending upload queue exists for this event. A local safety snapshot will be kept. OK = load Firebase data. Cancel = stop connecting so you can export/compare the local backup first.');if(!useRemote){dbRef=null;hideConnectionToast();connecting=false;setMsg('Connection cancelled. Export the local JSON backup before connecting again.',true);return}}else{setMsg(passwordless?'Connected from the event-specific marshal link. A local safety snapshot was kept and the live Firebase data was loaded.':'Auto-connected to Firebase. Local data differed, so a safety snapshot was kept and the live Firebase data was loaded.',true)}}data=remoteData;try{localStorage.setItem(key,JSON.stringify(data))}catch(e){setMsg('Firebase data loaded, but local cache storage failed: '+e.message,true)}render()}}online=true;connectedToServer=false;const blockedOverlay=document.getElementById('marshalAccessBlocked');if(blockedOverlay)blockedOverlay.remove();marshalAccessRevoked=false;const connRef=app.database().ref('.info/connected');connRef.on('value',snap=>{const wasConnected=connectedToServer;connectedToServer=snap.val()===true;updateConnectionIndicator();if(connectedToServer){notifyFirebaseConnected();flushPending()}else if(wasConnected&&hadFirebaseConnection){notifyFirebaseDisconnected()}});sub=s=>{if(running||pendingRun)return;const remote=s.val();if(remote){if(hasPendingForEvent(activeEventId())){setMsg('Local pending changes preserved. They will be uploaded and verified before this device replaces its local view.',true);updateSyncHealth();return}data=normalizeData(remote);localStorage.setItem(key,JSON.stringify(data));render()}};dbRef.on('value',sub,e=>setMsg('Database permission error: '+e.message,true));updateConnectionIndicator();localStorage.setItem('bs28-test-auto-online','1');setMsg(passwordless?'Marshal '+(marshalName||localStorage.getItem(marshalNameKey)||'')+' connected to Event ID '+eventId+'. Firebase will reconnect automatically when the network returns.':(automatic?'Automatically reconnected as ':'Signed in as ')+(credential.user?.email||auth.currentUser?.email||'authorized marshal')+'. Firebase will reconnect automatically when the network returns.');$('password').value='';render()}catch(e){online=false;connectedToServer=false;dbRef=null;updateConnectionIndicator();if(marshalLinkMode&&(/marshal access closed|marshal link has no event access token|does not belong to Event ID/i.test(String(e.message||''))))showMarshalAccessBlocked(e.message);showConnectionToast('error','Connection failed',e.message||'Please check your credentials and network.',4000);setMsg(e.message,true)}finally{connecting=false}};$('connect').onclick=()=>connectFirebase({automatic:false});// Stable app identity allows Firebase Auth to restore the saved browser session after reload. Passwords are never stored.
+const appName='bs28-test-marshal-auth';if(!app){try{app=firebase.app(appName)}catch(_){app=firebase.initializeApp(config,appName)}}auth=app.auth();await auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL);let credential={user:auth.currentUser};if(passwordless&&credential.user&&!credential.user.isAnonymous){await auth.signOut();credential={user:null}}if(!credential.user){if(passwordless){credential=await auth.signInAnonymously()}else{if(automatic)throw Error('Saved Firebase session is no longer available. Sign in again to restore automatic online mode.');credential=await auth.signInWithEmailAndPassword($('email').value.trim(),$('password').value)}}if(passwordless){if(!marshalLinkToken){showMarshalAccessBlocked('This marshal link is missing its event token. Copy the current event-specific link from the organiser page.');throw Error('Marshal link token missing.')}if(!auth.currentUser||!auth.currentUser.isAnonymous)throw Error('Marshal links require anonymous Firebase sign-in.');marshalGateRef=app.database().ref('marshalSessions/'+eventId+'/'+auth.currentUser.uid);try{await marshalGateRef.update({token:marshalLinkToken,enabled:true,marshalName:String(marshalName||localStorage.getItem(marshalNameKey)||'').trim(),updatedAt:Date.now()});const session=(await marshalGateRef.once('value')).val();if(!session||session.enabled!==true||session.token!==marshalLinkToken)throw Error('Firebase did not confirm this marshal session.')}catch(e){dbRef=null;showMarshalAccessBlocked('Marshal access is closed or this link is invalid for Event ID '+eventId+'. Ask the organiser to reopen access and copy the current link.');throw Error('Marshal access closed or invalid for Event ID '+eventId+': '+e.message)}marshalAccessRevoked=false;marshalSessionVerified=true;try{localStorage.setItem(marshalSessionVerifiedKey(eventId),JSON.stringify({token:marshalLinkToken,verifiedAt:Date.now()}))}catch(e){}if(marshalGateSub)marshalGateRef.off('value',marshalGateSub);marshalGateSub=snap=>{const current=snap.val();if(!current||current.enabled!==true||current.token!==marshalLinkToken)showMarshalAccessBlocked('The organiser closed marshal access for Event ID '+eventId+'. This link is now disabled.')};marshalGateRef.on('value',marshalGateSub)}dbRef=app.database().ref('events/'+eventId);const snap=await dbRef.once('value');if(!snap.exists()){if(passwordless){dbRef=null;throw Error('This Event ID has not been initialized in Firebase yet. Ask the organiser to connect the main page first.')}if(automatic){dbRef=null;showConnectionToast('error','Connection failed','This Event ID has no Firebase data yet. Check the Event ID or connect manually.',4000);setMsg('Automatic sign-in restored, but this Event ID has no Firebase data yet. Check the Event ID or connect manually to initialize it.',true);connecting=false;return}const localHasRecords=Object.keys(data.drivers||{}).length>0||Object.values(data.results||{}).some(byStage=>byStage&&Object.keys(byStage).length>0)||Object.keys(data.penalties||{}).length>0||Object.keys(data.drawOrders||{}).length>0||Object.keys(data.drawLocks||{}).length>0||Object.keys(data.lateEntries||{}).length>0;if(hasPendingForEvent(eventId)){dbRef=null;hideConnectionToast();connecting=false;setMsg('This Event ID has pending local uploads. Reconnect to the same event that owns those changes before creating or switching events.',true);return}const createMessage=localHasRecords?'No Firebase event exists for '+eventId+', and this device contains local race data. OK = save a safety snapshot and create an EMPTY event; Cancel = stop and check the Event ID. Local drivers/results will NOT be copied into the new event.':'No Firebase event exists for '+eventId+'. Create a new EMPTY event?';if(!confirm(createMessage)){dbRef=null;hideConnectionToast();connecting=false;return}if(localHasRecords){safetySnapshot('before initializing empty Firebase event '+eventId+'; local race data preserved in safety snapshot');const previous=data;data=window.RC_DRY_RUN_MODE?fresh():{...fresh(),cutoffs:clone(previous.cutoffs),gateTotals:clone(previous.gateTotals),penaltyRules:clone(previous.penaltyRules),penaltySetupInitialized:true};try{localStorage.setItem(key,JSON.stringify(data))}catch(e){data=previous;dbRef=null;throw new Error('Could not safely prepare empty local event. No Firebase event was written. Export a backup and check browser storage. '+e.message)}render()}await dbRef.set(data)}else{const remoteData=normalizeData(snap.val());if(hasPendingForEvent(eventId)){safetySnapshot('local data preserved while queued changes upload');setMsg('Preserving local data because this Event ID has queued changes. They will be uploaded and verified before the online copy is reloaded.')}else{const localHasRecords=Object.keys(data.drivers||{}).length>0||Object.values(data.results||{}).some(byStage=>byStage&&Object.keys(byStage).length>0);if(localHasRecords&&stableStringify(normalizeData(data))!==stableStringify(remoteData)){safetySnapshot('before Firebase connection - local and online data differ');if(!automatic&&!passwordless){const useRemote=confirm('This device has local data that differs from Firebase, but no pending upload queue exists for this event. A local safety snapshot will be kept. OK = load Firebase data. Cancel = stop connecting so you can export/compare the local backup first.');if(!useRemote){dbRef=null;hideConnectionToast();connecting=false;setMsg('Connection cancelled. Export the local JSON backup before connecting again.',true);return}}else{setMsg(passwordless?'Connected from the event-specific marshal link. A local safety snapshot was kept and the live Firebase data was loaded.':'Auto-connected to Firebase. Local data differed, so a safety snapshot was kept and the live Firebase data was loaded.',true)}}data=remoteData;try{localStorage.setItem(key,JSON.stringify(data))}catch(e){setMsg('Firebase data loaded, but local cache storage failed: '+e.message,true)}render()}}online=true;connectedToServer=false;const blockedOverlay=document.getElementById('marshalAccessBlocked');if(blockedOverlay)blockedOverlay.remove();marshalAccessRevoked=false;const connRef=app.database().ref('.info/connected');connRef.on('value',snap=>{const wasConnected=connectedToServer;connectedToServer=snap.val()===true;updateConnectionIndicator();if(connectedToServer){notifyFirebaseConnected();flushPending()}else if(wasConnected&&hadFirebaseConnection){notifyFirebaseDisconnected()}});sub=s=>{if(running||pendingRun)return;const remote=s.val();if(remote){if(hasPendingForEvent(activeEventId())){setMsg('Local pending changes preserved. They will be uploaded and verified before this device replaces its local view.',true);updateSyncHealth();return}data=normalizeData(remote);localStorage.setItem(key,JSON.stringify(data));render();
+// Apply accepted v28 group/stage assignment immediately when live Firebase publishes the official draw.
+if(window.BS28_MARSHAL_READY===true)bs28RenderMarshal()}};dbRef.on('value',sub,e=>setMsg('Database permission error: '+e.message,true));updateConnectionIndicator();localStorage.setItem('bs28-test-auto-online','1');setMsg(passwordless?'Marshal '+(marshalName||localStorage.getItem(marshalNameKey)||'')+' connected to Event ID '+eventId+'. Firebase will reconnect automatically when the network returns.':(automatic?'Automatically reconnected as ':'Signed in as ')+(credential.user?.email||auth.currentUser?.email||'authorized marshal')+'. Firebase will reconnect automatically when the network returns.');$('password').value='';render()}catch(e){online=false;connectedToServer=false;dbRef=null;updateConnectionIndicator();if(marshalLinkMode&&(/marshal access closed|marshal link has no event access token|does not belong to Event ID/i.test(String(e.message||''))))showMarshalAccessBlocked(e.message);showConnectionToast('error','Connection failed',e.message||'Please check your credentials and network.',4000);setMsg(e.message,true)}finally{connecting=false}};$('connect').onclick=()=>connectFirebase({automatic:false});// Stable app identity allows Firebase Auth to restore the saved browser session after reload. Passwords are never stored.
 async function setupAutoOnline(){try{if(typeof firebase==='undefined')return;const cfg=window.RC_FIREBASE_CONFIG||{};if(!cfg.apiKey||!cfg.authDomain||!cfg.databaseURL||!cfg.projectId){setMsg('BS-ARA Firebase setup is incomplete. Ask the organiser to add the Realtime Database URL to firebase-config.js in the new BS-ARA GitHub repository before using marshal links.',true);return}const appName='bs28-test-marshal-auth';if(!app){try{app=firebase.app(appName)}catch(_){app=firebase.initializeApp(cfg,appName)}}auth=app.auth();await auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL);auth.onAuthStateChanged(user=>{if(!user||(marshalLinkMode&&!String(marshalName||localStorage.getItem(marshalNameKey)||'').trim())||localStorage.getItem('bs28-test-auto-online')!=='1'||online||connecting)return;const savedEvent=localStorage.getItem('bs28-test-event-id');if(savedEvent&&$('eventId').value.trim()!==savedEvent){setMsg('Automatic sign-in is available, but this link selects a different Event ID. Connect manually to confirm the event before syncing.',true);return}connectFirebase({automatic:true,user}).catch(err=>setMsg('Automatic Firebase reconnect failed: '+err.message,true))})}catch(e){setMsg('Automatic online setup unavailable: '+e.message,true)}}
 // Keyboard race control: Space toggles START / STOP & SAVE using existing handlers.
 // Ignore typing, modifier keys, repeated keydown events, and disabled buttons.
@@ -1484,6 +1530,71 @@ $('retrySync').onclick=()=>{if(!online||!connectedToServer){setMsg('Connect to F
 /* v28 marshal SS selection extension inside the existing Marshal closure. */
 const bs28Core=window.BS28;
 let bs28StickyGroup='',bs28NextGroupChoice='',bs28GroupUserChosen=false,bs28LockRef=null,bs28LockListener=null,bs28LockEventId='',bs28Locks={},bs28RequestRef=null,bs28RequestListener=null,bs28RequestEventId='',bs28Requests={},bs28RequestLoaded=false,bs28Switching=false,bs28Submitting=false;
+let bs28AssignmentNoticeUntil=0,bs28AssignmentNoticeText='';
+
+// v28.5.4: Animate the already-saved official order. Does NOT reshuffle, write Firebase, or start a timer.
+let bs28AutoDrawCleanup=null;
+function bs28ShowAutoDrawReveal(groupId,stageName,officialIds){
+ if(!marshalLinkMode||running||pendingRun||!Array.isArray(officialIds)||!officialIds.length)return;
+ const order=officialIds.filter(id=>!!data.drivers[id]),first=data.drivers[order[0]];
+ if(!first)return;
+ if(bs28AutoDrawCleanup)bs28AutoDrawCleanup();
+ const old=document.getElementById('bs2854AutoDrawPopup');if(old)old.remove();
+ const cover=document.createElement('div');cover.id='bs2854AutoDrawPopup';cover.className='bs-draw-pop';
+ const firstText='#'+String(first.num||'?')+' '+String(first.name||'');
+ const stageLabel=String(stageName||'SS?');
+ const list=order.map((id,i)=>{
+   const d=data.drivers[id];
+   return '<li>'+String(i+1)+'. #'+bs28Esc(d.num||'?')+' '+bs28Esc(d.name||'')+'</li>';
+ }).join('');
+ cover.innerHTML='<section class="bs-draw-dialog" role="dialog" aria-modal="true" aria-labelledby="bsDrawTitle">'+
+   '<div class="bs-draw-eyebrow">OFFICIAL AUTO DRAW · ORDER ALREADY SAVED</div>'+
+   '<h2 class="bs-draw-title" id="bsDrawTitle">Driver draw</h2>'+
+   '<div class="bs-draw-stagebar"><span class="bs-draw-group">'+bs28Esc(bs28GroupName(groupId))+'</span><span class="bs-draw-stage">'+bs28Esc(stageLabel)+'</span></div>'+
+   '<div class="bs-draw-wheel" aria-live="off"><div class="bs-draw-wheel-label" id="bsDrawWheelLabel">REVEALING OFFICIAL ORDER...</div><div class="bs-draw-wheel-name" id="bsDrawWheelName">DRAW IN PROGRESS</div></div>'+
+   '<div class="bs-draw-reveal"><div class="bs-draw-first"><span class="bs-draw-number">#'+bs28Esc(first.num||'?')+'</span>'+
+   '<div class="bs-draw-first-text"><small>FIRST DRIVER · POSITION 1</small><strong class="bs-draw-first-name">'+bs28Esc(first.name||'')+'</strong></div></div>'+
+   '<div class="bs-draw-order-heading">OFFICIAL RUNNING ORDER · '+order.length+' DRIVERS</div><ol class="bs-draw-order">'+list+'</ol></div>'+
+   '<p class="bs-draw-footnote">The official draw is already saved. Race Control is now on '+bs28Esc(stageLabel)+'. Timer remains stopped until START.</p>'+
+   '<button type="button" class="bs-draw-action" id="bsDrawContinue">SKIP ANIMATION</button></section>';
+ document.body.appendChild(cover);
+ const display=cover.querySelector('#bsDrawWheelName'),caption=cover.querySelector('#bsDrawWheelLabel'),button=cover.querySelector('#bsDrawContinue');
+ let interval=null,revealTimer=null,revealed=false,closed=false,frame=0;
+ const close=()=>{if(closed)return;closed=true;clearInterval(interval);clearTimeout(revealTimer);cover.remove();document.removeEventListener('keydown',keyHandler);if(bs28AutoDrawCleanup===close)bs28AutoDrawCleanup=null};
+ bs28AutoDrawCleanup=close;
+ const reveal=()=>{
+   if(closed||revealed)return;
+   revealed=true;clearInterval(interval);clearTimeout(revealTimer);
+   display.textContent=firstText;caption.textContent='DRAW COMPLETE · FIRST DRIVER';
+   cover.classList.add('bs-draw-revealed');
+   button.textContent='CONTINUE TO RACE CONTROL';
+   button.focus();
+ };
+ const keyHandler=e=>{if(e.key==='Escape')close()};
+ document.addEventListener('keydown',keyHandler);
+ button.addEventListener('click',()=>{if(!revealed)reveal();else close()});
+ cover.addEventListener('click',e=>{if(e.target===cover)close()});
+ const reduced=window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+ if(!reduced){
+  interval=setInterval(()=>{
+    if(closed||revealed)return;
+    const d=data.drivers[order[(frame*3+1)%order.length]]||first;
+    display.textContent='#'+String(d.num||'?')+' '+String(d.name||'');frame++;
+  },100);
+ }
+ revealTimer=setTimeout(reveal,reduced?180:1700);
+ button.focus();
+}
+const bs28AppliedRequestKey=()=>'bs-style-v28-marshal-applied-request:'+activeEventId();
+function bs28ShowAssignmentNotice(message){
+ bs28AssignmentNoticeText=message;bs28AssignmentNoticeUntil=Date.now()+30000;
+ const note=$('bs28AssignmentNotice');if(note){note.textContent=message;note.style.display='block'}
+}
+function bs28RefreshAssignmentNotice(){
+ const note=$('bs28AssignmentNotice');if(!note)return;
+ if(bs28AssignmentNoticeUntil>Date.now()){note.textContent=bs28AssignmentNoticeText;note.style.display='block'}
+ else note.style.display='none';
+}
 const bs28Plan=()=>data?.groupRotationV28||null;
 const bs28IsActive=()=>bs28Plan()?.enabled===true;
 const bs28Esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -1570,6 +1681,7 @@ function bs28RenderMarshal(){
   $('bs28SwitchButton').disabled=true;return;
  }
  bs28StartListeners();
+ bs28RefreshAssignmentNotice();
  const assignment=bs28CurrentAssignment();
  if(assignment){bs28StickyGroup=assignment.id;localStorage.setItem(bs28SavedGroupKey(),assignment.id)}
  const stageGroupId=assignment?.id||bs28GetSticky(),stageGroup=plan.groups?.[stageGroupId];
@@ -1578,7 +1690,7 @@ function bs28RenderMarshal(){
  const stageResultsSaved=!!(stageGroup&&current&&bs28Core.allResultsConfirmed(stageGroup,data,current));
  const stageChoosing=stageGroup?.status==='CHOOSING'&&!current;
  if(stageGroup){
-  $('bs28MarshalHeading').textContent='GROUP ROTATION · V28.5';
+  $('bs28MarshalHeading').textContent='GROUP ROTATION · V28.5.2';
   $('bs28MarshalInfo').textContent=ready?
    `CURRENT: ${bs28GroupName(stageGroupId)} · ${current} · ${bs28Core.memberIds(stageGroup.members).filter(id=>bs28Core.statusFor(data.results?.[id]?.[bs28Core.stageIndex(current)])).length}/${bs28Core.memberIds(stageGroup.members).length} saved · ${stageGroup.status}`:
    stageGroup.status==='FINISHED'?'This group has completed all required stages.':
@@ -1599,6 +1711,23 @@ function bs28RenderMarshal(){
  // yet have a new stage may be selected. Unconfirmed completed groups are
  // described in the status line, never offered as a misleading selectable
  // group. The list is EVENT-WIDE, not tied to this phone's SS or marshal.
+ let ownReq=null;try{ownReq=JSON.parse(localStorage.getItem(bs28RequestKey())||'null')}catch(e){}
+ const ownRemote=ownReq?.groupId?bs28Requests[ownReq.groupId]:null;
+ const ownRequestAge=Date.now()-Number(ownReq?.savedAt||0);
+ // Hide this phone's just-submitted group immediately (even before the
+ // coordinator replies). Never hide it indefinitely: after 15 seconds the
+ // marshal may submit a replacement request if Main Control is not responding.
+ const submittedGroupId=!!(ownReq?.groupId&&ownReq?.requestId&&ownRequestAge>=0&&ownRequestAge<15000&&
+  (!ownRemote||ownRemote.requestId===ownReq.requestId&&ownRemote.status==='pending')&&
+  plan.groups?.[ownReq.groupId]?.status==='CHOOSING'&&!plan.groups[ownReq.groupId].currentStage)?ownReq.groupId:'';
+ const pendingNotice=$('bs28DrawPendingNotice');
+ if(pendingNotice){
+  const stillPending=!!(ownReq?.requestId&&plan.groups?.[ownReq.groupId]?.status==='CHOOSING'&&
+   (!ownRemote||ownRemote.requestId===ownReq.requestId&&ownRemote.status==='pending'));
+  pendingNotice.style.display=stillPending?'block':'none';
+  if(stillPending)pendingNotice.textContent=bs28GroupName(ownReq.groupId)+' → '+ownReq.destination+
+   ' · DRAW REQUEST SENT. Waiting for Main Control to publish the official driver order. START remains manual.';
+ }
  const groupStates=Object.entries(plan.groups||{}).map(([id,g])=>{
   const members=bs28Core.memberIds(g?.members),total=members.length;
   const saved=g?.currentStage?members.filter(driver=>
@@ -1608,20 +1737,21 @@ function bs28RenderMarshal(){
   const verifying=!!(total&&g?.currentStage&&saved===total&&g.status!=='FINISHED');
   return {id,g,total,saved,ready,verifying};
  });
- const readyGroups=groupStates.filter(x=>x.ready).sort((a,b)=>a.id.localeCompare(b.id));
+ const readyGroups=groupStates.filter(x=>x.ready&&x.id!==submittedGroupId).sort((a,b)=>a.id.localeCompare(b.id));
  const verifyingGroups=groupStates.filter(x=>x.verifying).sort((a,b)=>a.id.localeCompare(b.id));
  const candidates=readyGroups.map(x=>x.id);
  const summary=$('bs28WaitingGroupsSummary');
  if(summary){
   const readyLabel=readyGroups.map(x=>bs28GroupName(x.id)).join(' · ');
   const verifyingLabel=verifyingGroups.map(x=>bs28GroupName(x.id)).join(' · ');
-  summary.textContent=readyGroups.length?
+  const sentLabel=submittedGroupId?'DRAW REQUEST SENT: '+bs28GroupName(submittedGroupId)+' → '+ownReq.destination+' · ':'';
+  summary.textContent=sentLabel+(readyGroups.length?
    'AVAILABLE GROUPS: '+readyLabel+(verifyingGroups.length?'  |  WAITING FOR CONFIRMATION: '+verifyingLabel:''):
    verifyingGroups.length?'RESULTS SAVED · WAITING FOR MAIN CONTROL: '+verifyingLabel:
-   'NO GROUP AVAILABLE YET. Finish and SAVE all drivers in a group first.';
+   submittedGroupId?'NO OTHER GROUP AVAILABLE. Waiting for official draw.':
+   'NO GROUP AVAILABLE YET. Finish and SAVE all drivers in a group first.');
   summary.classList.toggle('is-pending',!readyGroups.length);
  }
- let ownReq=null;try{ownReq=JSON.parse(localStorage.getItem(bs28RequestKey())||'null')}catch(e){}
  if(bs28NextGroupChoice&&!candidates.includes(bs28NextGroupChoice)){
   bs28NextGroupChoice='';bs28GroupUserChosen=false;
  }
@@ -1666,6 +1796,7 @@ function bs28RenderMarshal(){
  if(!accessOK)status.textContent='MARSHAL LINK CLOSED OR OFFLINE · Ask Main Control to open access.';
  else if(busy)status.textContent='SAVE the current run, release its stage lock, and finish pending uploads first.';
  else if(bs28Submitting)status.textContent='SAVING SS CHOICE to Firebase…';
+ else if(submittedGroupId)status.textContent='REQUEST SENT · '+bs28GroupName(submittedGroupId)+' removed from Available Groups. Waiting for Main Control to save the official draw and update Race Control.';
  else if(!readyGroups.length)status.textContent=verifyingGroups.length?
   'All results saved; waiting for Main Control to verify/release the last run lock. Ask organiser to check the previous SS if this persists.':
   'No group ready to move. Groups appear here automatically after their current SS is completed and confirmed.';
@@ -1674,29 +1805,71 @@ function bs28RenderMarshal(){
  else if(pendingRequest)status.textContent='PREVIOUS SS CHOICE IS BEING PROCESSED. You can change Group or SS and confirm another choice. Timer START stays manual.';
  else status.textContent='READY · '+bs28GroupName(selectedGroupId)+' → '+destSelect.value+'. Choose any OPEN, unoccupied SS. Timer starts only after START.';
 
- // A device remembers only its own last selection for automatic navigation.
- // It is NEVER a lock. The authoritative assignment/draw is in Firebase.
- const reqGroup=ownReq&&plan.groups?.[ownReq.groupId];
+ // The official assignment and draw must BOTH exist in Firebase before
+ // Race Control changes. A saved *request* alone never authorises START.
+ // If an acknowledgement reached Firebase before the local set() promise
+ // resolved, recover the last accepted request from this marshal's own UID.
  const remoteRequest=ownReq&&bs28Requests[ownReq.groupId];
- const drawSaved=!!(reqGroup?.currentStage===ownReq?.destination&&plan.orders?.[ownReq?.groupId]?.[ownReq?.destination]?.order?.length);
- if(!bs28Switching&&ownReq?.requestId&&drawSaved&&!busy){
-  const nextStage=bs28Core.stageIndex(ownReq.destination);
+ let confirmed=ownReq?.requestId?ownReq:null;
+ const applied=localStorage.getItem(bs28AppliedRequestKey())||'';
+ if(!confirmed&&auth?.currentUser?.uid){
+  const recent=Object.entries(bs28Requests).filter(([gid,req])=>
+    req?.status==='accepted'&&req?.authUid===auth.currentUser.uid&&
+    req.requestId!==applied&&Date.now()-Number(req.decidedAt||0)<120000&&
+    plan.groups?.[gid]?.currentStage===req.destination&&
+    plan.orders?.[gid]?.[req.destination]?.order?.length
+  ).sort((a,b)=>Number(b[1].decidedAt||0)-Number(a[1].decidedAt||0))[0];
+  if(recent)confirmed={requestId:recent[1].requestId,groupId:recent[0],destination:recent[1].destination};
+ }
+ const finishedGroup=confirmed&&plan.groups?.[confirmed.groupId];
+ const drawSaved=!!(finishedGroup?.currentStage===confirmed?.destination&&
+  plan.orders?.[confirmed?.groupId]?.[confirmed?.destination]?.order?.length&&
+  plan.stageOwners?.[confirmed?.destination]===confirmed?.groupId);
+ if(!bs28Switching&&confirmed?.requestId&&drawSaved&&!busy&&confirmed.requestId!==applied){
+  const nextStage=bs28Core.stageIndex(confirmed.destination);
   if(nextStage>=0){
    bs28Switching=true;
    stage=nextStage;localStorage.setItem('bs28-stage',String(stage));
-   localStorage.removeItem(selectedDriverKey);$('manualTime').value='';
+   // Clear the previous stage's selected driver so Race Control picks the
+   // actual position-1 driver from the newly saved official order.
+   localStorage.removeItem(selectedDriverKey);$('driver').value='';$('manualTime').value='';
    localStorage.setItem(lastClockKey,'0');$('clock').textContent='00:00.00';
+   localStorage.setItem(bs28AppliedRequestKey(),confirmed.requestId);
    localStorage.removeItem(bs28RequestKey());
+   bs28StickyGroup=confirmed.groupId;
+   localStorage.setItem(bs28SavedGroupKey(),confirmed.groupId);
    bs28NextGroupChoice='';bs28GroupUserChosen=false;
-   status.textContent=ownReq.destination+' READY · Fresh draw saved. Press START manually.';
-   setTimeout(()=>{bs28Switching=false;render();bs28RenderMarshal()},0);
+   bs28ShowAssignmentNotice(bs28GroupName(confirmed.groupId)+' ASSIGNED TO '+confirmed.destination+' — official draw ready. Choose driver and press START.');
+   status.textContent=confirmed.destination+' READY · Official running order saved. Timer is STOPPED.';
+   if(pendingNotice)pendingNotice.style.display='none';
+   // The plan already has an accepted reservation AND saved official order.
+   // Updating Race Control now populates the driver dropdown immediately.
+   render();
+   // Display a purely visual auto-draw animation, then reveal the actual
+   // saved first driver and official order. Never rerandomize the Firebase draw.
+   bs28ShowAutoDrawReveal(confirmed.groupId,confirmed.destination,
+    plan.orders?.[confirmed.groupId]?.[confirmed.destination]?.order||[]);
+   setTimeout(()=>{
+    bs28Switching=false;bs28RenderMarshal();
+    const anchor=document.querySelector('.marshal-control-head');
+    if(anchor&&typeof anchor.scrollIntoView==='function')anchor.scrollIntoView({behavior:'smooth',block:'start'});
+   },40);
   }
  }else if(!bs28Switching&&ownReq?.requestId&&bs28RequestLoaded&&remoteRequest?.requestId===ownReq.requestId&&remoteRequest.status==='rejected'){
   localStorage.removeItem(bs28RequestKey());
-  status.textContent='SS NOT ASSIGNED: '+String(remoteRequest.reason||'No longer available')+'. Choose another OPEN SS.';
+  status.textContent='NOT ASSIGNED: '+String(remoteRequest.reason||'Main Control rejected this choice')+'. Choose an available SS again.';
  }else if(!bs28Switching&&ownReq?.requestId&&bs28RequestLoaded&&remoteRequest?.requestId&&remoteRequest.requestId!==ownReq.requestId){
   localStorage.removeItem(bs28RequestKey());
-  status.textContent='Another marshal changed this group selection. The selectors are still available; choose again if needed.';
+  status.textContent='Another marshal submitted a newer choice. You may select Group and SS again.';
+ }else if(ownReq?.requestId&&!drawSaved){
+  if(remoteRequest?.requestId===ownReq.requestId&&remoteRequest.status==='accepted'){
+   status.textContent='MAIN CONTROL ACCEPTED · Waiting for the new draw to load. START remains locked.';
+  }else if(remoteRequest?.requestId===ownReq.requestId&&remoteRequest.status==='pending'){
+   status.textContent='REQUEST RECEIVED BY FIREBASE · Waiting for Main Control to approve the draw. '+
+     (Date.now()-Number(ownReq.savedAt||0)>12000?'OPEN index.html on the organiser phone/laptop, sign in and verify COORDINATOR ACTIVE, then tap CHECK AUTOMATIC ROTATION NOW.':'The stopwatch remains stopped.');
+  }else{
+   status.textContent='REQUEST SAVED · Awaiting organiser coordinator. Main Control (index.html) must be online and active to create the official draw.';
+  }
  }
  const canStart=!!(ready&&plan.stages?.[current]?.included&&plan.stages[current].open&&!plan.stages[current].cancelled&&accessOK);
  if(!running&&!pendingRun){$('start').disabled=$('start').disabled||!canStart;$('markDns').disabled=$('markDns').disabled||!canStart;$('prepareManual').disabled=$('prepareManual').disabled||!canStart}
@@ -1733,12 +1906,21 @@ async function bs28SelectSS(){
  // No per-device or per-group choice lock: the most recent valid choice wins
  // until the organiser coordinator commits a real stage assignment/draw.
  bs28Submitting=true;
+ // Save the handoff token BEFORE Firebase acknowledgement can arrive.
+ // It is not a lock. On a denied write this entry is removed again.
+ const handoff={requestId:id,groupId,destination:dest,savedAt:Date.now()};
+ localStorage.setItem(bs28RequestKey(),JSON.stringify(handoff));
  try{
   await path.set(request);
-  localStorage.setItem(bs28RequestKey(),JSON.stringify({requestId:id,groupId,destination:dest}));
-  $('bs28SwitchStatus').textContent='SS CHOICE SAVED · '+bs28GroupName(groupId)+' → '+dest+'. Waiting for official draw. You can choose again; no timer has started.';
- }catch(e){alert('SS CHOICE WAS NOT SAVED: '+e.message+'\nPublish the included Firebase Rules v28.5 patch before retrying.');}
- finally{bs28Submitting=false;bs28RenderMarshal()}
+  // On save, remove the submitted group from the available choices at once.
+  // The official driver list is activated only when Main Control saves the draw.
+  bs28NextGroupChoice='';bs28GroupUserChosen=false;
+  $('bs28SwitchStatus').textContent='REQUEST SAVED · '+bs28GroupName(groupId)+' → '+dest+'. Waiting for automatic official draw.';
+ }catch(e){
+  const stored=JSON.parse(localStorage.getItem(bs28RequestKey())||'null');
+  if(stored?.requestId===id)localStorage.removeItem(bs28RequestKey());
+  alert('SS CHOICE WAS NOT SAVED: '+e.message+'\nCheck your Firebase Rules and marshal link.');
+ }finally{bs28Submitting=false;bs28RenderMarshal()}
 }
 $('bs28NextGroup')?.addEventListener('change',e=>{
  if(running||pendingRun||savingResult)return;
@@ -1749,7 +1931,7 @@ $('bs28NextGroup')?.addEventListener('change',e=>{
 $('bs28NextSS')?.addEventListener('change',bs28RenderMarshal);
 $('bs28SwitchButton')?.addEventListener('click',bs28SelectSS);
 
-window.BS28_MARSHAL_READY=true;window.BS28_MARSHAL_VERSION="28.5";setInterval(()=>{if(bs28IsActive())bs28RenderMarshal()},1800);bs28RenderMarshal();
+window.BS28_MARSHAL_READY=true;window.BS28_MARSHAL_VERSION="28.5.4";setInterval(()=>{if(bs28IsActive())bs28RenderMarshal()},1800);bs28RenderMarshal();
 })();
 /* System-wide uppercase for human-readable text fields, including dynamically rendered inputs. */
 (function installUppercaseWordInputs(){

@@ -173,10 +173,27 @@ input[type="reset"]:focus-visible,
 <style id="bs28-css">
 .bs28-section{border:1px solid #45698c!important;background:linear-gradient(155deg,#17243a,#101c30)!important}
 .bs28-section h2{margin:0 0 12px}.bs28-section h3{margin:18px 0 10px;font-size:1.05rem}
+.bs28-section details{margin:0}.bs28-section summary{font-size:19px;line-height:1.45;cursor:pointer;font-weight:800}
+.bs28-section summary::marker{color:#93c5fd}.bs28-section details[open]>summary{margin-bottom:14px}
+.bs28-summary-state{display:inline-block;padding:3px 9px;margin-left:6px;border:1px solid #475569;border-radius:999px;background:#253449;color:#d6e1ed;font-size:11px;font-weight:900;letter-spacing:.05em;vertical-align:middle}
+.bs28-summary-state[data-mode="RACING"]{color:#bbf7d0;background:#124b33;border-color:#22c55e}.bs28-summary-state[data-mode="SETUP"]{color:#fde68a;background:#614212;border-color:#f59e0b}
+.bs28-stage-setup-hint{font-size:12px;line-height:1.55;margin-top:4px}
 .bs28-coordinator{border:1px solid #396b5c;background:rgba(20,131,99,.12);border-radius:11px;padding:12px;margin:8px 0;font-weight:700}
 .bs28-card-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:10px;margin:12px 0}
 .bs28-stage,.bs28-group{border:1px solid #3d5169;border-radius:12px;background:rgba(255,255,255,.045);padding:14px;display:flex;flex-direction:column;gap:8px}
 .bs28-stage span,.bs28-group small{font-size:.9rem;color:#b7c8df}.bs28-actions{display:flex;gap:8px;flex-wrap:wrap}.bs28-actions button{flex:1;min-height:38px}
+/* SS status colours are inside each stage box, not only on the action button. */
+.bs28-stage.bs28-stage-open{border:2px solid #22c55e;background:rgba(22,163,74,.17)}
+.bs28-stage.bs28-stage-busy{border:2px solid #fb923c;background:rgba(234,88,12,.17)}
+.bs28-stage.bs28-stage-closed{border:2px solid #ef4444;background:rgba(220,38,38,.16)}
+.bs28-stage.bs28-stage-cancelled{border:2px solid #b4656c;background:rgba(118,38,45,.22)}
+.bs28-stage-head{display:flex;align-items:center;justify-content:space-between;gap:6px;flex-wrap:wrap}
+.bs28-stage .bs28-stage-status{display:inline-flex;align-items:center;justify-content:center;border-radius:8px;padding:6px 10px;font-size:12px;font-weight:900;letter-spacing:.04em;color:#fff;line-height:1.2;min-width:76px}
+.bs28-stage-open .bs28-stage-status{background:#166534;border:1px solid #4ade80}
+.bs28-stage-busy .bs28-stage-status{background:#9a3412;border:1px solid #fdba74}
+.bs28-stage-closed .bs28-stage-status{background:#991b1b;border:1px solid #fca5a5}
+.bs28-stage-cancelled .bs28-stage-status{background:#6d2029;border:1px solid #c5848d}
+.bs28-stage .bs28-stage-assignment{font-size:12px;font-weight:800;line-height:1.3;color:#fbe6c8}
 .bs28-stage select,.bs28-section select{width:100%;max-width:100%;margin-top:6px;min-height:42px}
 .bs28-order{margin:8px 0}.bs28-order-row{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px 8px;border-bottom:1px solid #3c4b5d}.bs28-order-row small{color:#bccddd}
 .bs28-m-stage{display:flex;flex-direction:column;gap:5px;border:1px solid #4a5463;background:rgba(255,255,255,.04);border-radius:10px;padding:11px}
@@ -193,8 +210,60 @@ input[type="reset"]:focus-visible,
 .event-advanced-details{margin-top:12px}
 @media(max-width:750px){.event-settings-fields{grid-template-columns:1fr}.event-settings-buttons{flex-direction:column}}
 </style>
+
+<style id="bs2854-main-shortcuts-style">
+/* Sitewide section shortcuts. Keep compact on phones; no impact on race logic. */
+#mainSectionShortcuts{position:sticky;top:0;z-index:100;display:flex;align-items:center;gap:10px;
+ background:rgba(11,22,40,.96);border:1px solid #375475;border-radius:13px;padding:9px 10px;
+ margin:8px 0 12px;box-shadow:0 6px 16px rgba(0,0,0,.22);backdrop-filter:blur(8px);
+ -webkit-backdrop-filter:blur(8px);max-width:100%;min-width:0}
+#mainSectionShortcuts .bs-nav-label{font-size:11px;letter-spacing:.07em;font-weight:900;color:#bfd9f4;white-space:nowrap;flex-shrink:0}
+#mainSectionShortcuts .bs-nav-links{display:flex;align-items:center;gap:7px;overflow-x:auto;overscroll-behavior-x:contain;
+ -webkit-overflow-scrolling:touch;scrollbar-width:thin;flex:1;min-width:0;padding:2px 1px 5px}
+#mainSectionShortcuts .bs-nav-link{display:inline-flex;align-items:center;justify-content:center;flex:0 0 auto;
+ white-space:nowrap;border:1px solid #466a94;border-radius:999px;color:#e9f3ff;background:#1a3150;
+ text-decoration:none;padding:8px 12px;font-size:12px;line-height:1.25;font-weight:800;min-height:36px}
+#mainSectionShortcuts .bs-nav-link:hover,#mainSectionShortcuts .bs-nav-link:focus-visible{background:#2463aa;border-color:#93c5fd;color:#fff;outline:2px solid transparent}
+#mainSectionShortcuts .bs-nav-link:active{transform:scale(.98)}
+body > section.card{scroll-margin-top:82px}
+@media(max-width:640px){#mainSectionShortcuts{gap:6px;padding:7px;margin:7px 0 10px;border-radius:11px}
+#mainSectionShortcuts .bs-nav-label{font-size:10px}#mainSectionShortcuts .bs-nav-link{padding:7px 10px;min-height:34px;font-size:11px}}
+</style>
 </head><body>
 <header><div class="brand"><img src="logo.svg" alt="TECH-ARTS CRAWLER logo" class="brand-logo"><div><h1>BS-STYLE POINT RC TIME ATTACK</h1><small>BORNEO SABAH • CRAWL HARD • COMPETE HARDER</small></div></div><span class="pill" id="status">Local mode</span></header>
+
+<nav id="mainSectionShortcuts" aria-label="Jump to Main Control section">
+ <span class="bs-nav-label">JUMP TO</span>
+ <div class="bs-nav-links">
+  <a class="bs-nav-link" href="#raceControlPanel">Race</a>
+  <a class="bs-nav-link" href="#manualInputPanel">Manual</a>
+  <a class="bs-nav-link" href="#mainLeaderboardPanel">Results</a>
+  <a class="bs-nav-link" href="#penaltyPanel">Penalties</a>
+  <a class="bs-nav-link" href="#mainDriverRegistration">Drivers</a>
+  <a class="bs-nav-link" href="#bs28Panel">Groups</a>
+  <a class="bs-nav-link" href="#stageGateSetup">SS Setup</a>
+  <a class="bs-nav-link" href="#marshalStageManagement">Marshals</a>
+  <a class="bs-nav-link" href="#eventSettingsPanel">Firebase</a>
+  <a class="bs-nav-link" href="#eventUtilitiesPanel">Utilities</a>
+  <a class="bs-nav-link" href="#eventRecoveryPanel">Recovery</a>
+ </div>
+</nav>
+<script id="bs2854-shortcut-handler">
+(function(){'use strict';
+ const nav=document.getElementById('mainSectionShortcuts');
+ if(!nav)return;
+ nav.addEventListener('click',function(event){
+  const link=event.target.closest('a[href^="#"]');
+  if(!link||!nav.contains(link))return;
+  const target=document.getElementById(link.getAttribute('href').slice(1));
+  if(!target)return;
+  event.preventDefault();
+  const details=target.querySelector('details');
+  if(details)details.open=true;
+  target.scrollIntoView({behavior:window.matchMedia('(prefers-reduced-motion: reduce)').matches?'instant':'smooth',block:'start'});
+ });
+})();
+</script>
 <div id="syncHealth" class="sync-health offline" role="status" aria-live="polite">OFFLINE - local safety active; uploads wait until Firebase reconnects.</div><div class="sync-controls"><button id="retrySync" type="button">Retry pending sync</button></div>
 
 <section class="card" id="raceControlPanel"><h2>1. Race Control</h2><div class="row timer-selectors"><div><label for="stageSelect">Special Stage</label><select id="stageSelect"></select></div><div><label for="driver">Driver</label><select id="driver"></select></div></div><div id="runInfo" class="muted">Ready</div><div class="row alarm-row"><button id="enableAlarm" class="alarm-icon" title="Enable alarm / test 5-second sound" aria-label="Enable alarm / test 5-second sound">🔊</button><span id="alarmStatus" class="muted">Alarm not enabled</span></div><div id="wakeState" class="wake-state">Screen wake lock activates during timing where supported.</div><div class="clock-wrap"><div class="clock" id="clock">00:00.00</div><span class="pill connection-indicator offline" id="connectionIndicator" role="status" title="Not connected to Firebase. Results may remain only on this device.">OFFLINE</span></div><div class="row buttons"><button class="start" id="start">▶ START</button><button class="stop" id="stop" disabled>STOP</button><button class="warn" id="dnf" disabled title="Record DNF for timeout, crawler damage or Jump Gate; enter the valid gates cleared.">DNF</button></div><div class="row restart-stage-row hidden" id="restartStageRow"><button type="button" class="restart-stage-button" id="restartStageButton">↻ RESTART STAGE (60s)</button><span class="muted" id="restartStageNote">Available for 60 seconds after a stage is cleared.</span></div><div class="row resume-row hidden" id="resumeRow"><button class="resume-run" id="resumeRun" type="button">↩ UNDO STOP / RESUME RUN</button></div><div class="row confirm-stop-row hidden" id="confirmStopRow"><button class="confirm-stop" id="confirmStop" type="button">✓ CONFIRM STOP — LOCK FINISH TIME</button></div><div id="dnfProgressPanel" class="dnf-progress hidden"><strong>DNF gate progress — required before saving</strong><span class="pill" id="dnfProgressTotal">Total gates: 10</span><div class="row"><div><label for="dnfGatesCleared">Gate markers cleared by this driver</label><input id="dnfGatesCleared" type="number" min="0" max="10" step="1" inputmode="numeric" placeholder="Enter 0 to total gates"></div></div><div id="dnfProgressInfo" class="dnf-progress-info" aria-live="polite">Enter the number of gates cleared before saving DNF.</div></div><div class="row buttons"><button class="primary save-result" id="saveResult" disabled>SAVE RESULT</button><span id="pendingStatus" class="muted">Stop, review penalties with the driver, CONFIRM STOP, then save.</span></div><div id="saveResultFeedback" class="save-result-feedback" role="status" aria-live="polite"></div><small>Tap Enable Alarm before racing. Keep this tab open. Confirmation with driver before saved result.</small><div class="penalty-quick-wrap"><div class="flex"><strong>Penalty tap counts</strong><span class="pill" id="penaltyTapTotal">0 taps</span></div><div id="penaltyCounterDriver" class="muted penalty-note">Tap + if penalty occur.</div><p class="muted penalty-note" style="margin:6px 0 0">Tap <b>+</b> to record penalties. Saved results may be corrected from Main Control.</p><div id="penaltyCounters" class="penalty-counter-grid"><div class="muted">No penalty types configured yet.</div></div><div id="penaltyCounterSummary" class="ok penalty-counter-summary">Total taps: 0 • Point deduction: 0 pts</div><div id="quickPenaltyStatus" class="quick-status" aria-live="polite"></div></div></section>
@@ -203,15 +272,17 @@ input[type="reset"]:focus-visible,
 
 
 <section class="card" id="manualInputPanel"><details><summary>2. Manual Stopwatch Input </summary><p class="muted manual-help">Update manual time here. Review penalties under the timer, then press SAVE RESULT.</p><div class="row"><div><label>Manual elapsed time</label><input id="manualTime" type="text" placeholder="Phone: 021435 = 02:14.35" inputmode="numeric" pattern="[0-9]*" autocomplete="off" enterkeyhint="done" aria-describedby="manualTimeHelp"><small id="manualTimeHelp" class="muted">Phone: enter digits only — 021435 = 02:14.35; 0214 = 02:14.00; 08 = 00:08.00. Laptop: mm:ss.cc also works.</small></div><div><label>Manual result status</label><select id="manualStatus"><option value="finish">Finish</option><option value="dnf">DNF</option><option value="dns">DNS</option></select></div><button id="prepareManual" class="primary">Prepare result for review</button></div><div id="manualStatusMessage" class="muted" aria-live="polite"></div></details></section>
-<section class="card"><details><summary>1. Live points leaderboard</summary><div class="flex"><span class="pill" id="count"></span></div><div class="scroll"><table><thead><tr><th>Rank</th><th>Driver</th><th id="stageHeaders" colspan="1">Stages</th><th>Total</th><th>Status</th></tr></thead><tbody id="board"></tbody></table></div><div id="raceProgress" class="muted" style="margin-top:10px;font-weight:600"></div><small>Overall ranking: highest net points wins. FINISH and DNF net points cannot fall below the minimum Gate-1 score (round(DNF base / total gates)). DNF net = max(Gate-1 minimum, round(DNF base x gates cleared / total gates) minus point penalties). DNS = 0. If stage points tie, FINISH ranks above DNF. Overall tie-break: more FINISH results, higher SS4 net points, lower total raw time across FINISH stages, then lower race number. DNF base is frozen at the first official result; later entries do not change it. Gate totals lock after the first saved result in that SS.</small></details></section>
+<section class="card" id="mainLeaderboardPanel"><details><summary>1. Live points leaderboard</summary><div class="flex"><span class="pill" id="count"></span></div><div class="scroll"><table><thead><tr><th>Rank</th><th>Driver</th><th id="stageHeaders" colspan="1">Stages</th><th>Total</th><th>Status</th></tr></thead><tbody id="board"></tbody></table></div><div id="raceProgress" class="muted" style="margin-top:10px;font-weight:600"></div><small>Overall ranking: highest net points wins. FINISH and DNF net points cannot fall below the minimum Gate-1 score (round(DNF base / total gates)). DNF net = max(Gate-1 minimum, round(DNF base x gates cleared / total gates) minus point penalties). DNS = 0. If stage points tie, FINISH ranks above DNF. Overall tie-break: more FINISH results, higher SS4 net points, lower total raw time across FINISH stages, then lower race number. DNF base is frozen at the first official result; later entries do not change it. Gate totals lock after the first saved result in that SS.</small></details></section>
 <section class="card" id="penaltyPanel"><details><summary>2. Penalty Setup</summary><div class="flex"><span class="pill">Same rules for every SS</span></div><p class="muted">Configure each penalty type and its point deduction before racing. Final preset: Touch 15 points, Special Gate 5 points, Outrack 10 points and Roll Over 5 points; a Jump Gate violation is recorded as DNF using the DNF control. Roll Over applies only when the crawler comes to a complete stop with all four tyres lifted off the ground (all four tyres are in the air); a brief bounce or momentary lift while the crawler is still moving does not count. Each tap deducts points from that stage score; it does not add time or change raw-time finishing order. Values are frozen when a tap is recorded, so existing tap values remain unchanged when the preset is applied. Existing Event IDs keep their saved rules until the organiser applies the updated preset below.</p><h3 style="font-size:15px;margin:14px 0 8px">Shared penalty types</h3><div class="row"><div><label>Penalty type name</label><input id="penaltyName" data-admin-control placeholder="e.g. Gate violation"></div><div><label>Point deduction per tap</label><input id="penaltyPoints" data-admin-control type="number" step="1" min="0" max="9999" value="5" inputmode="numeric"></div><button id="addPenaltyType" class="primary" data-admin-control>+ Add penalty type</button><button id="applyFinalPenaltyPreset" type="button" data-admin-control>Apply updated penalty preset</button></div><div class="scroll"><table><thead><tr><th>Penalty type</th><th>Points deducted each</th><th>Actions</th></tr></thead><tbody id="penaltyRulesBody"></tbody></table></div></details></section>
 
-<section class="card"><details><summary>3. Driver registration</summary><div class="row"><input id="num" type="hidden"><input id="name" placeholder="Driver / Team Name" aria-label="Driver or team name" autocomplete="name"><button id="add" type="button">Register driver</button></div><p class="muted" style="margin-top:6px">Race numbers are assigned automatically as 3-digit running numbers starting at 101.</p><div class="scroll"><table><thead><tr><th>Race #</th><th>Driver / Team</th><th>Action</th></tr></thead><tbody id="roster"></tbody></table></div></details></section>
+<section class="card" id="mainDriverRegistration"><details><summary>3. Driver registration</summary><div class="row"><input id="num" type="hidden"><input id="name" placeholder="Driver / Team Name" aria-label="Driver or team name" autocomplete="name"><button id="add" type="button">Register driver</button></div><p class="muted" style="margin-top:6px">Race numbers are assigned automatically as 3-digit running numbers starting at 101.</p><div class="scroll"><table><thead><tr><th>Race #</th><th>Driver / Team</th><th>Action</th></tr></thead><tbody id="roster"></tbody></table></div></details></section>
 
 <section class="card bs28-section" id="bs28Panel" aria-label="Group rotation control">
-  <h2>4. Group Rotation &amp; Automatic Draw</h2>
-  <p class="muted">New-project race system. Main Control is the automatic coordinator while connected.</p>
+  <details id="bs28Details">
+    <summary>4. Group Rotation &amp; Automatic Draw <span class="bs28-summary-state" id="bs28SummaryState">NOT CONFIGURED</span></summary>
+  <p class="muted">Main Control coordinates new SS assignments while connected. Add new stages only in Section 5.</p>
   <div class="bs28-coordinator" id="bs28Coordinator" role="status">Coordinator awaits connection</div>
+  <small class="muted">Automatic stage-request handoff v28.5.1</small>
   <div class="pill" id="bs28Mode">GROUP ROTATION: NOT CONFIGURED</div>
   <p id="bs28Message" class="muted" role="status" aria-live="polite"></p>
   <div id="bs28Setup">
@@ -229,8 +300,7 @@ input[type="reset"]:focus-visible,
   <h3>Special Stages · OPEN / CLOSE / CANCEL</h3>
   <p class="muted">CLOSE temporarily blocks new starts. CANCEL removes that SS from official overall scoring while preserving historical results.</p>
   <div id="bs28StageCards" class="bs28-card-grid"></div>
-  <button type="button" data-v28-action="add">+ ADD NEW SS (CLOSED)</button>
-  
+  <p class="muted bs28-stage-setup-hint">To add an SS, open <b>Section 5 · SS &amp; Gate Setup</b> and tap <b>+ Add SS</b>. The new SS appears here automatically as CLOSED.</p>
   <h3>Live Groups &amp; Rotation</h3>
   <div id="bs28LiveGroups" class="bs28-card-grid">No group rotation configured.</div>
   <button type="button" data-v28-action="pulse">CHECK AUTOMATIC ROTATION NOW</button>
@@ -240,8 +310,9 @@ input[type="reset"]:focus-visible,
     <button type="button" data-v28-action="late">ADD LATE DRIVER</button>
     <h3>Catch-up Required</h3><div id="bs28Catchup"></div>
   </div>
+  </details>
 </section>
-<section class="card" id="stageGateSetup"><details><summary>5. SS &amp; Gate Setup</summary><p class="muted stage-setup-note">Configure each Special Stage here. Edit the DNF cutoff and total gate markers for every SS, then tap <b>Save all change</b>. Total gate markers cannot be changed after any result has been saved for that SS.</p><div id="stageSetupRows" class="stage-setup-rows"></div><div class="stage-setup-actions"><button id="addStage" class="primary">+ Add SS</button><button id="removeStage" class="warn">− Remove last SS</button><button id="saveStageSetupAll" class="start" data-admin-control>Save all change</button></div></details></section>
+<section class="card" id="stageGateSetup"><details><summary>5. SS &amp; Gate Setup</summary><p class="muted stage-setup-note">Manage the SS count here: <b>+ Add SS</b> also creates the stage automatically in Group Rotation as CLOSED. Set the DNF cutoff and total gate markers, then tap <b>Save all change</b>. Total gate markers cannot be changed after a saved result. Removing a stage is disabled once Group Rotation is initialized, to protect official assignments and results.</p><div id="stageSetupRows" class="stage-setup-rows"></div><div class="stage-setup-actions"><button id="addStage" class="primary">+ Add SS</button><button id="removeStage" class="warn">− Remove last SS</button><button id="saveStageSetupAll" class="start" data-admin-control>Save all change</button></div></details></section>
 <section class="card" id="marshalStageManagement"><details open><summary>6. Marshal Access &amp; Stage Lock Management</summary><p class="muted">Manage marshal access for the current Event ID and recover a stage lock only after checking the active run. Use the same Event ID shown in Firebase setup.</p><div class="row"><div><label for="marshalLockStage">Stage lock to reset</label><select id="marshalLockStage"></select></div><button type="button" id="resetMarshalStageLock" class="warn">Reset selected marshal stage lock</button></div><div id="marshalLockAdminStatus" class="muted" role="status" aria-live="polite">Select a stage. Reset requires confirmation. Check the active run before releasing a lock.</div><div class="muted marshal-share-link" id="marshalSharePanel" style="margin-top:12px">Marshal Race Control for this Event ID: <a id="marshalLink" href="marshal.html?event=bs28-test&amp;marshal=1" target="_blank" rel="noopener">Open marshal control</a> <button type="button" id="copyMarshalLink" class="copy-link-button">Copy marshal link</button> <button type="button" id="closeMarshalLink" class="copy-link-button marshal-link-close" aria-label="Close marshal access">× Close marshal access</button><small class="marshal-share-help">This link is unique to the current Event ID. Closing access disables existing links for this event only.</small></div><button type="button" id="showMarshalLink" class="copy-link-button" style="display:none;margin-top:8px">Open marshal access</button></details></section>
 
 <section class="card" id="eventSettingsPanel">
@@ -462,7 +533,7 @@ async function reviewPendingRun(){if(!pendingRun||savingResult)return;if((pendin
 async function notifyNextDriver(savedId,s){const order=drawOrderState(s).order||[],index=order.indexOf(savedId),after=index>=0?order.slice(index+1).concat(order.slice(0,index+1)):order;const nextId=after.find(id=>id!==savedId&&!result(id,s));if(nextId){localStorage.setItem('bs28-test-selected-driver',nextId);$('driver').value=nextId;render();await showRaceModal('next',{stage:s+1,next:true,num:data.drivers[nextId]?.num||'?',name:data.drivers[nextId]?.name||'Unknown driver'})}else{render();await showRaceModal('next',{stage:s+1,next:false})}}
 async function commitPendingRun(){if(!pendingRun||savingResult)return;if((pendingRun.requiresStopConfirmation||pendingRun.source==='timer')&&!pendingRun.confirmed)return alert('Press CONFIRM STOP after reviewing the time and penalties with the driver.');const item=clone(pendingRun),{id,s,status,overwriteAuthorized,source}=item;if(!data.drivers[id])return alert('The selected driver no longer exists.');if(status==='dnf'&&!validDnfGateCount(item))return alert('Before saving DNF, enter the number of gates cleared (0 to '+gateTotalForStage(s)+').');const existing=result(id,s);if(existing&&!overwriteAuthorized){if(!requireAdmin())return;if(!confirm('A result already exists for this driver and stage. Overwrite it?'))return;if(!requireAdmin())return}const freezeDnfRoster=!(Number.isInteger(Number(data.dnfRosterCount))&&Number(data.dnfRosterCount)>0);if(freezeDnfRoster){const rosterCount=Object.keys(data.drivers||{}).length;if(!rosterCount)return alert('Register at least one driver before saving a result.');data.dnfRosterCount=rosterCount;try{persist()}catch(e){data.dnfRosterCount=null;return alert('Could not save the frozen DNF participant count locally. Export a backup and try again. '+e.message)}const rosterSync=await sendOrQueue('dnfRosterCount',rosterCount);if(!rosterSync.persisted){data.dnfRosterCount=null;try{persist()}catch(_){}return alert('Could not safely save the frozen DNF participant count. No result was saved. Export a backup and contact the organiser.')}}const before=clone(existing);const manualSource=source==='manual'||source==='manual-override';const r={status,ms:status==='dnf'?data.cutoffs[s]:status==='dns'?0:item.ms,at:Date.now(),source:manualSource?'manual':'timer',...(status==='dnf'?{gatesCleared:Number(item.gatesCleared),totalGates:gateTotalForStage(s)}:{})};data.results[id]??={};data.results[id][s]=r;try{persist()}catch(e){if(before===null){delete data.results[id][s];if(!Object.keys(data.results[id]).length)delete data.results[id]}else data.results[id][s]=before;render();alert('The result could not be safely saved to this device storage. The pending run is still available. Export/clear browser storage before trying again.');return}const action=source==='manual-override'?'timer result manually adjusted before save':source==='manual'?'manual stopwatch result saved':'timer result saved';recordHistory(action,id,s,before,r);savingResult=true;try{pendingRun=null;try{localStorage.removeItem(pendingRunKey);localStorage.removeItem(activeRunKey)}catch(e){}if(running){clearInterval(tick);tick=null;running=null;releaseWake()}try{localStorage.setItem(lastClockKey,'0')}catch(e){}$('clock').textContent='00:00.00';$('manualStatus').value='finish';$('manualTime').value='';$('manualTime').disabled=false;$('prepareManual').textContent='Prepare result for review';render();const outcome=await sendOrQueue('results/'+id+'/'+s,r);if(outcome.online){await completeControlRunAfterFirebaseConfirmation();$('quickPenaltyStatus').textContent='SAVED ONLINE - Firebase confirmed this result.';$('pendingStatus').textContent='SAVED ONLINE - Firebase confirmed this result.';$('manualStatusMessage').textContent='Result saved and verified on Firebase.';showSaveResultFeedback('online','✓ RESULT SAVED ONLINE — Firebase confirmed this result.')}else if(outcome.queued){$('quickPenaltyStatus').textContent='SAVED LOCALLY - WAITING TO SYNC. Keep this page open and reconnect to Firebase.';$('pendingStatus').textContent='WAITING TO SYNC - result is saved on this device; Firebase has not confirmed it yet.';$('manualStatusMessage').textContent='Result saved locally. It will upload when this device reconnects to the same Firebase Event ID.';showSaveResultFeedback('local','✓ RESULT SAVED ON THIS DEVICE — waiting for Firebase sync.')}else{$('quickPenaltyStatus').textContent='WARNING - local result exists, but the upload queue could not be persisted. Export JSON backup now.';$('pendingStatus').textContent='UPLOAD QUEUE ERROR - export a JSON backup before leaving this page.';$('manualStatusMessage').textContent='Upload queue could not be persisted. Export JSON backup immediately.';showSaveResultFeedback('error','⚠ SAVE WARNING — export a JSON backup before leaving this page.');alert('WARNING: the result is in the current page data, but its upload queue could not be saved. Export a JSON backup immediately and do not refresh.')}await notifyNextDriver(id,s);updateSafetyStatus()}catch(e){setMsg('Result saved locally, but sync needs attention: '+e.message,true);$('quickPenaltyStatus').textContent='Saved locally; sync needs attention. Check the warning above.';showSaveResultFeedback('error','⚠ Save/sync needs attention — check the warning and export a backup if needed.')}finally{savingResult=false;$('saveResult').disabled=!pendingRun}}
 function prepareManualResult(){if(running)return alert('Stop the timer first, then you can use manual input to override its pending time before saving.');const status=$('manualStatus').value;const targetId=pendingRun?pendingRun.id:selected(),targetStage=pendingRun?pendingRun.s:stage;if(!targetId)return alert('Select a driver first.');let ms=status==='finish'?parse($('manualTime').value):status==='dnf'?data.cutoffs[targetStage]:0;if(status==='finish'&&ms===null)return alert('Enter manual time as mm:ss.cc, for example 02:14.35, or use digits only on a phone.');if(status==='finish'&&ms>=data.cutoffs[targetStage])return alert('A finish time must be below the SS cutoff. Choose DNF if the driver did not finish before cutoff.');if(pendingRun){const before=clone(pendingRun);const updated={...pendingRun,status,ms,source:pendingRun.source==='timer'||pendingRun.source==='manual-override'?'manual-override':'manual',manuallyAdjusted:true,adjustedAt:Date.now(),...(pendingRun.requiresStopConfirmation?{confirmed:false,confirmedAt:null}: {})};if(status==='dnf'){updated.totalGates=gateTotalForStage(targetStage);if(before.status!=='dnf')delete updated.gatesCleared}else{delete updated.gatesCleared;delete updated.totalGates}pendingRun=updated;localStorage.setItem(pendingRunKey,JSON.stringify(pendingRun));localStorage.setItem(lastClockKey,String(pendingRun.ms||0));recordHistory('pending result time/status updated before save',pendingRun.id,pendingRun.s,before,pendingRun);$('clock').textContent=fmt(pendingRun.ms||0);render();syncManualOverrideInputs();$('manualStatusMessage').textContent='Pending result updated. Review penalty tap counts under the timer, then press SAVE RESULT.';$('quickPenaltyStatus').textContent=status==='dnf'?'Pending DNF. Enter gates cleared in the timer panel before SAVE RESULT.':'Pending result updated. Penalty taps are unchanged; review them, then SAVE RESULT.';return}const id=targetId,s=targetStage;let overwriteAuthorized=false;if(result(id,s)){if(!requireAdmin())return;if(!confirm('A result already exists for this driver and stage. Prepare a replacement result?'))return;if(!requireAdmin())return;overwriteAuthorized=true;clearPreviousPenaltiesForNewAttempt(id,s)}localStorage.setItem(selectedDriverKey,id);setPendingRun({id,s,status,ms,source:'manual',overwriteAuthorized,...(status==='dnf'?{totalGates:gateTotalForStage(s)}:{})})}
-function updateClock(){if(!running)return;if(pendingRun&&pendingRun.requiresStopConfirmation&&!pendingRun.confirmed)return;const elapsed=Date.now()-running.startAt;$('clock').textContent=fmt(Math.min(elapsed,data.cutoffs[running.s]));if(elapsed>=data.cutoffs[running.s])prepareRunResult('dnf',data.cutoffs[running.s])}$('addStage').onclick=()=>{if(!requireAdmin())return;if(running||pendingRun)return alert('Finish reviewing and save the current result first');if(data.cutoffs.length>=20)return alert('Maximum 20 stages');data.cutoffs.push(600000);data.gateTotals.push(10);sync('cutoffs',data.cutoffs);sync('gateTotals',data.gateTotals)};$('removeStage').onclick=()=>{if(!requireAdmin())return;if(running||pendingRun)return alert('Finish reviewing and save the current result first');if(data.cutoffs.length<=1)return alert('Keep at least one stage');const s=data.cutoffs.length-1;if(!confirm('Remove SS'+(s+1)+' and permanently delete all its recorded results?'))return;if(!requireAdmin())return;data.cutoffs.pop();data.gateTotals.pop();data.drawOrders??={};data.drawLocks??={};delete data.drawOrders[s];delete data.drawLocks[s];const changes={cutoffs:data.cutoffs,gateTotals:data.gateTotals,['drawOrders/'+s]:null,['drawLocks/'+s]:null};for(const id of Object.keys(data.results)){if(data.results[id]?.[s]!==undefined){delete data.results[id][s];changes['results/'+id+'/'+s]=null}}for(const id of Object.keys(data.penalties||{})){if(data.penalties[id]?.[s]!==undefined){delete data.penalties[id][s];changes['penalties/'+id+'/'+s]=null}}stage=Math.min(stage,data.cutoffs.length-1);localStorage.setItem('bs28-stage',stage);persist();render();Object.entries(changes).forEach(([p,v])=>sendOrQueue(p,v))};$('stageSelect').onchange=()=>{if(running||pendingRun){$('stageSelect').value=String(running?.s??pendingRun?.s??stage);return alert('Finish reviewing and save the current result first')}stage=Number($('stageSelect').value)||0;localStorage.setItem('bs28-stage',stage);render()};$('driver').onchange=()=>{if(running||pendingRun){$('driver').value=running?.id||pendingRun?.id||'';return}const id=selected();if(id)localStorage.setItem(selectedDriverKey,id);else localStorage.removeItem(selectedDriverKey);localStorage.setItem(lastClockKey,'0');$('clock').textContent='00:00.00';$('quickPenaltyStatus').textContent='';render()};$('dnfGatesCleared').addEventListener('input',()=>{if(!pendingRun||pendingRun.status!=='dnf')return;const raw=$('dnfGatesCleared').value;if(raw==='')delete pendingRun.gatesCleared;else pendingRun.gatesCleared=Number(raw);pendingRun.totalGates=gateTotalForStage(pendingRun.s);localStorage.setItem(pendingRunKey,JSON.stringify(pendingRun));updateDnfProgressUI()});function captureMainTimerView(){return {wasRunning:!!running,clockText:$('clock').textContent,driverId:selected(),stage};}
+function updateClock(){if(!running)return;if(pendingRun&&pendingRun.requiresStopConfirmation&&!pendingRun.confirmed)return;const elapsed=Date.now()-running.startAt;$('clock').textContent=fmt(Math.min(elapsed,data.cutoffs[running.s]));if(elapsed>=data.cutoffs[running.s])prepareRunResult('dnf',data.cutoffs[running.s])}$('addStage').onclick=async()=>{if(!requireAdmin())return;if(running||pendingRun)return alert('Finish reviewing and save the current result first');if(data.cutoffs.length>=20)return alert('Maximum 20 stages');if(data.groupRotationV28){await bs28AddStage();return}data.cutoffs.push(600000);data.gateTotals.push(10);sync('cutoffs',data.cutoffs);sync('gateTotals',data.gateTotals)};$('removeStage').onclick=()=>{if(!requireAdmin())return;if(running||pendingRun)return alert('Finish reviewing and save the current result first');if(data.cutoffs.length<=1)return alert('Keep at least one stage');const s=data.cutoffs.length-1;if(!confirm('Remove SS'+(s+1)+' and permanently delete all its recorded results?'))return;if(!requireAdmin())return;data.cutoffs.pop();data.gateTotals.pop();data.drawOrders??={};data.drawLocks??={};delete data.drawOrders[s];delete data.drawLocks[s];const changes={cutoffs:data.cutoffs,gateTotals:data.gateTotals,['drawOrders/'+s]:null,['drawLocks/'+s]:null};for(const id of Object.keys(data.results)){if(data.results[id]?.[s]!==undefined){delete data.results[id][s];changes['results/'+id+'/'+s]=null}}for(const id of Object.keys(data.penalties||{})){if(data.penalties[id]?.[s]!==undefined){delete data.penalties[id][s];changes['penalties/'+id+'/'+s]=null}}stage=Math.min(stage,data.cutoffs.length-1);localStorage.setItem('bs28-stage',stage);persist();render();Object.entries(changes).forEach(([p,v])=>sendOrQueue(p,v))};$('stageSelect').onchange=()=>{if(running||pendingRun){$('stageSelect').value=String(running?.s??pendingRun?.s??stage);return alert('Finish reviewing and save the current result first')}stage=Number($('stageSelect').value)||0;localStorage.setItem('bs28-stage',stage);render()};$('driver').onchange=()=>{if(running||pendingRun){$('driver').value=running?.id||pendingRun?.id||'';return}const id=selected();if(id)localStorage.setItem(selectedDriverKey,id);else localStorage.removeItem(selectedDriverKey);localStorage.setItem(lastClockKey,'0');$('clock').textContent='00:00.00';$('quickPenaltyStatus').textContent='';render()};$('dnfGatesCleared').addEventListener('input',()=>{if(!pendingRun||pendingRun.status!=='dnf')return;const raw=$('dnfGatesCleared').value;if(raw==='')delete pendingRun.gatesCleared;else pendingRun.gatesCleared=Number(raw);pendingRun.totalGates=gateTotalForStage(pendingRun.s);localStorage.setItem(pendingRunKey,JSON.stringify(pendingRun));updateDnfProgressUI()});function captureMainTimerView(){return {wasRunning:!!running,clockText:$('clock').textContent,driverId:selected(),stage};}
 function restoreMainTimerView(view){if(!view||view.wasRunning||running||pendingRun)return;const sameMainSelection=stage===view.stage&&selected()===view.driverId;if(sameMainSelection){$('clock').textContent=view.clockText;return}localStorage.setItem(lastClockKey,'0');$('clock').textContent='00:00.00';}
 function clearCorrectionInputs(clearComparison=true){if($('editStatus'))$('editStatus').value='';if($('editTime'))$('editTime').value='';if($('editGatesCleared'))$('editGatesCleared').value='';document.querySelectorAll('#correctionPenaltyCounters input[data-correction-penalty-key]').forEach(input=>input.value='');if(clearComparison)correctionComparison=null;updateCorrectionInfo()}
 $('correctionDriver').onchange=()=>{correctionComparison=null;clearCorrectionInputs(false);renderCorrectionPenaltyControls();updateCorrectionInfo()};$('correctionStage').onchange=()=>{correctionComparison=null;clearCorrectionInputs(false);renderCorrectionPenaltyControls();updateCorrectionInfo()};$('correctionPenaltyCounters').addEventListener('click',e=>{const button=e.target.closest('button[data-correction-penalty-step]');if(!button||button.disabled)return;const row=button.closest('.correction-penalty-row'),input=row?.querySelector('input[data-correction-penalty-key]');if(!input||input.disabled)return;const raw=String(input.value??'').trim(),base=raw===''?Number(input.dataset.recordedCount||0):Number(raw),delta=Number(button.dataset.correctionPenaltyStep)||0;input.value=String(Math.max(0,Math.min(999,(Number.isFinite(base)?base:0)+delta)));correctionComparison=null;input.dispatchEvent(new Event('input',{bubbles:true}))});$('correctionPenaltyCounters').addEventListener('input',e=>{if(!e.target.matches('input[data-correction-penalty-key]'))return;correctionComparison=null;updateCorrectionPreview()});$('editStatus').onchange=()=>{correctionComparison=null;const status=$('editStatus').value;if(status==='clear'||status==='dns'){$('editTime').value='';$('editGatesCleared').value=''}else if(status==='finish')$('editGatesCleared').value='';else if(status==='dnf')$('editTime').value='';updateCorrectionInfo()};$('editTime').addEventListener('input',()=>{correctionComparison=null;updateCorrectionPreview()});$('editGatesCleared').addEventListener('input',()=>{correctionComparison=null;updateCorrectionPreview()});$('manualStatus').onchange=()=>{$('manualTime').disabled=$('manualStatus').value!=='finish';if(pendingRun)$('manualStatusMessage').textContent='You are editing the pending '+pendingRun.status.toUpperCase()+' result. Enter the corrected time/status, then tap Update pending result.'};
@@ -565,6 +636,10 @@ $('retrySync').onclick=()=>{if(!online||!connectedToServer){setMsg('Connect to F
    This code lives inside the existing Main Control closure and uses its Firebase
    Auth, dbRef, controlSessionOwner, data and race helpers. */
 let bs28Preview=null,bs28PulseBusy=false,bs28PulseQueued=false,bs28PreviewSignature="",bs28InitialSelections={};
+// This is an organiser-browser coordinator, not a cloud function. A visible
+// pending request must wake it immediately, and the UI must not claim it is
+// active when Main Control's own session is blocking the coordinator.
+let bs28InboxWatcher=null,bs28InboxHandler=null,bs28InboxEvent='',bs28InboxPending=0,bs28CoordinatorWarning='';
 const bs28Core=window.BS28;
 const bs28Plan=()=>data?.groupRotationV28||null;
 const bs28IsActive=()=>bs28Plan()?.enabled===true;
@@ -577,11 +652,11 @@ function bs28StageLabel(plan,s){const info=plan?.stages?.[s];if(!info)return 'NO
 function bs28RenderMain(){
  const panel=$('bs28Panel');if(!panel)return;
  const plan=bs28Plan(),mode=plan?.enabled?'RACING':plan?.phase==='SETUP'?'SETUP':'NOT CONFIGURED';
- $('bs28Mode').textContent='GROUP ROTATION: '+mode;
+ $('bs28Mode').textContent='GROUP ROTATION: '+mode;const summary=$('bs28SummaryState');if(summary){summary.textContent=mode;summary.dataset.mode=mode;}
  $('bs28Setup').style.display=mode==='RACING'?'none':'block';
  $('bs28Initialize').style.display=plan?'none':'inline-block';
  $('bs28GroupStart').style.display=mode==='SETUP'?'block':'none';
- $('bs28StageCards').innerHTML=plan?bs28Core.stageNames(plan).map(s=>{const st=plan.stages[s],owner=plan.stageOwners?.[s],cancelled=st?.cancelled;return `<div class="bs28-stage"><b>${s}</b><span>${bs28Clean(bs28StageLabel(plan,s))}</span><div class="bs28-actions"><button data-v28-action="toggle" data-stage="${s}" ${cancelled?'disabled':''}>${st.open?'CLOSE':'OPEN'}</button><button data-v28-action="cancel" data-stage="${s}" ${cancelled?'disabled':''}>CANCEL</button></div></div>`}).join(''):'Initialize a NEW event to set up stages. All SS start CLOSED.';
+ $('bs28StageCards').innerHTML=plan?bs28Core.stageNames(plan).map(s=>{const st=plan.stages[s],owner=plan.stageOwners?.[s],cancelled=st?.cancelled||!st?.included;const tone=cancelled?'cancelled':!st?.open?'closed':owner?'busy':'open';const label=cancelled?'CANCELLED':tone==='open'?'OPEN':tone==='busy'?'BUSY':'CLOSED';return `<div class="bs28-stage bs28-stage-${tone}" data-stage-status="${tone}" data-stage="${s}"><div class="bs28-stage-head"><b>${s}</b><span class="bs28-stage-status">${label}</span></div>${owner?`<div class="bs28-stage-assignment">GROUP ${bs28Clean(owner)} ASSIGNED${!st.open?' · NO NEW STARTS':''}</div>`:''}<div class="bs28-actions"><button data-v28-action="toggle" data-stage="${s}" ${cancelled?'disabled':''}>${st.open?'CLOSE':'OPEN'}</button><button data-v28-action="cancel" data-stage="${s}" ${cancelled?'disabled':''}>CANCEL</button></div></div>`}).join(''):'Initialize a NEW event to set up stages. All SS start CLOSED.';
  if(!plan){$('bs28GroupPreview').innerHTML='Register drivers first, then initialize v28.';$('bs28LiveGroups').innerHTML='No group rotation configured.';return}
  const ids=Object.keys(data.drivers||{});
  if(bs28Preview){const signature=JSON.stringify([bs28Preview,bs28Core.includedStages(plan).filter(s=>plan.stages[s].open)]);
@@ -603,14 +678,43 @@ function bs28RenderMain(){
    return `<div class="bs28-group"><b>GROUP ${bs28Clean(g)} · ${bs28Clean(group.status||'WAITING')}</b><div>Current: ${current} · ${group.currentStage?done+'/'+total+' saved':'Choose next SS'}${stateHint} · Completed: ${completed.join(', ')||'None'}</div>${outstanding.length?`<small>CATCH-UP REQUIRED: ${bs28Clean(outstanding.join(', '))}</small>`:''}<div><small>${bs28Core.memberIds(group.members).map(id=>'#'+bs28Clean(data.drivers[id]?.num||'?')+' '+bs28Clean(data.drivers[id]?.name||id)).join(' / ')}</small></div></div>`;
  }).join(''):'Start competition after drawing and assigning the groups.';
  
- for(const id of ['addStage','removeStage'])if($(id))$(id).disabled=mode!=='NOT CONFIGURED';
+ if($('addStage'))$('addStage').disabled=!!(running||pendingRun)||(!!plan&&!bs28CanWrite());
+ if($('removeStage'))$('removeStage').disabled=mode!=='NOT CONFIGURED'||!!running||!!pendingRun;
  const lateGroup=$('bs28LateGroup');if(lateGroup){const old=lateGroup.value;lateGroup.innerHTML=bs28BaseGroups(plan).map(([id])=>`<option value="${id}">Group ${id}</option>`).join('');if(old&&lateGroup.querySelector('option[value="'+old+'"]'))lateGroup.value=old}
  $('bs28LatePanel').style.display=mode==='RACING'?'block':'none';
  const needed=[];Object.entries(plan.lateCatchup||{}).forEach(([id,stages])=>Object.entries(stages).forEach(([s,x])=>{if(x.status==='REQUIRED'&&plan.stages?.[s]?.included&&!plan.stages[s].cancelled)needed.push({id,s})}));
  $('bs28Catchup').innerHTML=needed.length?needed.map(({id,s})=>`<div class="bs28-stage"><span>Catch-up #${bs28Clean(data.drivers[id]?.num||'?')} ${bs28Clean(data.drivers[id]?.name||id)} · ${s}</span><button data-v28-action="catchup" data-driver="${bs28Clean(id)}" data-stage="${s}" ${plan.stages[s]?.open&&!plan.stageOwners?.[s]?'':'disabled'}>SCHEDULE</button></div>`).join(''):'No unresolved catch-up slots.';
- $('bs28Coordinator').textContent=mode!=='RACING'?'Coordinator awaits race start':online&&connectedToServer&&controlSessionOwner?'COORDINATOR ACTIVE — automatic draw enabled':'COORDINATOR PAUSED — connect as Main Control owner';
+ $('bs28Coordinator').textContent=mode!=='RACING'?'Coordinator awaits race start':
+  !online||!connectedToServer||!controlSessionOwner?'COORDINATOR PAUSED — organiser must connect and own Main Control':
+  bs28CoordinatorWarning?'COORDINATOR PAUSED — '+bs28CoordinatorWarning:
+  'COORDINATOR ACTIVE — '+(bs28InboxPending?bs28InboxPending+' REQUEST(S) PENDING; processing automatic draws':'ready for marshal stage selections');
 }
-function bs28Schedule(){if(bs28PulseQueued)return;bs28PulseQueued=true;setTimeout(()=>{bs28PulseQueued=false;bs28Pulse().catch(e=>bs28Show('Rotation coordinator error: '+e.message,true))},750)}
+function bs28Schedule(){if(bs28PulseQueued)return;bs28PulseQueued=true;setTimeout(()=>{bs28PulseQueued=false;bs28Pulse().catch(e=>{bs28CoordinatorWarning=e.message;bs28Show('Rotation coordinator error: '+e.message,true);bs28RenderMain()})},200)}
+// Listen for requests instead of relying only on the periodic poll. One
+// authorised organiser browser can approve pending requests promptly, and
+// stale event subscriptions are always detached on reconnect/event change.
+function bs28WatchInbox(){
+ const shouldWatch=!!(online&&connectedToServer&&controlSessionOwner&&app&&bs28IsActive());
+ const eid=shouldWatch?activeEventId():'';
+ if(bs28InboxWatcher&&(!shouldWatch||eid!==bs28InboxEvent)){
+  bs28InboxWatcher.off('value',bs28InboxHandler);
+  bs28InboxWatcher=null;bs28InboxHandler=null;bs28InboxEvent='';bs28InboxPending=0;
+ }
+ if(!shouldWatch||bs28InboxWatcher)return;
+ bs28InboxEvent=eid;
+ bs28InboxWatcher=app.database().ref('rotationRequests/'+eid);
+ bs28InboxHandler=snap=>{
+  if(eid!==activeEventId())return;
+  const inbox=snap.val()||{};
+  bs28InboxPending=Object.values(inbox).filter(req=>req?.status==='pending').length;
+  bs28RenderMain();
+  if(bs28InboxPending)bs28Schedule();
+ };
+ bs28InboxWatcher.on('value',bs28InboxHandler,err=>{
+  bs28CoordinatorWarning='cannot read marshal requests: '+err.message;
+  bs28RenderMain();
+ });
+}
 async function bs28Initialize(){
  if(!bs28CanWrite())return bs28Show('Connect as the active Main Control device before configuring v28.',true);
  if(bs28Plan())return bs28Show('V28 is already initialized for this event.',true);
@@ -646,11 +750,11 @@ async function bs28CancelStage(stage){
 async function bs28AddStage(){
  if(!bs28CanWrite())return bs28Show('Connect to Main Control first.',true);
  if(data.cutoffs.length>=20)return bs28Show('The existing scoring system supports a maximum of 20 SS.',true);
- if(!confirm('ADD a new Special Stage to ALL groups during this race? It will start CLOSED, and previously finished groups must complete it before the event finishes.'))return;
+ if(!confirm('Add SS'+(data.cutoffs.length+1)+' from Section 5? It will appear in Group Rotation as CLOSED. Open it when the obstacle is ready; every group will need to complete it.'))return;
  try{const tx=await dbRef.transaction(ev=>{
   if(!ev||!ev.groupRotationV28)return;const d=JSON.parse(JSON.stringify(ev)),p=d.groupRotationV28,cut=Array.isArray(d.cutoffs)?d.cutoffs:[];if(cut.length>=20)return;
   const stage=bs28Core.ss(cut.length);cut.push(600000);d.cutoffs=cut;d.gateTotals=Array.isArray(d.gateTotals)?d.gateTotals:[];d.gateTotals.push(10);p.stages[stage]={included:true,open:false,cancelled:false};for(const g of Object.values(p.groups||{})){if(g.type!=='CATCHUP'&&g.status==='FINISHED'&&!g.currentStage)g.status='CHOOSING'}p.revision=(p.revision||0)+1;p.audit=p.audit||{};p.audit['add-'+Date.now()]={action:'ADD_SS',stage,at:Date.now()};return d;
- },undefined,false);if(!tx.committed)throw Error('Event was modified during the operation.');bs28Show('New SS added CLOSED. Set cutoff/gates, then OPEN when the obstacle is ready.')}catch(e){bs28Show('Add stage failed: '+e.message,true)}
+ },undefined,false);if(!tx.committed)throw Error('Event was modified during the operation.');bs28Show('SS added from Section 5 and automatically included in Group Rotation as CLOSED. Set cutoff/gates, SAVE all change, then OPEN when ready.')}catch(e){bs28Show('Add stage failed: '+e.message,true)}
 }
 async function bs28StartRace(){
  if(!bs28CanWrite())return bs28Show('Main Control must be connected and own the active session.',true);
@@ -725,7 +829,9 @@ async function bs28Pulse(){
  bs28PulseBusy=true;
  try{
   const eid=activeEventId(),session=(await app.database().ref('controlSessions/'+eid).once('value')).val();
-  if(!session||session.activeSessionId!==controlSessionId||session.runActive)return;
+  if(!session||session.activeSessionId!==controlSessionId){bs28CoordinatorWarning='this page does not own the organiser session';bs28RenderMain();return}
+  if(session.runActive){bs28CoordinatorWarning='Main Control has an unfinished run; finish and SAVE it first';bs28RenderMain();return}
+  bs28CoordinatorWarning='';
   const event=(await dbRef.once('value')).val();if(!event?.groupRotationV28?.enabled)return;
   const locks=(await app.database().ref('stageLocks/'+eid).once('value')).val()||{};
   const inbox=(await app.database().ref('marshalRecoveryInbox/'+eid).once('value')).val()||{};
@@ -786,15 +892,15 @@ const bs28PanelEl=$('bs28Panel');if(bs28PanelEl){
  bs28PanelEl.addEventListener('change',e=>{if(e.target.matches('.bs28-initial'))bs28InitialSelections[e.target.dataset.group]=e.target.value});
  bs28PanelEl.addEventListener('click',async e=>{
   const target=e.target.closest('[data-v28-action]');if(!target)return;const act=target.dataset.v28Action,ss=target.dataset.stage;
-  try{if(act==='init')await bs28Initialize();else if(act==='toggle')await bs28Toggle(ss);else if(act==='cancel')await bs28CancelStage(ss);else if(act==='add')await bs28AddStage();else if(act==='draw'){
+  try{if(act==='init')await bs28Initialize();else if(act==='toggle')await bs28Toggle(ss);else if(act==='cancel')await bs28CancelStage(ss);else if(act==='draw'){
     const n=Number($('bs28GroupCount').value),drivers=registrationDriversSorted().map(([id])=>id);
     if(drivers.length<n)return bs28Show('Need at least '+n+' registered drivers.',true);
     bs28Preview=bs28Core.balancedGroups(drivers,n);bs28PreviewSignature='';bs28InitialSelections={};bs28RenderMain();bs28Show('Groups drawn. Select unique OPEN starting SS, then START v28 RACE.');
   }else if(act==='start')await bs28StartRace();else if(act==='late')await bs28RegisterLate();else if(act==='catchup')await bs28ScheduleCatchup(target.dataset.driver,ss);else if(act==='pulse')await bs28Pulse()}catch(err){bs28Show('V28 action failed: '+err.message,true)}
  });
 }
-setInterval(()=>{if(bs28IsActive())bs28Schedule()},4500);
-setInterval(bs28RenderMain,1800);bs28RenderMain();
+setInterval(()=>{bs28WatchInbox();if(bs28IsActive())bs28Schedule()},3500);
+setInterval(()=>{bs28WatchInbox();bs28RenderMain()},1800);bs28WatchInbox();bs28RenderMain();
 
 })();
 /* System-wide uppercase for human-readable text fields, including dynamically rendered inputs. */
