@@ -769,11 +769,15 @@ async function bs28Pulse(){
     // These checks must execute AFTER a valid marshal session, rather
     // than being attached as else-if branches to a failed access check.
     if(!reason&&(!g||g.status!=='CHOOSING'||g.currentStage||Number(g.visitIndex)!==Number(req.visitIndex)))reason='Group not yet released by Main Control';
-    if(!reason&&!bs28Core.canChoose(p,groupId,destination,locks))reason='SS closed, occupied, already completed or run lock exists';
+    if(!reason&&!bs28Core.canChoose(p,groupId,destination,{}))reason='SS closed, occupied or already completed';
     if(!reason&&!bs28Core.memberIds(g.members).length)reason='No drivers in group';
     if(reason){await reqRef.child(groupId).transaction(old=>old?.requestId===req.requestId&&old.status==='pending'?{...old,status:'rejected',reason,decidedAt:Date.now()}:undefined,undefined,false);continue}
+    // A different marshal may replace this selection while we are checking
+    // availability. Do not commit an already superseded request.
+    const freshReq=(await reqRef.child(groupId).once('value')).val();
+    if(!freshReq||freshReq.requestId!==req.requestId||freshReq.status!=='pending')continue;
     const newOrder=bs28Core.shuffle(bs28Core.memberIds(g.members)),now=Date.now();
-    const tx=await bs28EventRef().transaction(old=>bs28Core.reserveForRequest(old,{requestId:req.requestId,groupId,destination,visitIndex:req.visitIndex},newOrder,locks,now),undefined,false);
+    const tx=await bs28EventRef().transaction(old=>bs28Core.reserveForRequest(old,{requestId:req.requestId,groupId,destination,visitIndex:req.visitIndex},newOrder,{},now),undefined,false);
     const result=tx.committed?'accepted':'rejected';await reqRef.child(groupId).transaction(old=>old?.requestId===req.requestId&&old.status==='pending'?{...old,status:result,reason:result==='accepted'?'':'Stage was claimed or group changed',decidedAt:Date.now()}:undefined,undefined,false);
   }
  }finally{bs28PulseBusy=false}
