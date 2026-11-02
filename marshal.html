@@ -127,7 +127,7 @@ body{width:100%;max-width:none;min-height:100vh;margin:0;padding:clamp(8px,1.25v
 
 /* Dedicated marshal link: retain the full app DOM for its existing JS, but show only Race Control. */
 body.marshal-view{max-width:1600px;width:100%;padding:clamp(8px,1.2vw,20px);margin:0 auto}
-body.marshal-view > section.card:not(#raceControlPanel):not(#manualInputPanel){display:none!important}
+body.marshal-view > section.card:not(#raceControlPanel):not(#manualInputPanel):not(#bs28MarshalPanel){display:none!important}
 body.marshal-view .resume-row{display:block;margin:8px 0}
 body.marshal-view .resume-run{width:100%;min-height:48px!important;background:#075985;border:2px solid #38bdf8;color:#f0f9ff;font-size:15px!important;font-weight:900;padding:10px 12px;border-radius:11px}
 body.marshal-view .resume-run:active{transform:scale(.99)}
@@ -767,6 +767,20 @@ body.marshal-view #raceControlPanel .marshal-alarm-control #alarmStatus.alarm-on
   </div>
 </div>
 <div class="marshal-control-head"><h2>1. Race Control</h2><span class="pill connection-indicator offline" id="connectionIndicator" role="status" title="Not connected to Firebase. Results may remain only on this device.">OFFLINE</span></div>
+<section class="card bs28-section" id="bs28MarshalPanel" style="display:none" aria-label="Group stage selection">
+  <h2 id="bs28MarshalHeading">GROUP ROTATION · V28.0</h2>
+  <p class="muted" id="bs28MarshalInfo">Waiting for group assignment.</p>
+  <h3>Official Group Running Order</h3>
+  <div id="bs28RunningOrder" class="bs28-order"></div>
+  <div id="bs28Selection" style="display:none">
+    <h3>SELECT NEXT SPECIAL STAGE</h3>
+    <p class="muted">Choose any OPEN, AVAILABLE, uncompleted SS. Main Control automatically creates the fresh draw after approving the request.</p>
+    <div id="bs28MarshalCards" class="bs28-card-grid"></div>
+    <label for="bs28NextSS">Next SS</label><select id="bs28NextSS"></select>
+    <button type="button" id="bs28SwitchButton" class="primary">CONTINUE TO SELECTED SS &amp; AUTO DRAW</button>
+  </div>
+  <p id="bs28SwitchStatus" class="muted" role="status" aria-live="polite"></p>
+</section>
 <div class="row timer-selectors"><div><label for="stageSelect">Special Stage</label><select id="stageSelect"></select></div><div><label for="driver">Driver</label><select id="driver"></select></div></div>
 <div class="driver-selection-hint">Choose any driver without a saved result in this SS. The next-driver reminder follows the top remaining driver in the SS running order.</div>
 <div id="runInfo" class="muted">Ready</div>
@@ -813,21 +827,6 @@ body.marshal-view #raceControlPanel .marshal-alarm-control #alarmStatus.alarm-on
 
 <section class="card"><details><summary>🌐 Online sync setup (Firebase)</summary><p class="muted">BS-ARA v28 Firebase project fields are supplied by firebase-config.js. The organiser must first publish the correct Realtime Database URL in that file. Marshal links connect anonymously when Main Control opens marshal access; no organiser password is needed on the marshal phone. The Event ID must match on all devices. To change it while connected, disconnect first, edit the ID, then reconnect. Only enter your authorized organizer email and password when connecting; the app does not save those credentials. The public results link below includes the selected Event ID. Host this site on HTTPS (e.g. GitHub Pages) and use the SAME Firebase Realtime Database on every device. Local mode does NOT synchronize devices.</p><div class="row"><div><label>Firebase API key</label><input id="apiKey" placeholder="Firebase apiKey" readonly></div><div><label>Firebase auth domain</label><input id="authDomain" placeholder="project.firebaseapp.com" readonly></div></div><div class="row"><div><label>Firebase database URL</label><input id="databaseURL" placeholder="https://project-default-rtdb.firebaseio.com" readonly></div><div><label>Firebase project ID</label><input id="projectId" placeholder="project-id" readonly></div></div><div class="row"><div><label>Event ID (same on all devices)</label><input id="eventId" value="bs28-test" maxlength="80" placeholder="e.g. bs28-test" autocapitalize="off" spellcheck="false"><div class="muted">Editable and saved on this device. Letters, numbers and hyphens only. Disconnect before changing while online.</div></div><div><label>Firebase email</label><input id="email" type="email" placeholder="organizer@example.com" autocomplete="off"></div><div><label>Firebase password</label><input id="password" type="password" placeholder="Password" autocomplete="off"></div></div><div class="row"><button id="connect" class="primary">Connect / sign in</button><button id="disconnect">Disconnect</button></div><div class="muted" style="margin-top:8px">Public results for this Event ID: <a id="publicResultsLink" href="results.html?event=bs28-test" target="_blank" rel="noopener">Open public results</a>. Share the generated link with spectators.</div><div class="muted marshal-share-link" style="margin-top:8px">Marshal Race Control for this Event ID: <a id="marshalLink" href="marshal.html?event=bs28-test" target="_blank" rel="noopener">Open marshal control</a> <button type="button" id="copyMarshalLink" class="copy-link-button">Copy marshal link</button><small class="marshal-share-help">Share this link with the marshal. It opens Section 1 only and preselects this Event ID.</small></div><div id="syncMsg" class="muted"></div></details><details><summary>💾 Backups, import, corrections</summary><div class="row"><button id="export">Export JSON backup</button><button id="snapshotDownload">Download latest safety backup</button><button id="historyDownload">Export correction history</button><span id="safetyStatus" class="muted" role="status"></span><button id="csv">Export CSV leaderboard</button><label>Import JSON backup<input type="file" id="import" accept=".json,application/json"></label></div><p class="muted">Choose a driver and SS to compare the saved record with your proposed correction. Result status, time/gate progress and penalty counts are saved together. Leave a penalty count blank to keep its recorded value; enter 0 to remove that penalty type.</p><div class="row"><div><label for="correctionDriver">Driver to correct</label><select id="correctionDriver"></select></div><div><label for="correctionStage">Special Stage</label><select id="correctionStage"></select></div></div><div class="correction-compare-grid"><div class="correction-snapshot"><div class="correction-snapshot-title">Recorded before correction</div><div id="correctionBefore" class="correction-snapshot-body" aria-live="polite">Select a driver and SS.</div></div><div class="correction-snapshot after"><div class="correction-snapshot-title" id="correctionAfterTitle">After correction preview</div><div id="correctionAfter" class="correction-snapshot-body" aria-live="polite">Select a driver and SS.</div></div></div><div class="row"><div><label for="editStatus">New status (blank = keep current)</label><select id="editStatus" aria-label="Correction status"><option value="" selected>Keep current status</option><option value="finish">Finish</option><option value="dnf">DNF</option><option value="dns">DNS</option><option value="clear">Clear result</option></select></div><div><label for="editTime">Finish time (blank = keep current)</label><input id="editTime" placeholder="mm:ss.cc (finish only)" inputmode="numeric" autocomplete="off"></div><div><label for="editGatesCleared">Gates cleared (DNF)</label><input id="editGatesCleared" type="number" min="0" step="1" inputmode="numeric" placeholder="Blank = keep current" disabled></div></div><div class="penalty-quick-wrap correction-penalty-section"><div class="flex"><strong>Penalty counts to save with correction</strong><span class="pill" id="correctionPenaltyTapTotal">0 taps</span></div><div id="correctionPenaltyDriverLabel" class="muted penalty-note">Select a driver and SS above.</div><p class="muted">The input shows the currently recorded tap count. Use <b>−</b> and <b>+</b>, or type a number, to prepare a correction. Changes are preview-only and do not overwrite saved data until you press <b>Save Correction</b>. Enter <b>0</b> to remove all taps of that type.</p><div id="correctionPenaltyCounters" class="correction-penalty-list"><div class="muted">Select a driver and SS.</div></div><div id="correctionPenaltySummary" class="ok correction-penalty-summary">Total taps: 0 • Deduction: 0 pts</div></div><div id="correctionInfo" class="muted" aria-live="polite" style="margin-top:8px"></div><div class="correction-save-row"><button id="correct" class="primary">Save result + penalties together</button></div></details></section>
 <section class="card clear-race-panel" id="clearRaceDataPanel"><details><summary>🗑 New Race — Clear All Race Data</summary><p class="clear-race-warning"><b>Destructive action:</b> clears registered drivers, results, penalty records, late-entry records, SS draw orders and draw locks for the currently selected Firebase Event ID on all connected devices. It keeps SS cutoff times, gate totals, shared penalty rules, Firebase configuration and Event ID. This action requires a live Firebase connection and zero pending uploads. Local safety snapshots are kept for recovery.</p><div class="clear-race-controls"><div><label for="clearRacePassword">Reset password</label><input id="clearRacePassword" type="password" inputmode="numeric" maxlength="6" placeholder="6-digit reset password" autocomplete="new-password"></div><button id="clearAllRaceData" type="button">🗑 Clear all race data</button></div><div id="clearRaceDataStatus" class="clear-race-status muted" role="status" aria-live="polite">Connect to Firebase and sync all pending changes before starting a new race.</div></details></section>
-
-<section class="card bs28-section" id="bs28MarshalPanel" style="display:none" aria-label="Group stage selection">
-  <h2 id="bs28MarshalHeading">GROUP ROTATION · V28.0</h2>
-  <p class="muted" id="bs28MarshalInfo">Waiting for group assignment.</p>
-  <h3>Official Group Running Order</h3>
-  <div id="bs28RunningOrder" class="bs28-order"></div>
-  <div id="bs28Selection" style="display:none">
-    <h3>SELECT NEXT SPECIAL STAGE</h3>
-    <p class="muted">Choose any OPEN, AVAILABLE, uncompleted SS. Main Control automatically creates the fresh draw after approving the request.</p>
-    <div id="bs28MarshalCards" class="bs28-card-grid"></div>
-    <label for="bs28NextSS">Next SS</label><select id="bs28NextSS"></select>
-    <button type="button" id="bs28SwitchButton" class="primary">CONTINUE TO SELECTED SS &amp; AUTO DRAW</button>
-  </div>
-  <p id="bs28SwitchStatus" class="muted" role="status" aria-live="polite"></p>
-</section>
 
 <footer>© TEC-ARTS CRAWLER • ALL RIGHTS RESERVED</footer><script>
 (function(){
@@ -1426,21 +1425,32 @@ function bs28GroupName(id){const group=bs28Plan()?.groups?.[id];if(!group)return
 function bs28GetSticky(){return bs28StickyGroup||localStorage.getItem(bs28SavedGroupKey())||''}
 function bs28RenderMarshal(){
  const panel=$('bs28MarshalPanel');if(!panel)return;
- const plan=bs28Plan();panel.style.display=plan?.enabled?'block':'none';
- if(!plan?.enabled){bs28StopListeners();return}
+ const plan=bs28Plan();panel.style.display='block';
+ if(!plan?.enabled){
+  bs28StopListeners();
+  $('bs28MarshalHeading').textContent='GROUP ROTATION · NOT STARTED';
+  $('bs28MarshalInfo').textContent='The organiser must press CONFIRM GROUPS & START V28 RACE in Main Control. Drawing groups alone is not enough.';
+  $('bs28RunningOrder').textContent='No active group order has been published for this Event ID yet.';
+  $('bs28Selection').style.display='none';
+  $('bs28SwitchStatus').textContent='WAITING FOR MAIN CONTROL — Do not start an unassigned group.';
+  $('bs28SwitchButton').disabled=true;
+  return;
+ }
  const assignment=bs28CurrentAssignment();
  if(assignment){bs28StickyGroup=assignment.id;localStorage.setItem(bs28SavedGroupKey(),assignment.id)}
  const groupId=assignment?.id||bs28GetSticky(),group=plan.groups?.[groupId];
  bs28StartListeners(groupId);
  if(!group){$('bs28Selection').style.display='none';$('bs28RunningOrder').textContent='No group assigned to selected SS.';$('bs28MarshalHeading').textContent='SELECT ASSIGNED STAGE';$('bs28MarshalInfo').textContent='Choose an SS that Main Control assigned to a group. A marshal cannot race on an unassigned SS.';$('bs28MarshalCards').innerHTML='';$('bs28SwitchButton').disabled=true;return}
- const current=group.currentStage,last=group.lastStage,ready=current===bs28CurrentStage();
+ const current=group.currentStage,last=group.lastStage,ready=current===bs28CurrentStage(),choosing=group.status==='CHOOSING'&&!current;
  $('bs28MarshalHeading').textContent=bs28GroupName(groupId)+' · '+(current||'STAGE COMPLETE');
- $('bs28MarshalInfo').textContent=ready?`Official draw saved · ${bs28Core.memberIds(group.members).filter(id=>!!data.results?.[id]?.[stage]).length}/${bs28Core.memberIds(group.members).length} confirmed results · ${group.status}`:group.status==='FINISHED'?'All required SS completed.':group.status==='CHOOSING'?'Choose any OPEN and AVAILABLE SS below. The timer will NOT start automatically.':'Select the SS assigned to this group from the stage selector above.';
+ $('bs28MarshalInfo').textContent=ready?`Official draw saved · ${bs28Core.memberIds(group.members).filter(id=>!!data.results?.[id]?.[stage]).length}/${bs28Core.memberIds(group.members).length} confirmed results · ${group.status}`:group.status==='FINISHED'?'All required SS completed.':group.status==='CHOOSING'?'This group is COMPLETE at '+(last||'its previous stage')+'. Choose any OPEN and AVAILABLE, uncompleted SS below. The timer will NOT start automatically.':'Select the SS assigned to this group from the stage selector above.';
+ if(choosing&&!running&&!pendingRun){$('runInfo').textContent=bs28GroupName(groupId)+' COMPLETED '+(last||'its previous stage')+' — SELECT NEXT SS in the GROUP ROTATION panel above.'} 
+ if(ready&&!running&&!pendingRun){const members=bs28Core.memberIds(group.members);if(members.length&&members.every(id=>!!data.results?.[id]?.[stage]))$('runInfo').textContent=bs28GroupName(groupId)+' — ALL '+members.length+' RESULTS SAVED. Waiting for Main Control to confirm group completion and release the stage.';}
  // Disable all legacy stage-wide draw editing and registration on marshal devices.
  for(const id of ['add','spinDraw','lockDrawOrder','unlockDrawOrder','addLateDriver','addStage','removeStage'])if($(id))$(id).disabled=true;
  if($('drawSpinPanel'))$('drawSpinPanel').style.display='none';
  if($('stageGateSetup'))$('stageGateSetup').style.display='none';
- const choosing=group.status==='CHOOSING'&&!current,select=$('bs28NextSS');
+ const select=$('bs28NextSS');
  const prior=select.value;
  const options=bs28Core.stageNames(plan).map(st=>({stage:st,status:bs28Core.availability(plan,groupId,st,bs28Locks)}));
  select.innerHTML=options.filter(x=>x.status==='AVAILABLE').map(x=>`<option value="${x.stage}">${x.stage} — AVAILABLE</option>`).join('');
@@ -1455,6 +1465,7 @@ function bs28RenderMarshal(){
  else if(busy)status.textContent='STOP / CONFIRM / SAVE the current run and release its lock before switching.';
  else if(pendingRequest)status.textContent='REQUEST PENDING · Waiting for Main Control automatic coordinator.';
  else if(bs28RequestState?.status==='rejected')status.textContent='STAGE REQUEST REJECTED: '+String(bs28RequestState.reason||'stage unavailable')+'. Choose another AVAILABLE SS.';
+ else if(choosing&&!select.value)status.textContent='NO AVAILABLE SS — wait for another group to finish or ask Main Control to OPEN an uncompleted stage.';
  else if(choosing)status.textContent='Select a free stage; no PIN is required for normal SS switching.';
  else if(group.status==='FINISHED')status.textContent='GROUP EVENT COMPLETE.';
  else status.textContent='The group is still racing or awaiting result confirmation.';
