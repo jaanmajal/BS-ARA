@@ -757,28 +757,50 @@ body.marshal-view #raceControlPanel .marshal-alarm-control #alarmStatus.alarm-on
 
 @media(max-width:520px){.bs28-card-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.bs28-stage,.bs28-group{padding:9px}.bs28-section h3{margin-top:14px}.bs28-section button{min-height:42px}}
 </style>
-<style id="bs28-group-collapse-css">
-/* Keep Race Control, penalty input, and the stopwatch untouched. Only the Group Rotation card folds. */
-body.marshal-view #bs28MarshalPanel.bs28-compact-fold-card{margin:14px 0 2px;padding:0!important;overflow:hidden;border:1px solid #3d6f87!important;border-radius:14px}
-body.marshal-view #bs28RotationDetails.bs28-rotation-fold{margin:0;background:#132238}
-body.marshal-view #bs28RotationDetails>summary{display:flex;align-items:center;justify-content:space-between;gap:10px;min-height:64px;padding:12px 14px;list-style:none;cursor:pointer;user-select:none;-webkit-tap-highlight-color:transparent;background:linear-gradient(125deg,#1c3852,#163347);color:#eff8ff}
-body.marshal-view #bs28RotationDetails>summary::-webkit-details-marker{display:none}
-body.marshal-view #bs28RotationDetails>summary:focus-visible{outline:3px solid #6ad8b5;outline-offset:-3px}
-body.marshal-view .bs28-rotation-summary-left{display:flex;align-items:center;gap:10px;min-width:0}
-body.marshal-view .bs28-rotation-summary-icon{font-size:24px;color:#a1ffdc;flex:none}
-body.marshal-view .bs28-rotation-summary-text{min-width:0}
-body.marshal-view .bs28-rotation-summary-text strong{display:block;font-size:13px;line-height:1.3;letter-spacing:.03em}
-body.marshal-view .bs28-rotation-summary-text small{display:block;color:#bcd6e6;font-size:10px;line-height:1.4;margin-top:3px}
-body.marshal-view .bs28-rotation-summary-right{display:flex;align-items:center;gap:7px;flex:none}
-body.marshal-view .bs28-rotation-status{font-size:9px;font-weight:900;letter-spacing:.025em;white-space:nowrap;padding:6px 7px;border:1px solid #53778f;border-radius:99px;color:#d0e2ec;background:#1a3045}
-body.marshal-view .bs28-rotation-status.ready{color:#b6fce4;border-color:#249e77;background:#134b3e}
-body.marshal-view .bs28-rotation-status.pending{color:#fff1bd;border-color:#a27d27;background:#5b441a}
-body.marshal-view .bs28-rotation-chevron{font-size:24px;transition:transform .15s ease;line-height:1}
-body.marshal-view #bs28RotationDetails[open] .bs28-rotation-chevron{transform:rotate(180deg)}
-body.marshal-view #bs28RotationDetails[open]>summary{border-bottom:1px solid #47637c}
-body.marshal-view #bs28RotationDetails .bs28-rotation-content{padding:12px 13px 14px}
-body.marshal-view #bs28RotationDetails .bs28-rotation-content h2{margin-top:0}
-@media(max-width:480px){body.marshal-view #bs28RotationDetails>summary{min-height:60px;padding:10px 8px;gap:5px}body.marshal-view .bs28-rotation-summary-left{gap:6px}body.marshal-view .bs28-rotation-summary-icon{font-size:20px}body.marshal-view .bs28-rotation-summary-text strong{font-size:11px}body.marshal-view .bs28-rotation-summary-text small{font-size:9px}body.marshal-view .bs28-rotation-status{font-size:8px;padding:5px}body.marshal-view .bs28-rotation-chevron{font-size:19px}body.marshal-view #bs28RotationDetails .bs28-rotation-content{padding:10px 9px}}
+
+<style id="bs28-v284-layout-only-css">
+/* v28.4 layout-only update. No Race Control / Firebase / timing JS changes. */
+body.marshal-view #bs28MarshalPanel.bs28-rotation-below{
+  margin:10px 0 14px;
+  padding:0;
+  overflow:visible;
+  width:100%;
+}
+#bs28RotationDetails{border-radius:13px;min-width:0;}
+#bs28RotationDetails > summary{
+  cursor:pointer;
+  display:flex;
+  flex-direction:column;
+  position:relative;
+  gap:5px;
+  padding:16px 52px 16px 16px;
+  margin:0;
+  list-style:none;
+  color:#e8f3ff;
+  touch-action:manipulation;
+  -webkit-tap-highlight-color:transparent;
+}
+#bs28RotationDetails > summary::-webkit-details-marker{display:none;}
+#bs28RotationDetails > summary::marker{content:'';}
+#bs28RotationDetails > summary::after{
+  content:'+';
+  position:absolute;
+  top:50%;right:17px;
+  transform:translateY(-50%);
+  font-size:27px;
+  font-weight:700;
+  color:#93c5fd;
+  line-height:1;
+}
+#bs28RotationDetails[open] > summary::after{content:'−';}
+#bs28RotationDetails > summary:focus-visible{outline:2px solid #6abaff;outline-offset:-3px;border-radius:12px;}
+#bs28RotationDetails .bs28-rotation-summary-title{font-size:16px;font-weight:800;line-height:1.25;}
+#bs28RotationDetails .bs28-rotation-summary-subtitle{font-size:12px;color:#bbcee4;line-height:1.3;}
+#bs28RotationDetails .bs28-rotation-body{padding:6px 15px 16px;}
+@media(max-width:480px){
+ #bs28RotationDetails > summary{padding:14px 46px 14px 12px;}
+ #bs28RotationDetails .bs28-rotation-body{padding:3px 11px 13px;}
+}
 </style>
 </head><body class="marshal-view">
 <header><div class="brand"><img src="logo.svg" alt="TECH-ARTS CRAWLER logo" class="brand-logo"><div><h1>BS-STYLE POINT RC TIME ATTACK</h1><small>BORNEO SABAH • CRAWL HARD • COMPETE HARDER</small></div></div><span class="pill" id="status">Local mode</span></header>
@@ -825,13 +847,16 @@ body.marshal-view #bs28RotationDetails .bs28-rotation-content h2{margin-top:0}
 <div id="saveResultFeedback" class="save-result-feedback" role="status" aria-live="polite"></div>
 <small>Alarm is ON by default. Tap the speaker to test the sound. Keep this tab open. Confirm the stop time with the driver before saving.</small>
 <div class="penalty-quick-wrap"><div class="flex"><strong>Penalty tap counts</strong><span class="pill" id="penaltyTapTotal">0 taps</span></div><div id="penaltyCounterDriver" class="muted penalty-note">Tap + if penalty occur.</div><p class="muted penalty-note" style="margin:6px 0 0">Tap <b>+</b> to add a penalty, or <b>−</b> to correct the count. No admin PIN is required. <b>Roll Over:</b> count only when the crawler comes to a complete stop with all four tyres lifted off the ground; a brief bounce while moving does not count.</p><div id="penaltyCounters" class="penalty-counter-grid"><div class="muted">No penalty types configured yet.</div></div><div id="penaltyCounterSummary" class="ok penalty-counter-summary">Total taps: 0 • Point deduction: 0 pts</div><div id="quickPenaltyStatus" class="quick-status" aria-live="polite"></div></div>
-<section class="card bs28-section bs28-compact-fold-card" id="bs28MarshalPanel" style="display:none" aria-label="Group rotation control">
-  <details class="bs28-rotation-fold" id="bs28RotationDetails">
-    <summary aria-label="Expand or collapse Group Rotation Control">
-      <span class="bs28-rotation-summary-left"><span aria-hidden="true" class="bs28-rotation-summary-icon">&#8635;</span><span class="bs28-rotation-summary-text"><strong>GROUP ROTATION CONTROL</strong><small>Select available group and next SS</small></span></span>
-      <span class="bs28-rotation-summary-right"><span class="bs28-rotation-status" id="bs28RotationSummaryState" role="status" aria-live="polite">NO GROUP READY</span><span class="bs28-rotation-chevron" aria-hidden="true">&#8964;</span></span>
+</section>
+
+<section class="card bs28-section bs28-rotation-below" id="bs28MarshalPanel" style="display:none" aria-label="Group rotation control">
+  <details id="bs28RotationDetails" class="bs28-rotation-details">
+    <summary>
+      <span class="bs28-rotation-summary-title">↻ GROUP ROTATION CONTROL</span>
+      <span class="bs28-rotation-summary-subtitle">Select available group &amp; next SS</span>
     </summary>
-    <div class="bs28-rotation-content">
+    <div class="bs28-rotation-body">
+
   <h2 id="bs28MarshalHeading">GROUP ROTATION · NEXT STAGE</h2>
   <small class="muted" style="display:block;margin:-8px 0 12px">v28.4 · AVAILABLE GROUP + AVAILABLE SS</small>
   <p class="muted" id="bs28MarshalInfo">Waiting for group assignment.</p>
@@ -855,7 +880,6 @@ body.marshal-view #bs28RotationDetails .bs28-rotation-content h2{margin-top:0}
   <div id="bs28RunningOrder" class="bs28-order"></div>
     </div>
   </details>
-</section>
 </section>
 
 
@@ -1460,39 +1484,6 @@ $('retrySync').onclick=()=>{if(!online||!connectedToServer){setMsg('Connect to F
 /* v28 marshal SS selection extension inside the existing Marshal closure. */
 const bs28Core=window.BS28;
 let bs28StickyGroup='',bs28NextGroupChoice='',bs28GroupUserChosen=false,bs28LockRef=null,bs28LockListener=null,bs28Locks={},bs28RequestRef=null,bs28RequestListener=null,bs28RequestState=null,bs28RequestGroup='',bs28Switching=false;
-// Fold only Group Rotation. Timer/Race Control remains permanently visible.
-let bs28RotationLastUse=Date.now();
-let bs28RotationHadReady=false;
-let bs28RotationManualHold=false;
-const bs28RotationDetails=document.getElementById('bs28RotationDetails');
-if(bs28RotationDetails){
- const touch=()=>{bs28RotationLastUse=Date.now()};
- for(const type of ['pointerdown','keydown','change','input','focusin'])bs28RotationDetails.addEventListener(type,touch);
- bs28RotationDetails.addEventListener('toggle',()=>{bs28RotationLastUse=Date.now()});
-}
-function bs28UpdateRotationFold(readyCount,verifyingCount,pendingRequest,enabled=true){
- const fold=bs28RotationDetails,tag=document.getElementById('bs28RotationSummaryState');
- if(!fold||!tag)return;
- const active=!!(running||pendingRun||savingResult);
- const ready=Number(readyCount)||0;
- const verifying=Number(verifyingCount)||0;
- if(!enabled){tag.textContent='NOT STARTED';tag.className='bs28-rotation-status';fold.open=false;bs28RotationHadReady=false;return}
- if(pendingRequest){tag.textContent='REQUEST PENDING';tag.className='bs28-rotation-status pending'}
- else if(ready){tag.textContent=ready+' GROUP'+(ready===1?'':'S')+' READY';tag.className='bs28-rotation-status ready'}
- else if(verifying){tag.textContent='VERIFYING RESULTS';tag.className='bs28-rotation-status pending'}
- else{tag.textContent='NO GROUP READY';tag.className='bs28-rotation-status'}
- // Auto-open once when an eligible group first appears, but never interrupt an active run.
- if(ready>0&&!bs28RotationHadReady&&!active){fold.open=true;bs28RotationLastUse=Date.now()}
- // Close automatically when all the previously available groups have moved on.
- if(ready===0&&bs28RotationHadReady&&!pendingRequest){fold.open=false}
- bs28RotationHadReady=ready>0;
- // Idle auto-collapse. Do not close a focused form, an active race, or a pending request.
- if(fold.open&&!active&&!pendingRequest&&Date.now()-bs28RotationLastUse>60000){
-  const focused=document.activeElement;
-  if(!focused||!fold.contains(focused)||focused.tagName==='SUMMARY')fold.open=false;
- }
-}
-
 const bs28Plan=()=>data?.groupRotationV28||null;
 const bs28IsActive=()=>bs28Plan()?.enabled===true;
 const bs28Esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -1530,7 +1521,7 @@ function bs28RenderMarshal(){
   $('bs28RunningOrder').textContent='No active group order has been published for this Event ID yet.';
   $('bs28Selection').style.display='none';
   $('bs28SwitchStatus').textContent='WAITING FOR MAIN CONTROL — Do not start an unassigned group.';
-  $('bs28SwitchButton').disabled=true;bs28UpdateRotationFold(0,0,false,false);return;
+  $('bs28SwitchButton').disabled=true;return;
  }
  const assignment=bs28CurrentAssignment();
  if(assignment){bs28StickyGroup=assignment.id;localStorage.setItem(bs28SavedGroupKey(),assignment.id)}
@@ -1613,7 +1604,6 @@ function bs28RenderMarshal(){
  const movable=!!(selectedGroup&&selectedGroup.status==='CHOOSING'&&!selectedGroup.currentStage);
  const pendingRequest=selectedGroupId===bs28RequestGroup&&bs28RequestState?.status==='pending';
  const ownRequestWaiting=!!(ownReq?.requestId&&bs28RequestState?.status!=='accepted'&&bs28RequestState?.status!=='rejected');
- bs28UpdateRotationFold(readyGroups.length,verifyingGroups.length,ownRequestWaiting);
  $('bs28SelectedGroupProgress').textContent=selectedGroupId&&movable?
   bs28GroupName(selectedGroupId)+' · FINISHED '+(selectedGroup.lastStage||'PREVIOUS SS')+' · READY FOR NEXT SS':
   (verifyingGroups.length?'Main Control is checking saved results for '+verifyingGroups.map(x=>bs28GroupName(x.id)).join(', ')+'.':'');
@@ -1649,34 +1639,14 @@ function bs28RenderMarshal(){
    localStorage.removeItem(selectedDriverKey);$('manualTime').value='';
    localStorage.setItem(lastClockKey,'0');$('clock').textContent='00:00.00';
    localStorage.removeItem(bs28RequestKey());
-   if(bs28RotationDetails)bs28RotationDetails.open=false;
    bs28NextGroupChoice='';bs28GroupUserChosen=false;
    status.textContent=ownReq.destination+' READY · New draw saved. Press START manually.';
    setTimeout(()=>{bs28Switching=false;render();bs28RenderMarshal()},0);
   }
  }
- const selectedDriverId=selected();
- const stageInfo=plan.stages?.[current]||null;
- const groupCanRace=!!(stageGroup&&['READY','RACING'].includes(String(stageGroup.status||'')));
- const canStart=!!(ready&&groupCanRace&&stageInfo?.included===true&&stageInfo.open===true&&stageInfo.cancelled!==true&&accessOK&&!pendingRequest);
- // Recompute controls from the current authorization state on every refresh.
- // Do not OR with the previous disabled value: that made a button stay disabled
- // forever after a stage was temporarily closed or its group was not yet assigned.
- const runBlocked=!!(running||pendingRun||savingResult);
- if(!running&&!pendingRun){
-  $('start').disabled=runBlocked||!selectedDriverId||!canStart;
-  $('markDns').disabled=runBlocked||!selectedDriverId||!!result(selectedDriverId,stage)||!canStart;
-  $('prepareManual').disabled=!!running||!selectedDriverId||(!pendingRun&&!canStart);
- }
- if(!running&&!pendingRun){
-  if(!ready)$('runInfo').textContent='No group is currently assigned to SS'+(stage+1)+'. Use Group Rotation Control below to select a confirmed waiting group and an OPEN, AVAILABLE SS.';
-  else if(!stageInfo?.included||stageInfo.cancelled)$('runInfo').textContent='SS'+(stage+1)+' is not included in the active race plan. Ask Main Control to check the stage plan.';
-  else if(!stageInfo.open)$('runInfo').textContent='SS'+(stage+1)+' is CLOSED by Main Control. Ask the organiser to OPEN it before starting.';
-  else if(!accessOK)$('runInfo').textContent='Marshal access is closed or the phone is offline. Reconnect using the current authorised marshal link.';
-  else if(pendingRequest)$('runInfo').textContent='A group stage request is waiting for Main Control. Do not start a new run yet.';
-  else if(!groupCanRace)$('runInfo').textContent='The assigned group is not READY to race at SS'+(stage+1)+'. Wait for Main Control confirmation.';
-  else if(!selectedDriverId)$('runInfo').textContent='No eligible driver remains in this group for SS'+(stage+1)+'.';
- }
+ const canStart=!!(ready&&plan.stages?.[current]?.included&&plan.stages[current].open&&!plan.stages[current].cancelled&&accessOK&&!pendingRequest);
+ if(!running&&!pendingRun){$('start').disabled=$('start').disabled||!canStart;$('markDns').disabled=$('markDns').disabled||!canStart;$('prepareManual').disabled=$('prepareManual').disabled||!canStart}
+ if(!canStart&&ready&&!running&&!pendingRun)$('runInfo').textContent='Stage '+current+' is CLOSED or not yet authorized. Wait for Main Control to OPEN it.';
  const host=$('bs28RunningOrder');if(host){
   const order=ready?plan.orders?.[stageGroupId]?.[current]?.order||[]:[];
   host.innerHTML=ready?order.map((id,i)=>{
@@ -1722,7 +1692,7 @@ $('bs28NextGroup')?.addEventListener('change',e=>{
 $('bs28NextSS')?.addEventListener('change',bs28RenderMarshal);
 $('bs28SwitchButton')?.addEventListener('click',bs28SelectSS);
 
-window.BS28_MARSHAL_READY=true;window.BS28_MARSHAL_VERSION="28.4.3";render();bs28RenderMarshal();setInterval(()=>{if(bs28IsActive())bs28RenderMarshal()},1800);
+window.BS28_MARSHAL_READY=true;window.BS28_MARSHAL_VERSION="28.4";setInterval(()=>{if(bs28IsActive())bs28RenderMarshal()},1800);bs28RenderMarshal();
 })();
 /* System-wide uppercase for human-readable text fields, including dynamically rendered inputs. */
 (function installUppercaseWordInputs(){
