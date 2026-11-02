@@ -1779,7 +1779,7 @@ function bs28RenderMarshal(){
  const chosen=available.some(x=>x.stage===previousDest)?previousDest:'';
  bs28SyncOptions(destSelect,nextOptions,chosen);
  const accessOK=!!(online&&connectedToServer&&navigator.onLine!==false&&!marshalAccessRevoked&&marshalLinkMode&&marshalSessionVerified);
- const busy=!!(running||pendingRun||savingResult||localStageLock||eventPendingCount(activeEventId())>0);
+ const busy=!!(running||pendingRun||savingResult); // Selection is separate from the START-only stage lock and device sync queue.
  const movable=!!(selectedGroup&&selectedGroup.status==='CHOOSING'&&!selectedGroup.currentStage);
  const latestRequest=bs28Requests[selectedGroupId]||null;
  const pendingRequest=!!(latestRequest?.status==='pending');
@@ -1794,7 +1794,7 @@ function bs28RenderMarshal(){
  $('bs28SwitchButton').disabled=!!(!movable||!destSelect.value||!accessOK||busy||bs28Submitting||bs28Switching);
  const status=$('bs28SwitchStatus');
  if(!accessOK)status.textContent='MARSHAL LINK CLOSED OR OFFLINE · Ask Main Control to open access.';
- else if(busy)status.textContent='SAVE the current run, release its stage lock, and finish pending uploads first.';
+ else if(busy)status.textContent='Finish or SAVE the currently active run before changing stage. A previous stage lock or queued sync does not block selecting a group/SS.';
  else if(bs28Submitting)status.textContent='SAVING SS CHOICE to Firebase…';
  else if(submittedGroupId)status.textContent='REQUEST SENT · '+bs28GroupName(submittedGroupId)+' removed from Available Groups. Waiting for Main Control to save the official draw and update Race Control.';
  else if(!readyGroups.length)status.textContent=verifyingGroups.length?
@@ -1896,7 +1896,7 @@ async function bs28ValidateStart(id,si){
 async function bs28SelectSS(){
  if(!bs28IsActive())return;
  if(!marshalLinkMode||!online||!connectedToServer||!app||navigator.onLine===false||marshalAccessRevoked)return alert('V28: Connect the authorized marshal link while it is OPEN.');
- if(running||pendingRun||savingResult||localStageLock||eventPendingCount(activeEventId())>0)return alert('Finish/save/sync pending result and release its stage lock first.');
+ if(running||pendingRun||savingResult)return alert('Finish or save the active timer result on this device before changing to another stage.');
  const groupId=$('bs28NextGroup')?.value||'',p=bs28Plan(),g=p?.groups?.[groupId],dest=$('bs28NextSS').value;
  if(!g||!bs28Core.canChoose(p,groupId,dest,{}))return alert('The group is not ready or this stage is CLOSED, occupied or completed. Choose another OPEN SS.');
  if(!await verifyMarshalSessionOnline())return alert('Marshal session invalid or the link is closed. Ask Main Control to reopen it.');
