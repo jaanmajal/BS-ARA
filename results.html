@@ -3,7 +3,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="description" content="RC CRAWLER Point &amp; Time Attack System by TEC-ARTS CRAWLER. Official live competition results.">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="description" content="RC CRAWLER Point &amp; Time Attack System by TEC-ARTS CRAWLER. Official live competition results."><meta name="application-name" content="RC CRAWLER"><meta name="apple-mobile-web-app-title" content="RC CRAWLER">
 <meta name="theme-color" content="#070b10"><link rel="icon" type="image/png" sizes="128x128" href="logo.png"><link rel="apple-touch-icon" href="logo.png">
 <title>RC CRAWLER | POINT &amp; TIME ATTACK SYSTEM - Public Results</title>
 <style>
@@ -342,7 +342,7 @@ body{height:auto;min-height:100vh;overflow-x:clip;overflow-y:visible;touch-actio
 <main class="shell">
   <header class="hero">
     <div class="hero-copy">
-      <div class="hero-brand-lockup"><img class="hero-brand-logo" src="logo.png" alt="RC CRAWLER Point and Time Attack System by TEC-ARTS CRAWLER"><div class="hero-brand-copy"><div class="event-kicker">SABAH RC CRAWLER COMPETITION</div>
+      <div class="hero-brand-lockup"><img class="hero-brand-logo" src="logo.png" alt="RC CRAWLER competition logo by TEC-ARTS CRAWLER"><div class="hero-brand-copy"><div class="event-kicker">SABAH RC CRAWLER COMPETITION</div>
       <h1>RC CRAWLER <span>POINT &amp; TIME ATTACK SYSTEM</span></h1>
       <p class="hero-sub">Official timing · Scoring · Live competition results</p></div></div>
     </div>
@@ -397,14 +397,14 @@ body{height:auto;min-height:100vh;overflow-x:clip;overflow-y:visible;touch-actio
   <p class="footer-caption" style="line-height:1.5;margin:8px 0 12px">Penalty reference: Touch -15 pts | Special Gate -5 pts | Outrack -10 pts | Roll Over -5 pts (crawler stops with all four tyres off the ground) | Jump Gate = DNF.</p>
   <section class="card" aria-label="Group rotation overview"><h2>GROUP ROTATION · LIVE</h2><p class="muted">Stages may be OPEN, CLOSED or CANCELLED. Completed historical records remain viewable.</p><div id="bs28PublicGroups" class="bs28-card-grid"><div class="muted">Waiting for group assignments…</div></div></section>
 <footer>
-    <div class="brand-footer"><img src="logo.png" alt="TEC-ARTS CRAWLER logo"><div><div class="brand-name">TEC-ARTS CRAWLER</div><small>SABAH · CRAWL HARD, COMPETE HARDER</small></div></div>
+    <div class="brand-footer"><img src="logo.png" alt="RC CRAWLER logo by TEC-ARTS CRAWLER"><div><div class="brand-name">TEC-ARTS CRAWLER</div><small>SABAH · CRAWL HARD, COMPETE HARDER</small></div></div>
     <div class="footer-caption">RC CRAWLER · POINT &amp; TIME ATTACK SYSTEM · PUBLIC LIVE RESULTS</div>
   </footer>
 </main>
 <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-database-compat.js"></script>
 <script src="firebase-config.js"></script><script src="bs28-core.js"></script><script>
-/* BS-ARA shared scoring engine. Used by Main Control, Marshal and Public Results. */
+/* RC CRAWLER shared scoring engine. Used by Main Control, Marshal and Public Results. */
 (function (root) {
   'use strict';
 
@@ -756,7 +756,7 @@ $('board').addEventListener('click',e=>{const tr=e.target.closest('tr[data-drive
 $('board').addEventListener('keydown',e=>{if(e.key!=='Enter'&&e.key!==' ')return;const tr=e.target.closest('tr[data-driver-id]');if(!tr)return;e.preventDefault();selectedDriverId=tr.dataset.driverId;renderTable();renderDriverDetail()});
 $('refresh').addEventListener('click',()=>{if(!dbRef){showMessage('Firebase is not configured. Check that firebase-config.js is present in the repository root.');return}setConnection('connecting','Refreshing event data…');dbRef.once('value').then(s=>{if(s.exists()){data=normalizeData(s.val());lastDataAt=new Date();render();setConnection(connected?'online':'offline',connected?'Live updates enabled':'Data refreshed; currently offline')}else{$('board').innerHTML=`<tr><td class="empty" colspan="8">No event data found for Event ID ${esc(eventId)}.</td></tr>`;setConnection('offline','Event not initialized')}}).catch(e=>{setConnection('error','Database read failed');showMessage(e.message+' Check Firebase Realtime Database rules.')})});
 window.addEventListener('online',()=>setConnection(connected?'online':'connecting',connected?'Firebase connected':'Network restored; checking Firebase…'));window.addEventListener('offline',()=>setConnection('offline','Device network is offline'));
-if(!config.apiKey||!config.authDomain||!config.databaseURL||!config.projectId){setConnection('error','Firebase config missing');showMessage('Firebase configuration is incomplete: add your exact Realtime Database URL to firebase-config.js in the BS-ARA GitHub repository, then refresh this page.');$('board').innerHTML='<tr><td class="empty" colspan="8">Cannot load results until Firebase is configured.</td></tr>';renderSummary()}else{try{app=firebase.initializeApp(config,'bs28-test-public-results-'+Math.random().toString(36).slice(2,8));dbRef=app.database().ref('events/'+eventId);connectionRef=app.database().ref('.info/connected');connectionRef.on('value',snap=>{connected=snap.val()===true;setConnection(connected?'online':'offline',connected?'Firebase connected · live updates enabled':'Firebase disconnected · waiting to reconnect')});dbRef.on('value',snap=>{if(snap.exists()){data=normalizeData(snap.val());lastDataAt=new Date();$('message').classList.add('hidden');render()}else{data=normalizeData(null);render();showMessage('No data exists for Event ID “'+eventId+'” yet. Connect Race Control to the same Firebase project and Event ID to initialize this event.');lastDataAt=null;renderSummary()}},e=>{setConnection('error','Database access denied');showMessage(e.message+' Check the Firebase Realtime Database rules and confirm that the public results page can read /events/'+eventId+'.')});setConnection('connecting','Connecting to Firebase…')}catch(e){setConnection('error','Firebase initialization failed');showMessage(e.message)}}
+if(!config.apiKey||!config.authDomain||!config.databaseURL||!config.projectId){setConnection('error','Firebase config missing');showMessage('Firebase configuration is incomplete: add your exact Realtime Database URL to firebase-config.js in the RC CRAWLER GitHub repository, then refresh this page.');$('board').innerHTML='<tr><td class="empty" colspan="8">Cannot load results until Firebase is configured.</td></tr>';renderSummary()}else{try{app=firebase.initializeApp(config,'bs28-test-public-results-'+Math.random().toString(36).slice(2,8));dbRef=app.database().ref('events/'+eventId);connectionRef=app.database().ref('.info/connected');connectionRef.on('value',snap=>{connected=snap.val()===true;setConnection(connected?'online':'offline',connected?'Firebase connected · live updates enabled':'Firebase disconnected · waiting to reconnect')});dbRef.on('value',snap=>{if(snap.exists()){data=normalizeData(snap.val());lastDataAt=new Date();$('message').classList.add('hidden');render()}else{data=normalizeData(null);render();showMessage('No data exists for Event ID “'+eventId+'” yet. Connect Race Control to the same Firebase project and Event ID to initialize this event.');lastDataAt=null;renderSummary()}},e=>{setConnection('error','Database access denied');showMessage(e.message+' Check the Firebase Realtime Database rules and confirm that the public results page can read /events/'+eventId+'.')});setConnection('connecting','Connecting to Firebase…')}catch(e){setConnection('error','Firebase initialization failed');showMessage(e.message)}}
 })();
 </script>
 </body>
