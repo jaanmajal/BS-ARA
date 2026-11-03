@@ -325,7 +325,235 @@ body{height:auto;min-height:100vh;overflow-x:clip;overflow-y:visible;touch-actio
 </main>
 <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-database-compat.js"></script>
-<script src="firebase-config.js"></script><script src="bs28-core.js"></script>
+<script src="firebase-config.js"></script><script src="bs28-core.js"></script><script>
+/* BS-ARA shared scoring engine. Used by Main Control, Marshal and Public Results. */
+(function (root) {
+  'use strict';
+
+  const FORMATS = Object.freeze([
+    { id: 'classic_bs', label: 'Classic BS', family: 'bs' },
+    { id: 'modified_bs', label: 'Modified BS', family: 'bs' },
+    { id: 'gate_bs', label: 'Gate BS', family: 'bs' },
+    { id: 'pure_time_attack', label: 'Pure Time Attack', family: 'time' },
+    { id: 'sorr_ca_class_1', label: 'SORRCA Class 1', family: 'sorr_ca' },
+    { id: 'sorr_ca_class_2', label: 'SORRCA Class 2', family: 'sorr_ca' },
+    { id: 'sorr_ca_class_3', label: 'SORRCA Class 3', family: 'sorr_ca' }
+  ]);
+
+  const POSITION_POINTS = Object.freeze([
+    100, 95, 90, 87, 84, 81, 78, 75, 72, 69,
+    66, 63, 60, 58, 56, 54, 52, 50, 48, 46,
+    45, 44, 43, 42, 41, 40, 39, 38, 37, 36,
+    35, 34, 33, 32, 31, 30, 29, 28, 27, 26,
+    25, 24, 23, 22, 21
+  ]);
+
+  const BONUS_GATE_RULE_ID = 'sorrcca-bonus-gate';
+  const formatById = new Map(FORMATS.map(item => [item.id, item]));
+
+  function normalizeFormat(value) {
+    const id = String(value || '').trim().toLowerCase();
+    if (formatById.has(id)) return id;
+    const aliases = {
+      'classic bs': 'classic_bs',
+      'modified bs': 'modified_bs',
+      'gate bs': 'gate_bs',
+      'pure time attack': 'pure_time_attack',
+      'sorrcca class 1': 'sorr_ca_class_1',
+      'sorrcca class 2': 'sorr_ca_class_2',
+      'sorrcca class 3': 'sorr_ca_class_3',
+      'sorr_ca_class1': 'sorr_ca_class_1',
+      'sorr_ca_class2': 'sorr_ca_class_2',
+      'sorr_ca_class3': 'sorr_ca_class_3'
+    };
+    return aliases[id] || null;
+  }
+
+  function formatLabel(value) {
+    const id = normalizeFormat(value);
+    return id ? formatById.get(id).label : 'Not selected';
+  }
+
+  function isSorrca(value) {
+    const id = normalizeFormat(value);
+    return !!id && formatById.get(id).family === 'sorr_ca';
+  }
+
+  function isPureTimeAttack(value) {
+    return normalizeFormat(value) === 'pure_time_attack';
+  }
+
+  function pointsForPlace(place) {
+    const p = Math.max(1, Math.floor(Number(place) || 1));
+    return POSITION_POINTS[p - 1] ?? 21;
+  }
+
+  function modifiedDnfBase(rosterCount) {
+    const n = Math.max(0, Math.floor(Number(rosterCount) || 0));
+    if (n >= 45) return 20;
+    const referencePlace = Math.ceil((25 * n) / 44);
+    return Math.max(20, pointsForPlace(referencePlace) - 20);
+  }
+
+  function isBonusGateItem(item) {
+    return String(item?.ruleId || '') === BONUS_GATE_RULE_ID ||
+      String(item?.name || '').trim().toLowerCase() === 'bonus gate';
+  }
+
+  function bonusGateCount(items) {
+    return (Array.isArray(items) ? items : []).reduce((sum, item) => {
+      if (!isBonusGateItem(item)) return sum;
+      return sum + Math.max(0, Number(item?.count) || 1);
+    }, 0);
+  }
+
+  function scoreStage(options) {
+    const o = options || {};
+    const format = normalizeFormat(o.format);
+    const status = String(o.status || '').trim().toLowerCase();
+    if (!format || !['finish', 'dnf', 'dns'].includes(status)) return null;
+
+    const penaltyValue = Math.max(0, Number(o.penaltyValue) || 0);
+    const totalGates = Math.max(1, Math.floor(Number(o.totalGates) || 1));
+    const rawCleared = o.gatesCleared === undefined || o.gatesCleared === null || o.gatesCleared === ''
+      ? (status === 'finish' ? totalGates : 0)
+      : Math.floor(Number(o.gatesCleared) || 0);
+    const gatesCleared = Math.min(totalGates, Math.max(0, rawCleared));
+    const bonusGates = Math.max(0, Math.floor(Number(o.bonusGates) || 0));
+    const rosterCount = Math.max(0, Math.floor(Number(o.rosterCount) || 0));
+    const dnfBase = modifiedDnfBase(rosterCount);
+
+    if (format === 'classic_bs') {
+      if (status === 'dns') return 0;
+      if (status === 'dnf') return 20;
+      return Math.max(21, pointsForPlace(o.place) - penaltyValue);
+    }
+
+    if (format === 'modified_bs') {
+      if (status === 'dns') return 0;
+      if (status === 'dnf') return dnfBase;
+      return Math.max(dnfBase + 1, pointsForPlace(o.place) - penaltyValue);
+    }
+
+    if (format === 'gate_bs') {
+      if (status === 'dns') return 0;
+      if (status === 'dnf') return Math.max(20, Math.round(dnfBase * gatesCleared / totalGates));
+      return Math.max(dnfBase + 1, pointsForPlace(o.place) - penaltyValue);
+    }
+
+    if (format === 'pure_time_attack') {
+      if (status === 'dns') return null;
+      const baseTime = status === 'dnf' ? Math.max(0, Number(o.cutoffMs) || 0) : Math.max(0, Number(o.elapsedMs) || 0);
+      return baseTime + penaltyValue * 1000;
+    }
+
+    if (isSorrca(format)) {
+      if (status === 'dnf') return 120;
+      if (status === 'dns') return 140;
+      return penaltyValue - (2 * gatesCleared) - (10 * bonusGates);
+    }
+
+    return null;
+  }
+
+  function statusPriority(status) {
+    const s = String(status || '').toLowerCase();
+    return s === 'finish' ? 3 : s === 'dnf' ? 2 : s === 'dns' ? 1 : 0;
+  }
+
+  function compareNumber(a, b) {
+    const av = Number.isFinite(Number(a)) ? Number(a) : Infinity;
+    const bv = Number.isFinite(Number(b)) ? Number(b) : Infinity;
+    return av - bv;
+  }
+
+  function isComplete(row) {
+    if (typeof row?.complete === 'boolean') return row.complete;
+    return String(row?.status || '').toUpperCase() !== 'PENDING';
+  }
+
+  function compareOverall(a, b, formatValue) {
+    const format = normalizeFormat(formatValue);
+    const byNumber = () => String(a?.number ?? a?.d?.num ?? '').localeCompare(
+      String(b?.number ?? b?.d?.num ?? ''), undefined, { numeric: true }
+    );
+
+    if (isPureTimeAttack(format)) {
+      return Number(isComplete(b)) - Number(isComplete(a)) ||
+        (Number(b?.finishes) || 0) - (Number(a?.finishes) || 0) ||
+        (Number(b?.dnfs) || 0) - (Number(a?.dnfs) || 0) ||
+        compareNumber(a?.total, b?.total) || byNumber();
+    }
+
+    if (isSorrca(format)) {
+      return compareNumber(a?.total, b?.total) || byNumber();
+    }
+
+    return compareNumber(b?.total, a?.total) ||
+      (Number(b?.finishes) || 0) - (Number(a?.finishes) || 0) ||
+      compareNumber(a?.time, b?.time) || byNumber();
+  }
+
+  function compareStage(a, b, formatValue) {
+    const format = normalizeFormat(formatValue);
+    if (!a?.status) return b?.status ? 1 : 0;
+    if (!b?.status) return -1;
+    const statusOrder = statusPriority(b?.status) - statusPriority(a?.status);
+    const byTime = compareNumber(a?.time, b?.time);
+    const byNumber = String(a?.number ?? '').localeCompare(String(b?.number ?? ''), undefined, { numeric: true });
+    if (isPureTimeAttack(format)) return statusOrder || compareNumber(a?.score, b?.score) || byTime || byNumber;
+    if (isSorrca(format)) return compareNumber(a?.score, b?.score) || statusOrder || byTime || byNumber;
+    return compareNumber(b?.score, a?.score) || statusOrder || byTime || byNumber;
+  }
+
+  function sameOverallTie(a, b, formatValue) {
+    const format = normalizeFormat(formatValue);
+    if (isPureTimeAttack(format)) {
+      return isComplete(a) && isComplete(b) &&
+        Number(a?.finishes || 0) === Number(b?.finishes || 0) &&
+        Number(a?.dnfs || 0) === Number(b?.dnfs || 0) &&
+        Number(a?.total || 0) === Number(b?.total || 0);
+    }
+    if (isSorrca(format)) return Number(a?.total || 0) === Number(b?.total || 0);
+    return Number(a?.total || 0) === Number(b?.total || 0) &&
+      Number(a?.finishes || 0) === Number(b?.finishes || 0) &&
+      Number(a?.time || 0) === Number(b?.time || 0);
+  }
+
+  function overallRank(rows, index, formatValue) {
+    if (!Array.isArray(rows) || index < 0 || !rows[index]) return null;
+    if (isPureTimeAttack(formatValue) && !isComplete(rows[index])) return null;
+    let rank = index + 1;
+    for (let i = index - 1; i >= 0; i--) {
+      if (isPureTimeAttack(formatValue) && !isComplete(rows[i])) break;
+      if (!sameOverallTie(rows[i], rows[index], formatValue)) break;
+      rank = i + 1;
+    }
+    return rank;
+  }
+
+  root.BS28_SCORING = Object.freeze({
+    formats: FORMATS,
+    positionPoints: POSITION_POINTS,
+    bonusGateRuleId: BONUS_GATE_RULE_ID,
+    normalizeFormat,
+    formatLabel,
+    isSorrca,
+    isPureTimeAttack,
+    pointsForPlace,
+    modifiedDnfBase,
+    isBonusGateItem,
+    bonusGateCount,
+    scoreStage,
+    statusPriority,
+    compareOverall,
+    compareStage,
+    sameOverallTie,
+    overallRank
+  });
+})(typeof window !== 'undefined' ? window : globalThis);
+
+</script>
 <script>
 (()=>{'use strict';
 const $=id=>document.getElementById(id);
@@ -333,23 +561,23 @@ const config=window.RC_FIREBASE_CONFIG||{};
 const requestedEvent=new URLSearchParams(window.location.search).get('event');
 const eventId=requestedEvent&&/^[a-zA-Z0-9-]{1,80}$/.test(requestedEvent)?requestedEvent:(window.RC_EVENT_ID||'bs28-test');
 const defaultCutoffs=[600000,720000,900000,600000];
-let app=null,dbRef=null,connectionRef=null,connected=false,lastDataAt=null,selectedDriverId=null,currentView='overall',mobileExpandedStageDetails=new Set(),data={drivers:{},results:{},dnfRosterCount:null,cutoffs:defaultCutoffs.slice(),gateTotals:[10,10,10,10],penaltyRules:[],penalties:{},lateEntries:{},drawOrders:{},drawLocks:{}};
-const positionPoints=[100,95,90,87,84,81,78,75,72,69,66,63,60,58,56,54,52,50,48,46,45,44,43,42,41,40,39,38,37,36,35,34,33,32,31,30,29,28,27,26];
+let app=null,dbRef=null,connectionRef=null,connected=false,lastDataAt=null,selectedDriverId=null,currentView='overall',mobileExpandedStageDetails=new Set(),data={drivers:{},results:{},dnfRosterCount:null,cutoffs:defaultCutoffs.slice(),gateTotals:[10,10,10,10],penaltyRules:[],penalties:{},lateEntries:{},drawOrders:{},drawLocks:{},scoringFormat:null};
+const positionPoints=BS28_SCORING.positionPoints;
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const fmt=ms=>{ms=Math.max(0,Math.floor(Number(ms)||0));return String(Math.floor(ms/60000)).padStart(2,'0')+':'+String(Math.floor(ms%60000/1000)).padStart(2,'0')+'.'+String(Math.floor(ms%1000/10)).padStart(2,'0')};
-const pointsForPlace=place=>positionPoints[Math.max(0,Number(place)-1)]??26;
+const pointsForPlace=place=>BS28_SCORING.pointsForPlace(place);
 function numericArray(value,fallback){if(Array.isArray(value))return value.slice();if(value&&typeof value==='object')return Object.keys(value).sort((a,b)=>Number(a)-Number(b)).map(k=>value[k]);return fallback.slice()}
-function normalizeData(value){const d=value&&typeof value==='object'?value:{};const cutoffs=numericArray(d.cutoffs,defaultCutoffs);const cleanCutoffs=cutoffs.length?cutoffs:defaultCutoffs.slice();const gates=numericArray(d.gateTotals,cleanCutoffs.map(()=>10));const drivers=d.drivers&&typeof d.drivers==='object'?d.drivers:{};const rawOrders=d.drawOrders&&typeof d.drawOrders==='object'?d.drawOrders:{};const drawOrders={};const drawLocks={};for(let s=0;s<cleanCutoffs.length;s++){const raw=rawOrders[s];const list=Array.isArray(raw)?raw:(raw&&typeof raw==='object'?Object.keys(raw).sort((a,b)=>Number(a)-Number(b)).map(k=>raw[k]):[]);drawOrders[s]=[...new Set(list.map(String).filter(id=>!!drivers[id]))];drawLocks[s]=d.drawLocks?.[s]===true}const results=d.results&&typeof d.results==='object'?d.results:{};const savedRosterCount=Number(d.dnfRosterCount);const dnfRosterCount=Number.isInteger(savedRosterCount)&&savedRosterCount>0?savedRosterCount:null;return {drivers,results,dnfRosterCount,cutoffs:cleanCutoffs,gateTotals:cleanCutoffs.map((_,i)=>{const n=Number(gates[i]);return Number.isInteger(n)&&n>0&&n<=999?n:10}),penaltyRules:Array.isArray(d.penaltyRules)?d.penaltyRules:(d.penaltyRules&&typeof d.penaltyRules==='object'?Object.values(d.penaltyRules):[]),penalties:d.penalties&&typeof d.penalties==='object'?d.penalties:{},lateEntries:d.lateEntries&&typeof d.lateEntries==='object'?d.lateEntries:{},drawOrders,drawLocks,groupRotationV28:d.groupRotationV28||null}}
+function normalizeData(value){const d=value&&typeof value==='object'?value:{};const cutoffs=numericArray(d.cutoffs,defaultCutoffs);const cleanCutoffs=cutoffs.length?cutoffs:defaultCutoffs.slice();const gates=numericArray(d.gateTotals,cleanCutoffs.map(()=>10));const drivers=d.drivers&&typeof d.drivers==='object'?d.drivers:{};const rawOrders=d.drawOrders&&typeof d.drawOrders==='object'?d.drawOrders:{};const drawOrders={};const drawLocks={};for(let s=0;s<cleanCutoffs.length;s++){const raw=rawOrders[s];const list=Array.isArray(raw)?raw:(raw&&typeof raw==='object'?Object.keys(raw).sort((a,b)=>Number(a)-Number(b)).map(k=>raw[k]):[]);drawOrders[s]=[...new Set(list.map(String).filter(id=>!!drivers[id]))];drawLocks[s]=d.drawLocks?.[s]===true}const results=d.results&&typeof d.results==='object'?d.results:{};const savedRosterCount=Number(d.dnfRosterCount);const dnfRosterCount=Number.isInteger(savedRosterCount)&&savedRosterCount>0?savedRosterCount:null;return {drivers,results,dnfRosterCount,scoringFormat:BS28_SCORING.normalizeFormat(d.scoringFormat),cutoffs:cleanCutoffs,gateTotals:cleanCutoffs.map((_,i)=>{const n=Number(gates[i]);return Number.isInteger(n)&&n>0&&n<=999?n:10}),penaltyRules:Array.isArray(d.penaltyRules)?d.penaltyRules:(d.penaltyRules&&typeof d.penaltyRules==='object'?Object.values(d.penaltyRules):[]),penalties:d.penalties&&typeof d.penalties==='object'?d.penalties:{},lateEntries:d.lateEntries&&typeof d.lateEntries==='object'?d.lateEntries:{},drawOrders,drawLocks,groupRotationV28:d.groupRotationV28||null}}
 const result=(id,s)=>data.results?.[id]?.[s]||null;
 const gateTotalForStage=s=>{const n=Number(data.gateTotals?.[s]);return Number.isInteger(n)&&n>=1&&n<=999?n:10};
 const penaltyItems=(id,s)=>{const v=data.penalties?.[id]?.[s];return Array.isArray(v)?v:(v&&typeof v==='object'?Object.values(v):[])};
 function legacyPenaltyPoints(name,legacyValue){const n=String(name||'').trim().toLowerCase();if(/jump\s*gate/.test(n))return 0;if(/touch/.test(n))return 15;if(/outrack|out\s*track|off[\s-]*track/.test(n))return 10;if(/gate/.test(n)||/roll[\s-]?over|rollover/.test(n))return 5;return Math.max(0,Math.round(Math.abs(Number(legacyValue)||0)))}
-function penaltyTotal(id,s){return penaltyItems(id,s).reduce((sum,p)=>sum+(Number.isFinite(Number(p.points))?Math.max(0,Number(p.points)):legacyPenaltyPoints(p.name,p.seconds))*(Number(p.count)||1),0)}
+function penaltyTotal(id,s){return penaltyItems(id,s).filter(p=>!BS28_SCORING.isBonusGateItem(p)).reduce((sum,p)=>sum+(Number.isFinite(Number(p.points))?Math.max(0,Number(p.points)):legacyPenaltyPoints(p.name,p.seconds))*(Number(p.count)||1),0)}
 const rawTime=(id,s,r=result(id,s))=>r?.status==='finish'?Math.max(0,Number(r.ms)||0):null;
-function dnfBase(){const frozen=Number(data.dnfRosterCount);const registered=Number.isInteger(frozen)&&frozen>0?frozen:Object.keys(data.drivers).length;return registered?Math.max(20,pointsForPlace(registered)-20):20}
+function dnfBase(){return BS28_SCORING.modifiedDnfBase(Object.keys(data.drivers||{}).length)}
 function dnfProgress(r,s){const total=Math.max(1,Number(r?.totalGates)||gateTotalForStage(s));const raw=r?.gatesCleared;if(raw===undefined||raw===null||raw==='')return dnfBase();const cleared=Math.min(total,Math.max(0,Math.floor(Number(raw)||0)));return Math.round(dnfBase()*cleared/total)}
 function gateOneFloor(s){return Math.round(dnfBase()/gateTotalForStage(s))}
-function stagePoints(id,s){const r=result(id,s);if(!r)return null;if(r.status==='dns')return 0;const deduction=penaltyTotal(id,s),floor=gateOneFloor(s);if(r.status==='dnf')return Math.max(floor,dnfProgress(r,s)-deduction);if(r.status!=='finish')return null;const mine=rawTime(id,s,r);const faster=Object.keys(data.drivers).filter(other=>other!==id&&result(other,s)?.status==='finish'&&rawTime(other,s,result(other,s))<mine).length;return Math.max(floor,pointsForPlace(faster+1)-deduction)}
+function stagePoints(id,s){const r=result(id,s);if(!r)return null;const items=penaltyItems(id,s),penaltyValue=penaltyTotal(id,s),bonusGates=BS28_SCORING.bonusGateCount(items),mine=rawTime(id,s,r),faster=Object.keys(data.drivers||{}).filter(other=>other!==id&&result(other,s)?.status==='finish'&&rawTime(other,s,result(other,s))<mine).length;return BS28_SCORING.scoreStage({format:data.scoringFormat,status:r.status,elapsedMs:mine,cutoffMs:data.cutoffs?.[s],place:faster+1,rosterCount:Object.keys(data.drivers||{}).length,totalGates:gateTotalForStage(s),gatesCleared:r.gatesCleared,penaltyValue,bonusGates})}
 function resultStatusPriority(r){return r?.status==='finish'?3:r?.status==='dnf'?2:r?.status==='dns'?1:0}
 function bs28ScoreStage(s){const p=data.groupRotationV28;return !p?.enabled||!!(p.stages?.["SS"+(s+1)]?.included&&!p.stages["SS"+(s+1)].cancelled)}
 function totalPoints(id){return data.cutoffs.reduce((sum,_,s)=>sum+(bs28ScoreStage(s)?stagePoints(id,s)??0:0),0)}
@@ -361,43 +589,44 @@ function statusClass(status){return status==='FINISH'?'status-finish':status==='
 function statusBadge(status){return `<span class="status-badge ${statusClass(status)}">${status==='FINISH'?'⚑ ':status==='DNF'?'✕ ':status==='DNS'?'— ':''}${esc(status)}</span>`}
 function stageProgress(r,s){if(!r)return '—';if(r.status==='dnf'){const total=Number(r.totalGates)||gateTotalForStage(s);return `${r.gatesCleared===undefined||r.gatesCleared===null?'?':r.gatesCleared}/${total} gates`}if(r.status==='dns')return 'Did not start';return fmt(rawTime('',s,r))}
 function driversSorted(){return Object.entries(data.drivers).sort((a,b)=>String(a[1]?.num??'').localeCompare(String(b[1]?.num??''),undefined,{numeric:true})||String(a[1]?.name??'').localeCompare(String(b[1]?.name??'')))}
-function allDriverRecords(){return driversSorted().map(([id,d])=>({id,d,total:totalPoints(id),last:stagePoints(id,data.cutoffs.length-1)??-1,recorded:recordedCount(id),finishes:finishStageCount(id),time:totalRawTime(id),status:overallStatus(id)}))}
+function allDriverRecords(){return driversSorted().map(([id,d])=>({id,d,total:totalPoints(id),last:stagePoints(id,data.cutoffs.length-1)??-1,recorded:recordedCount(id),finishes:finishStageCount(id),dnfs:data.cutoffs.filter((_,s)=>result(id,s)?.status==='dnf').length,dns:data.cutoffs.filter((_,s)=>result(id,s)?.status==='dns').length,time:totalRawTime(id),status:overallStatus(id),complete:overallStatus(id)==='FINISH'}))}
 function getFilteredRows(){const q=$('search').value.trim().toLowerCase(),filter=$('statusFilter').value,sort=$('sortBy').value;let rows=allDriverRecords().filter(r=>{const searchable=(`#${r.d.num||''} ${r.d.name||''}`).toLowerCase();if(q&&!searchable.includes(q))return false;if(currentView==='overall'){if(filter==='FINISH'&&r.status!=='FINISH')return false;if(filter==='PENDING'&&r.status!=='PENDING')return false;if(filter==='DNF'&&!data.cutoffs.some((_,s)=>result(r.id,s)?.status==='dnf'))return false;if(filter==='DNS'&&!data.cutoffs.some((_,s)=>result(r.id,s)?.status==='dns'))return false}else{const s=Number(currentView.split(':')[1]),rr=result(r.id,s),stageStatus=rr?String(rr.status||'').toUpperCase():'PENDING';if(filter!=='all'&&stageStatus!==filter)return false}return true});
- if(currentView==='overall'){rows.sort((a,b)=>sort==='number'?String(a.d.num).localeCompare(String(b.d.num),undefined,{numeric:true}):sort==='time'?a.time-b.time||b.total-a.total:b.total-a.total||b.finishes-a.finishes||b.last-a.last||a.time-b.time||String(a.d.num).localeCompare(String(b.d.num),undefined,{numeric:true}))}
- else{const s=Number(currentView.split(':')[1]);rows.sort((a,b)=>{if(sort==='number')return String(a.d.num).localeCompare(String(b.d.num),undefined,{numeric:true});if(sort==='time'){const at=rawTime(a.id,s),bt=rawTime(b.id,s);return (at===null?Infinity:at)-(bt===null?Infinity:bt)}const ap=stagePoints(a.id,s),bp=stagePoints(b.id,s);return (bp??-1)-(ap??-1)||resultStatusPriority(result(b.id,s))-resultStatusPriority(result(a.id,s))||((rawTime(a.id,s)??Infinity)-(rawTime(b.id,s)??Infinity))||String(a.d.num).localeCompare(String(b.d.num),undefined,{numeric:true})})}
+ if(currentView==='overall'){rows.sort((a,b)=>sort==='number'?String(a.d.num).localeCompare(String(b.d.num),undefined,{numeric:true}):sort==='time'&&!BS28_SCORING.isPureTimeAttack(data.scoringFormat)?a.time-b.time||BS28_SCORING.compareOverall(a,b,data.scoringFormat):BS28_SCORING.compareOverall(a,b,data.scoringFormat))}
+ else{const s=Number(currentView.split(':')[1]);rows.sort((a,b)=>{if(sort==='number')return String(a.d.num).localeCompare(String(b.d.num),undefined,{numeric:true});const ar=result(a.id,s),br=result(b.id,s),ap=stagePoints(a.id,s),bp=stagePoints(b.id,s);if(sort==='time'&&!BS28_SCORING.isPureTimeAttack(data.scoringFormat)){const at=rawTime(a.id,s),bt=rawTime(b.id,s);return (at===null?Infinity:at)-(bt===null?Infinity:bt)}return BS28_SCORING.compareStage({score:ap,status:ar?.status,time:rawTime(a.id,s),number:a.d.num},{score:bp,status:br?.status,time:rawTime(b.id,s),number:b.d.num},data.scoringFormat)})}
  return rows}
-function tableHeader(){if(currentView==='overall'){return `<tr><th>#</th><th>Driver</th>${data.cutoffs.map((_,s)=>`<th>SS${s+1}</th>`).join('')}<th>Total</th><th>Status</th></tr>`}const s=Number(currentView.split(':')[1]);return `<tr><th>#</th><th>Driver</th><th>Result / time</th><th>Gates</th><th>Penalty</th><th>Net points</th><th>Status</th></tr>`}
-function stageCell(id,s){const r=result(id,s);if(!r)return `<td><span class="neutral">—</span><span class="subcell">Pending</span></td>`;const pts=stagePoints(id,s),pen=penaltyTotal(id,s);if(r.status==='dnf')return `<td><span class="stage-cell-main error">DNF</span><span class="stage-cell-sub">${esc(stageProgress(r,s))}</span><span class="stage-cell-sub">${pts} pts</span></td>`;if(r.status==='dns')return `<td><span class="stage-cell-main">DNS</span><span class="stage-cell-sub">0 pts</span></td>`;return `<td><span class="stage-cell-main">${fmt(rawTime(id,s,r))}</span><span class="stage-cell-sub">${pts} pts${pen?` · <span class="deduction">−${pen}</span>`:''}</span></td>`}
-function renderMobileBoard(rows){
+function tableHeader(){const time=BS28_SCORING.isPureTimeAttack(data.scoringFormat),sorr=BS28_SCORING.isSorrca(data.scoringFormat);if(currentView==='overall'){return `<tr><th>#</th><th>Driver</th>${data.cutoffs.map((_,s)=>`<th>SS${s+1}</th>`).join('')}<th>${time?'Total adjusted time':sorr?'Total course points':'Total points'}</th><th>Status</th></tr>`}return `<tr><th>#</th><th>Driver</th><th>Result / time</th><th>Gates</th><th>${time?'Penalty (sec)':sorr?'Penalty points':'Penalty'}</th><th>${time?'Adjusted time':sorr?'Course points':'Net points'}</th><th>Status</th></tr>`}
+function stageCell(id,s){const r=result(id,s);if(!r)return `<td><span class="neutral">—</span><span class="subcell">Pending</span></td>`;const pts=stagePoints(id,s),pen=penaltyTotal(id,s),time=BS28_SCORING.isPureTimeAttack(data.scoringFormat),sorr=BS28_SCORING.isSorrca(data.scoringFormat),bonus=sorr&&r.status==='finish'?BS28_SCORING.bonusGateCount(penaltyItems(id,s)):0,score=pts===null?'DNS':time?fmt(pts):pts+' pts',penalty=pen?(time?'+'+pen+' sec':sorr?'+'+pen+' penalty pts':'−'+pen+' pts'):'';if(r.status==='dnf')return `<td><span class="stage-cell-main error">DNF</span><span class="stage-cell-sub">${esc(stageProgress(r,s))}</span><span class="stage-cell-sub">${score}${time&&pen?' · '+pen:''}</span></td>`;if(r.status==='dns')return `<td><span class="stage-cell-main">DNS</span><span class="stage-cell-sub">${score}</span></td>`;return `<td><span class="stage-cell-main">${fmt(rawTime(id,s,r))}</span><span class="stage-cell-sub">${score}${pen?' · '+pen:''}${bonus?' · −'+(bonus*10)+' bonus pts':''}</span></td>`}
+function officialRankMap(rows){const ordered=rows.slice();if(currentView==='overall'){ordered.sort((a,b)=>BS28_SCORING.compareOverall(a,b,data.scoringFormat))}else{const s=Number(currentView.split(':')[1]);ordered.sort((a,b)=>{const ar=result(a.id,s),br=result(b.id,s);return BS28_SCORING.compareStage({score:stagePoints(a.id,s),status:ar?.status,time:rawTime(a.id,s),number:a.d.num},{score:stagePoints(b.id,s),status:br?.status,time:rawTime(b.id,s),number:b.d.num},data.scoringFormat)})}const map=new Map();ordered.forEach((row,i)=>{const rank=currentView==='overall'?BS28_SCORING.overallRank(ordered,i,data.scoringFormat):i+1;map.set(row.id,rank??'—')});return map}
+function renderMobileBoard(rows,rankMap=new Map()){
  const host=$('mobileBoard');if(!host)return;
  if(!rows.length){host.innerHTML=`<div class="empty">${Object.keys(data.drivers).length?'No drivers match the selected search/filter.':'No drivers registered for this event yet.'}</div>`;return}
  host.innerHTML=rows.map((r,i)=>{
-  const rankClass=i===0?'top1':i===1?'top2':i===2?'top3':'';
+  const rankValue=rankMap.get(r.id)??'—',rankClass=rankValue===1?'top1':rankValue===2?'top2':rankValue===3?'top3':'';
   const late=data.lateEntries?.[r.id]?'<span class="late-entry-badge">LATE ENTRY</span>':'';
   if(currentView==='overall'){
    const chips=data.cutoffs.map((_,s)=>{
-    const rr=result(r.id,s),pts=stagePoints(r.id,s),pen=penaltyTotal(r.id,s);let cls='pending',main='PENDING',sub=pts===null?'No result':pts+' pts';
-    if(rr?.status==='finish'){cls='finish';main=fmt(rawTime(r.id,s,rr));sub=(pts===null?'—':pts+' pts')+(pen?' · −'+pen:'')}
-    else if(rr?.status==='dnf'){cls='dnf';main='DNF';sub=stageProgress(rr,s)+' · '+(pts===null?'—':pts+' pts')+(pen?' · −'+pen:'')}
-    else if(rr?.status==='dns'){cls='dnf';main='DNS';sub=(pts===null?'0':pts)+' pts'}
+    const rr=result(r.id,s),pts=stagePoints(r.id,s),pen=penaltyTotal(r.id,s),isTime=BS28_SCORING.isPureTimeAttack(data.scoringFormat),isSorrca=BS28_SCORING.isSorrca(data.scoringFormat),bonus=rr?.status==='finish'&&isSorrca?BS28_SCORING.bonusGateCount(penaltyItems(r.id,s)):0;let cls='pending',main='PENDING',sub=pts===null?'No result':isTime?fmt(pts):pts+' pts';
+    if(rr?.status==='finish'){cls='finish';main=fmt(rawTime(r.id,s,rr));sub=(pts===null?'—':isTime?fmt(pts):pts+' pts')+(pen?' · '+(isTime?'+'+pen+' sec':isSorrca?'+'+pen+' pts':'−'+pen+' pts'):'')+(bonus?' · −'+(bonus*10)+' bonus':'')}
+    else if(rr?.status==='dnf'){cls='dnf';main='DNF';sub=stageProgress(rr,s)+' · '+(pts===null?'—':isTime?fmt(pts):pts+' pts')+(isTime&&pen?' · +'+pen+' sec':'')}
+    else if(rr?.status==='dns'){cls='dnf';main='DNS';sub=isTime?'DNS':(pts===null?'0':pts)+' pts'}
     return `<div class="mobile-stage-chip ${cls}"><span class="stage-label">SS${s+1}</span><strong>${esc(main)}</strong><small>${esc(sub)}</small></div>`
    }).join('');
    const isOpen=mobileExpandedStageDetails.has(r.id);
-   return `<article class="mobile-driver-card ${selectedDriverId===r.id?'selected':''}"><button type="button" class="mobile-card-select" data-driver-id="${esc(r.id)}" aria-label="View ${esc(r.d.name||'driver')} performance"><div class="mobile-card-top"><span class="mobile-rank ${rankClass}">${i+1}</span><span class="mobile-driver-main"><strong>${esc(r.d.name||'Unnamed driver')} ${late}</strong><small>${esc(r.status)} overall · ${r.recorded}/${data.cutoffs.length} stages recorded</small></span><span class="mobile-total"><strong>${r.total}</strong><small>TOTAL PTS</small></span></div></button><details class="mobile-card-stage-details" data-mobile-stage-details-id="${esc(r.id)}" ${isOpen?'open':''}><summary>Stage results <span>${r.recorded}/${data.cutoffs.length} recorded</span></summary><div class="mobile-stage-grid">${chips}</div></details></article>`
+   return `<article class="mobile-driver-card ${selectedDriverId===r.id?'selected':''}"><button type="button" class="mobile-card-select" data-driver-id="${esc(r.id)}" aria-label="View ${esc(r.d.name||'driver')} performance"><div class="mobile-card-top"><span class="mobile-rank ${rankClass}">${rankValue}</span><span class="mobile-driver-main"><strong>${esc(r.d.name||'Unnamed driver')} ${late}</strong><small>${esc(r.status)} overall · ${r.recorded}/${data.cutoffs.length} stages recorded</small></span><span class="mobile-total"><strong>${BS28_SCORING.isPureTimeAttack(data.scoringFormat)?fmt(r.total):r.total}</strong><small>${BS28_SCORING.isPureTimeAttack(data.scoringFormat)?'TOTAL TIME':BS28_SCORING.isSorrca(data.scoringFormat)?'TOTAL COURSE PTS':'TOTAL PTS'}</small></span></div></button><details class="mobile-card-stage-details" data-mobile-stage-details-id="${esc(r.id)}" ${isOpen?'open':''}><summary>Stage results <span>${r.recorded}/${data.cutoffs.length} recorded</span></summary><div class="mobile-stage-grid">${chips}</div></details></article>`
   }
-  const st=Number(currentView.split(':')[1]),rr=result(r.id,st),pen=penaltyTotal(r.id,st),pts=stagePoints(r.id,st);let main='PENDING',sub='Awaiting result';
+  const st=Number(currentView.split(':')[1]),rr=result(r.id,st),pen=penaltyTotal(r.id,st),pts=stagePoints(r.id,st),isTime=BS28_SCORING.isPureTimeAttack(data.scoringFormat),isSorrca=BS28_SCORING.isSorrca(data.scoringFormat),penaltyText=pen?(isTime?'+'+pen+' sec':isSorrca?'+'+pen+' pts':'−'+pen+' pts'):'0',scoreText=pts===null?'—':isTime?fmt(pts):pts+' pts';let main='PENDING',sub='Awaiting result';
   if(rr?.status==='finish'){main=fmt(rawTime(r.id,st,rr));sub='FINISH'}else if(rr?.status==='dnf'){main='DNF';sub=stageProgress(rr,st)}else if(rr?.status==='dns'){main='DNS';sub='Did not start'}
-  return `<article class="mobile-driver-card ${selectedDriverId===r.id?'selected':''}"><button type="button" class="mobile-card-select" data-driver-id="${esc(r.id)}" aria-label="View ${esc(r.d.name||'driver')} performance"><div class="mobile-card-top"><span class="mobile-rank ${rankClass}">${i+1}</span><span class="mobile-driver-main"><strong>${esc(r.d.name||'Unnamed driver')} ${late}</strong><small>${esc(r.status)} overall · ${r.recorded}/${data.cutoffs.length} stages recorded</small></span><span class="mobile-total"><strong>${pts===null?'—':pts}</strong><small>SS${st+1} PTS</small></span></div><div class="mobile-result-line"><div><div class="mobile-result-main">${esc(main)}</div><div class="mobile-result-sub">${esc(sub)}${pen?' · penalty −'+pen+' pts':''}</div></div>${statusBadge(rr?String(rr.status).toUpperCase():'PENDING')}</div></button></article>`
+  return `<article class="mobile-driver-card ${selectedDriverId===r.id?'selected':''}"><button type="button" class="mobile-card-select" data-driver-id="${esc(r.id)}" aria-label="View ${esc(r.d.name||'driver')} performance"><div class="mobile-card-top"><span class="mobile-rank ${rankClass}">${rankMap.get(r.id)??'—'}</span><span class="mobile-driver-main"><strong>${esc(r.d.name||'Unnamed driver')} ${late}</strong><small>${esc(r.status)} overall · ${r.recorded}/${data.cutoffs.length} stages recorded</small></span><span class="mobile-total"><strong>${scoreText}</strong><small>${isTime?'SS'+(st+1)+' TIME':isSorrca?'SS'+(st+1)+' COURSE PTS':'SS'+(st+1)+' PTS'}</small></span></div><div class="mobile-result-line"><div><div class="mobile-result-main">${esc(main)}</div><div class="mobile-result-sub">${esc(sub)}${pen?' · penalty '+penaltyText:''}</div></div>${statusBadge(rr?String(rr.status).toUpperCase():'PENDING')}</div></button></article>`
  }).join('');
  host.querySelectorAll('details[data-mobile-stage-details-id]').forEach(el=>el.addEventListener('toggle',()=>{const id=el.dataset.mobileStageDetailsId;if(!id)return;if(el.open)mobileExpandedStageDetails.add(id);else mobileExpandedStageDetails.delete(id)}));
 }
-function renderTable(){const rows=getFilteredRows();$('tableHead').innerHTML=tableHeader();$('rowCount').textContent=`${rows.length} / ${Object.keys(data.drivers).length} drivers`;$('tableTitle').textContent=currentView==='overall'?'Overall points leaderboard':`SS${Number(currentView.split(':')[1])+1} stage results`;$('tableSubtitle').textContent=currentView==='overall'?'Highest total net points ranks first':'Ranked by net stage points; FINISH wins ties';$('sortBy').options[0].textContent=currentView==='overall'?'Sort by total points':'Sort by net points';
- if(!rows.length){$('board').innerHTML=`<tr><td class="empty" colspan="${currentView==='overall'?data.cutoffs.length+4:7}">${Object.keys(data.drivers).length?'No drivers match the selected search/filter.':'No drivers registered for this event yet.'}</td></tr>`;renderMobileBoard([]);return}
- $('board').innerHTML=rows.map((r,i)=>{const rankClass=i===0?'top1':i===1?'top2':i===2?'top3':'';let cells='';if(currentView==='overall'){cells=data.cutoffs.map((_,s)=>stageCell(r.id,s)).join('')+`<td><span class="points">${r.total}</span></td><td>${statusBadge(r.status)}</td>`}else{const s=Number(currentView.split(':')[1]),rr=result(r.id,s),pen=penaltyTotal(r.id,s),pts=stagePoints(r.id,s);cells=`<td>${rr?rr.status==='finish'?`<span class="stage-cell-main">${fmt(rawTime(r.id,s,rr))}</span>`:`<span class="stage-cell-main">${esc(String(rr.status).toUpperCase())}</span>`:'<span class="neutral">—</span>'}</td><td>${rr?.status==='dnf'?esc(stageProgress(rr,s)):'—'}</td><td class="${pen?'deduction':'neutral'}">${pen?'−'+pen:'0'}</td><td><span class="points">${pts===null?'—':pts}</span></td><td>${statusBadge(rr?String(rr.status).toUpperCase():'PENDING')}</td>`}return `<tr data-driver-id="${esc(r.id)}" tabindex="0" role="button" aria-label="View ${esc(r.d.name)} performance" class="${selectedDriverId===r.id?'selected':''}"><td class="rank ${rankClass}">${i+1}</td><td><div class="driver-cell"><div><span class="driver-name">${esc(r.d.name||'Unnamed driver')}</span>${data.lateEntries?.[r.id]?`<span class="late-entry-badge">LATE ENTRY · SS${Number(data.lateEntries[r.id].targetStage)+1}</span>`:''}</div></div></td>${cells}</tr>`}).join('');renderMobileBoard(rows)}
-function renderDriverDetail(){const oldPoints=$('detailContent').querySelector('.stage-points-collapse');const oldDetails=$('detailContent').querySelector('.stage-details-collapse');const previousPointsOpen=oldPoints?oldPoints.open:undefined;const previousDetailsOpen=oldDetails?oldDetails.open:undefined;const rows=allDriverRecords();if(!rows.length){$('detailStageCount').textContent='No drivers';$('detailContent').className='empty';$('detailContent').textContent='Driver details will appear after drivers are registered in Race Control.';return}const overallRows=rows.slice().sort((a,b)=>b.total-a.total||b.finishes-a.finishes||b.last-a.last||a.time-b.time||String(a.d.num).localeCompare(String(b.d.num),undefined,{numeric:true}));let r=overallRows.find(x=>x.id===selectedDriverId);if(!r){r=overallRows[0];selectedDriverId=r.id}const d=r.d;const overallRank=Math.max(1,overallRows.findIndex(x=>x.id===r.id)+1);$('detailStageCount').textContent=`${r.recorded}/${data.cutoffs.length} recorded`;
- const maxPts=Math.max(1,...data.cutoffs.map((_,s)=>stagePoints(r.id,s)||0));const bars=data.cutoffs.map((_,s)=>{const pts=stagePoints(r.id,s)||0;return `<div class="performance-row"><span class="stage-name">SS${s+1}</span><div class="bar-track"><div class="bar-fill" style="width:${Math.max(0,Math.min(100,pts/maxPts*100))}%"></div></div><span class="bar-value">${pts}</span></div>`}).join('');
- const details=data.cutoffs.map((_,s)=>{const rr=result(r.id,s),pen=penaltyTotal(r.id,s),pts=stagePoints(r.id,s);const time=rr?.status==='finish'?fmt(rawTime(r.id,s,rr)):rr?.status==='dnf'?stageProgress(rr,s):rr?.status==='dns'?'DNS':'—';return `<tr><td><strong>SS${s+1}</strong></td><td>${esc(time)}</td><td class="${pen?'deduction':'neutral'}">${pen?'−'+pen:'0'}</td><td class="num"><strong style="color:var(--yellow)">${pts===null?'—':pts}</strong></td><td>${statusBadge(rr?String(rr.status).toUpperCase():'PENDING')}</td></tr>`}).join('');
- $('detailContent').className='';$('detailContent').innerHTML=`<div class="detail-hero"><div class="detail-number">#${overallRank}</div><div><div class="detail-name">${esc(d.name||'Unnamed driver')}</div><div class="detail-meta">Race #${esc(d.num||'—')} · BS-STYLE POINT RC TIME ATTACK · ${esc(r.status)} overall${data.lateEntries?.[r.id]?' · LATE ENTRY SS'+(Number(data.lateEntries[r.id].targetStage)+1):''}</div></div><div class="detail-total"><strong>${r.total}</strong><small>Total points</small></div></div><div class="detail-stats"><div class="mini-stat"><span>Total points</span><strong>${r.total}</strong></div><div class="mini-stat"><span>Stage finishes</span><strong>${r.finishes}/${data.cutoffs.length}</strong></div><div class="mini-stat"><span>Results saved</span><strong>${r.recorded}/${data.cutoffs.length}</strong></div><div class="mini-stat"><span>Overall status</span><strong style="font-size:12px;color:${r.status==='FINISH'?'var(--green)':'var(--muted)'}">${r.status}</strong></div></div><details class="detail-section mobile-detail-collapse stage-points-collapse"><summary><span>Stage points</span><span class="muted" style="font-size:9px;font-weight:600;letter-spacing:0;text-transform:none">Net points after deductions</span></summary><div class="collapse-body"><div class="performance">${bars}</div></div></details><details class="detail-section mobile-detail-collapse stage-details-collapse"><summary><span>Stage details</span><span class="muted" style="font-size:9px;font-weight:600;letter-spacing:0;text-transform:none">Raw time / gate progress</span></summary><div class="collapse-body"><div class="table-scroll"><table class="detail-table"><thead><tr><th>Stage</th><th>Time / progress</th><th>Penalty</th><th class="num">Points</th><th>Status</th></tr></thead><tbody>${details}</tbody></table></div></div></details>`;
+function renderTable(){const rows=getFilteredRows(),rankMap=officialRankMap(allDriverRecords());$('tableHead').innerHTML=tableHeader();$('rowCount').textContent=`${rows.length} / ${Object.keys(data.drivers).length} drivers`;$('tableTitle').textContent=currentView==='overall'?(BS28_SCORING.isPureTimeAttack(data.scoringFormat)?'Overall adjusted-time leaderboard':BS28_SCORING.isSorrca(data.scoringFormat)?'Overall course-points leaderboard':'Overall points leaderboard'):`SS${Number(currentView.split(':')[1])+1} stage results`;$('tableSubtitle').textContent=currentView==='overall'?(BS28_SCORING.isPureTimeAttack(data.scoringFormat)?'Most FINISH results, then DNF above DNS, then lowest adjusted time':BS28_SCORING.isSorrca(data.scoringFormat)?'Lowest total SORRCA course points ranks first':'Highest total net points ranks first'):(BS28_SCORING.isPureTimeAttack(data.scoringFormat)?'FINISH ranks above DNF; lowest adjusted time ranks first':BS28_SCORING.isSorrca(data.scoringFormat)?'Lowest SORRCA course score ranks first':'Highest net stage points ranks first');$('sortBy').options[0].textContent=currentView==='overall'?(BS28_SCORING.isPureTimeAttack(data.scoringFormat)?'Sort by adjusted time':BS28_SCORING.isSorrca(data.scoringFormat)?'Sort by course points':'Sort by total points'):(BS28_SCORING.isPureTimeAttack(data.scoringFormat)?'Sort by adjusted time':BS28_SCORING.isSorrca(data.scoringFormat)?'Sort by course points':'Sort by net points');
+ if(!rows.length){$('board').innerHTML=`<tr><td class="empty" colspan="${currentView==='overall'?data.cutoffs.length+4:7}">${Object.keys(data.drivers).length?'No drivers match the selected search/filter.':'No drivers registered for this event yet.'}</td></tr>`;renderMobileBoard([],rankMap);return}
+ $('board').innerHTML=rows.map((r,i)=>{const rank=rankMap.get(r.id)??'—',rankClass=rank===1?'top1':rank===2?'top2':rank===3?'top3':'';let cells='';if(currentView==='overall'){const total=BS28_SCORING.isPureTimeAttack(data.scoringFormat)?fmt(r.total):r.total;cells=data.cutoffs.map((_,s)=>stageCell(r.id,s)).join('')+`<td><span class="points">${total}</span></td><td>${statusBadge(r.status)}</td>`}else{const s=Number(currentView.split(':')[1]),rr=result(r.id,s),pen=penaltyTotal(r.id,s),pts=stagePoints(r.id,s);cells=`<td>${rr?rr.status==='finish'?`<span class="stage-cell-main">${fmt(rawTime(r.id,s,rr))}</span>`:`<span class="stage-cell-main">${esc(String(rr.status).toUpperCase())}</span>`:'<span class="neutral">—</span>'}</td><td>${rr?.status==='dnf'?esc(stageProgress(rr,s)):'—'}</td><td class="${pen?'deduction':'neutral'}">${pen?(rr?.status==='dnf'&&!BS28_SCORING.isPureTimeAttack(data.scoringFormat)?'Not applied':BS28_SCORING.isPureTimeAttack(data.scoringFormat)?'+'+pen+' sec':BS28_SCORING.isSorrca(data.scoringFormat)?'+'+pen+' pts':'−'+pen+' pts'):'0'}</td><td><span class="points">${pts===null?'—':BS28_SCORING.isPureTimeAttack(data.scoringFormat)?fmt(pts):pts}</span></td><td>${statusBadge(rr?String(rr.status).toUpperCase():'PENDING')}</td>`}return `<tr data-driver-id="${esc(r.id)}" tabindex="0" role="button" aria-label="View ${esc(r.d.name)} performance" class="${selectedDriverId===r.id?'selected':''}"><td class="rank ${rankClass}">${rank}</td><td><div class="driver-cell"><div><span class="driver-name">${esc(r.d.name||'Unnamed driver')}</span>${data.lateEntries?.[r.id]?`<span class="late-entry-badge">LATE ENTRY · SS${Number(data.lateEntries[r.id].targetStage)+1}</span>`:''}</div></div></td>${cells}</tr>`}).join('');renderMobileBoard(rows,rankMap)}
+function renderDriverDetail(){const oldPoints=$('detailContent').querySelector('.stage-points-collapse');const oldDetails=$('detailContent').querySelector('.stage-details-collapse');const previousPointsOpen=oldPoints?oldPoints.open:undefined;const previousDetailsOpen=oldDetails?oldDetails.open:undefined;const rows=allDriverRecords();if(!rows.length){$('detailStageCount').textContent='No drivers';$('detailContent').className='empty';$('detailContent').textContent='Driver details will appear after drivers are registered in Race Control.';return}const overallRows=rows.slice().sort((a,b)=>BS28_SCORING.compareOverall(a,b,data.scoringFormat));let r=overallRows.find(x=>x.id===selectedDriverId);if(!r){r=overallRows[0];selectedDriverId=r.id}const d=r.d;const overallRank=BS28_SCORING.overallRank(overallRows,overallRows.findIndex(x=>x.id===r.id),data.scoringFormat)??'—',isTime=BS28_SCORING.isPureTimeAttack(data.scoringFormat),isSorrca=BS28_SCORING.isSorrca(data.scoringFormat),totalLabel=isTime?'Total adjusted time':isSorrca?'Total course points':'Total points',totalValue=isTime?fmt(r.total):r.total;$('detailStageCount').textContent=`${r.recorded}/${data.cutoffs.length} recorded`;
+ const maxPts=Math.max(1,...data.cutoffs.map((_,s)=>stagePoints(r.id,s)||0));const bars=data.cutoffs.map((_,s)=>{const pts=stagePoints(r.id,s)||0,barWidth=isTime?Math.max(0,Math.min(100,100-pts/maxPts*100)):Math.max(0,Math.min(100,pts/maxPts*100));return `<div class="performance-row"><span class="stage-name">SS${s+1}</span><div class="bar-track"><div class="bar-fill" style="width:${barWidth}%"></div></div><span class="bar-value">${isTime?fmt(pts):pts}</span></div>`}).join('');
+ const details=data.cutoffs.map((_,s)=>{const rr=result(r.id,s),pen=penaltyTotal(r.id,s),pts=stagePoints(r.id,s),penalty=pen?(isTime?'+'+pen+' sec':isSorrca?'+'+pen+' pts':'−'+pen+' pts'):'0';const time=rr?.status==='finish'?fmt(rawTime(r.id,s,rr)):rr?.status==='dnf'?stageProgress(rr,s):rr?.status==='dns'?'DNS':'—';return `<tr><td><strong>SS${s+1}</strong></td><td>${esc(time)}</td><td class="${pen?'deduction':'neutral'}">${pen&&rr?.status==='dnf'&&!isTime?'Not applied':penalty}</td><td class="num"><strong style="color:var(--yellow)">${pts===null?'—':isTime?fmt(pts):pts}</strong></td><td>${statusBadge(rr?String(rr.status).toUpperCase():'PENDING')}</td></tr>`}).join('');
+ $('detailContent').className='';$('detailContent').innerHTML=`<div class="detail-hero"><div class="detail-number">#${overallRank}</div><div><div class="detail-name">${esc(d.name||'Unnamed driver')}</div><div class="detail-meta">Race #${esc(d.num||'—')} · BS-STYLE POINT RC TIME ATTACK · ${esc(r.status)} overall${data.lateEntries?.[r.id]?' · LATE ENTRY SS'+(Number(data.lateEntries[r.id].targetStage)+1):''}</div></div><div class="detail-total"><strong>${totalValue}</strong><small>${totalLabel}</small></div></div><div class="detail-stats"><div class="mini-stat"><span>${totalLabel}</span><strong>${totalValue}</strong></div><div class="mini-stat"><span>Stage finishes</span><strong>${r.finishes}/${data.cutoffs.length}</strong></div><div class="mini-stat"><span>Results saved</span><strong>${r.recorded}/${data.cutoffs.length}</strong></div><div class="mini-stat"><span>Overall status</span><strong style="font-size:12px;color:${r.status==='FINISH'?'var(--green)':'var(--muted)'}">${r.status}</strong></div></div><details class="detail-section mobile-detail-collapse stage-points-collapse"><summary><span>${isTime?'Adjusted time':isSorrca?'Course points':'Stage points'}</span><span class="muted" style="font-size:9px;font-weight:600;letter-spacing:0;text-transform:none">${isTime?'Lower adjusted time ranks first':isSorrca?'Lower course points ranks first':'Net points after deductions'}</span></summary><div class="collapse-body"><div class="performance">${bars}</div></div></details><details class="detail-section mobile-detail-collapse stage-details-collapse"><summary><span>Stage details</span><span class="muted" style="font-size:9px;font-weight:600;letter-spacing:0;text-transform:none">Raw time / gate progress</span></summary><div class="collapse-body"><div class="table-scroll"><table class="detail-table"><thead><tr><th>Stage</th><th>Time / progress</th><th>${isTime?'Penalty (sec)':isSorrca?'Penalty points':'Penalty'}</th><th class="num">${isTime?'Adjusted time':isSorrca?'Course points':'Points'}</th><th>Status</th></tr></thead><tbody>${details}</tbody></table></div></div></details>`;
  const newPoints=$('detailContent').querySelector('.stage-points-collapse');const newDetails=$('detailContent').querySelector('.stage-details-collapse');if(previousPointsOpen!==undefined&&newPoints)newPoints.open=previousPointsOpen;if(previousDetailsOpen!==undefined&&newDetails)newDetails.open=previousDetailsOpen;}
 function stageHasSavedResult(s){return Object.keys(data.drivers||{}).some(id=>!!result(id,s))}
 function drawStateForStage(s){if(data.groupRotationV28?.enabled){const p=data.groupRotationV28,st='SS'+(s+1),v=p.stages?.[st],groups=Object.entries(p.groups||{}).filter(([,g])=>g.currentStage===st),orders=groups.flatMap(([g])=>p.orders?.[g]?.[st]?.order||[]);return {order:orders,hasDraw:!!orders.length,current:true,locked:true,open:!!(v?.included&&!v.cancelled),reason:v?.cancelled?'CANCELLED · excluded from official scoring':!v?.open?'CLOSED · no new groups allowed':'OPEN for group racing'};}const registered=Object.keys(data.drivers||{}).map(String);const order=Array.isArray(data.drawOrders?.[s])?data.drawOrders[s].map(String):[];const unique=[...new Set(order.filter(id=>!!data.drivers[id]))];const hasDraw=unique.length>0;const current=hasDraw&&unique.length===registered.length&&registered.every(id=>unique.includes(id));const locked=data.drawLocks?.[s]===true||stageHasSavedResult(s);const open=hasDraw&&current&&locked;let reason='';if(!hasDraw)reason='CLOSED · draw has not been made yet.';else if(!current)reason='CLOSED · draw does not match the current driver list. Organiser must redraw and lock it.';else if(!locked)reason='CLOSED · draw is ready but the organiser has not locked it.';else reason='OPEN · draw is complete and locked.';return {order:unique,hasDraw,current,locked,open,reason}}
