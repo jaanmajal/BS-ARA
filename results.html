@@ -276,6 +276,66 @@ body{height:auto;min-height:100vh;overflow-x:clip;overflow-y:visible;touch-actio
 @media(max-width:700px){.hero-brand-lockup{gap:9px}.hero-brand-logo{width:68px;height:64px;flex-basis:68px}.hero h1{font-size:clamp(25px,7vw,36px)}.hero h1 span{font-size:clamp(16px,4.1vw,21px);letter-spacing:-.02em}.event-kicker{font-size:9px;letter-spacing:.12em}.hero-sub{font-size:9px;letter-spacing:.07em;line-height:1.4}.brand-footer img{width:48px;height:44px}}
 @media(max-width:380px){.hero-brand-logo{width:58px;height:55px;flex-basis:58px}.hero h1{font-size:24px}.hero h1 span{font-size:15px}}
 </style>
+
+<style id="resultsStageTabsGridFix">
+/* v28.6.5: Keep all SS result tabs visible when an event has many stages. */
+.toolbar{
+  display:grid;
+  grid-template-columns:minmax(0,1fr);
+  align-items:stretch;
+  gap:10px;
+}
+.tabs{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(112px,1fr));
+  width:100%;
+  min-width:0;
+  flex:none;
+  overflow:visible;
+  gap:7px;
+  padding:1px;
+}
+.tab{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  width:100%;
+  min-width:0;
+  min-height:42px;
+  flex:none;
+  padding:9px 8px;
+  font-size:11px;
+  line-height:1.25;
+  text-align:center;
+  white-space:normal;
+  overflow-wrap:anywhere;
+}
+.tools{
+  display:grid;
+  grid-template-columns:minmax(220px,1.4fr) repeat(2,minmax(145px,.8fr));
+  width:100%;
+  min-width:0;
+  gap:8px;
+}
+.search-wrap{min-width:0;width:100%}
+.search-wrap input{width:100%;min-width:0}
+.tools select{width:100%;min-width:0}
+.connection{justify-self:start;min-width:160px}
+@media(max-width:1050px) and (min-width:701px){
+  .tabs{grid-template-columns:repeat(auto-fit,minmax(100px,1fr))}
+  .tools{grid-template-columns:minmax(180px,1.2fr) repeat(2,minmax(130px,.8fr))}
+}
+@media(max-width:700px){
+  .toolbar{display:grid;grid-template-columns:minmax(0,1fr);gap:9px}
+  .tabs{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));width:100%;min-width:0;overflow:visible;gap:6px}
+  .tab{min-width:0;width:100%;min-height:40px;padding:9px 4px;font-size:10px;line-height:1.2;white-space:normal}
+  .tools{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));width:100%;gap:7px}
+  .search-wrap{grid-column:1/-1}
+  .search-wrap input,.tools select{width:100%;min-width:0;height:44px;font-size:13px}
+  .connection{grid-column:1/-1;justify-self:stretch;width:100%;min-width:0}
+}
+</style>
+
 </head>
 <body>
 <main class="shell">
