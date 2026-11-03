@@ -1,4 +1,4 @@
-<!doctype html><!-- v28.6.4: safe removal of unused/cancelled last SS; block cancellation/removal when result or penalty history exists. --><!-- v28.6.3: aligned scoring engines, SORRCA 60-point point-out, grouped marshal review penalties. --><!-- v27.6.8: Main Control edits no longer need admin PIN. --><!-- v27.6.6: updated penalty schedule, DNF minimum Gate-1 scoring, frozen DNF roster base, and official tie-break order. --><!-- v27.6.1: refresh event-specific marshal stage-lock options after Firebase data loads; retain organiser email and Event ID on this device. --><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="description" content="RC CRAWLER Point &amp; Time Attack System by TEC-ARTS CRAWLER. Competition timing, scoring and live results."><meta name="theme-color" content="#101827"><link rel="icon" type="image/png" sizes="128x128" href="logo.png"><link rel="apple-touch-icon" href="logo.png"><title>RC CRAWLER | POINT &amp; TIME ATTACK SYSTEM - Main Control</title><style>
+<!doctype html><!-- v28.6.5: allow safe offline removal of an unused final SS only for a clean, empty new event; queue Firebase sync. --><!-- v28.6.3: aligned scoring engines, SORRCA 60-point point-out, grouped marshal review penalties. --><!-- v27.6.8: Main Control edits no longer need admin PIN. --><!-- v27.6.6: updated penalty schedule, DNF minimum Gate-1 scoring, frozen DNF roster base, and official tie-break order. --><!-- v27.6.1: refresh event-specific marshal stage-lock options after Firebase data loads; retain organiser email and Event ID on this device. --><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="description" content="RC CRAWLER Point &amp; Time Attack System by TEC-ARTS CRAWLER. Competition timing, scoring and live results."><meta name="theme-color" content="#101827"><link rel="icon" type="image/png" sizes="128x128" href="logo.png"><link rel="apple-touch-icon" href="logo.png"><title>RC CRAWLER | POINT &amp; TIME ATTACK SYSTEM - Main Control</title><style>
 :root{font-family:system-ui,-apple-system,sans-serif;color:#edf3ff;background:#0a1120}*{box-sizing:border-box}body{margin:auto;max-width:980px;padding:18px}header,.flex{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}h1{font-size:25px;margin:0}h2{font-size:19px;margin:0 0 12px}.muted,small{color:#aab9ce}.card{background:#172238;border:1px solid #30425e;border-radius:16px;padding:16px;margin:14px 0}.card.firebase-online{border:4px solid #22c55e!important;box-shadow:0 0 0 1px rgba(34,197,94,.32),0 0 18px rgba(34,197,94,.24)!important;transition:border-color .15s ease,box-shadow .15s ease}.card.firebase-online:focus-within{border-color:#4ade80!important}button,input,select,textarea{font:inherit;border-radius:10px;border:1px solid #425572;padding:11px;background:#0c1729;color:white}button{cursor:pointer;font-weight:700}button:disabled{opacity:.4;cursor:default}.primary{background:#2563eb}.start{background:#168348}.stop{background:#b92d39}.warn{background:#8d5918}.row{display:flex;gap:8px;flex-wrap:wrap;margin:8px 0}.row>*{flex:1;min-width:120px}label{display:block;font-size:13px;color:#b8c7da;margin-bottom:4px}input,select{width:100%}.clock-wrap{display:flex;align-items:center;justify-content:center;gap:12px;flex-wrap:wrap;margin:10px 0}.clock{text-align:center;font-size:clamp(48px,10vw,90px);font-weight:800;font-variant-numeric:tabular-nums;letter-spacing:-3px;margin:0}.connection-indicator{font-size:14px;font-weight:900;letter-spacing:.04em;border:2px solid #ef4444;background:#651e2b;color:#ffe4e6;padding:9px 12px;white-space:nowrap}.connection-indicator.online{border-color:#22c55e;background:#14532d;color:#dcfce7}.connection-indicator.offline{border-color:#ef4444;background:#651e2b;color:#ffe4e6}.save-result{background:#087443;border-color:#22c55e}.confirm-stop{background:#c27a13;border-color:#f0b44d;color:#fff7e6}.confirm-stop-row{margin-top:6px}.confirm-stop-row button{width:100%;min-height:52px;font-size:17px}.manual-help{font-size:13px;line-height:1.5}.stage{display:flex;gap:8px}.stage button{flex:1}.selected{outline:3px solid #66b1ff}table{width:100%;border-collapse:collapse;font-size:14px}td,th{padding:10px 5px;border-bottom:1px solid #35445c;text-align:left}th{color:#b3c4db}.scroll{overflow:auto}.pill{border-radius:99px;background:#273a55;padding:5px 10px;font-size:12px}.error{color:#ff9f9f}.ok{color:#85e7ae}.hidden{display:none!important}details{margin:12px 0}summary{cursor:pointer;font-weight:700}.buttons button{min-height:65px;font-size:22px}textarea{width:100%;min-height:100px}a{color:#8cc8ff}.brand{display:flex;align-items:center;gap:12px}.brand-logo{width:66px;height:66px;object-fit:contain;border-radius:9px}footer{text-align:center;color:#aab9ce;font-size:12px;padding:25px 0 15px;letter-spacing:.08em}.wake-state{font-size:13px;color:#b9d7ff;margin-top:8px}.row .alarm-icon{flex:0 0 44px;min-width:44px;width:44px;padding:7px 4px;font-size:19px;line-height:1}.alarm-row{align-items:center}.alarm-row #alarmStatus{flex:1;min-width:0}.timer-selectors>div{flex:1;min-width:130px}
 .penalty-quick-wrap{margin-top:12px;padding-top:12px;border-top:1px solid #35445c}
 .penalty-counter-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(175px,1fr));gap:8px;margin-top:10px}
@@ -1165,6 +1165,58 @@ function bs28LastStageRemovalReason(event){
  }
  return null;
 }
+function bs28CanRemoveEmptyEventLocally(event){
+ if(running||pendingRun)return false;
+ const dataOwner=localStorage.getItem(dataEventKey)||localStorage.getItem(eventStorageKey)||window.RC_EVENT_ID||'bs28-test';
+ if(dataOwner!==activeEventId())return false;
+ if(Object.keys(event?.drivers||{}).length)return false;
+ const hasResults=Object.values(event?.results||{}).some(byStage=>Array.isArray(byStage)?byStage.some(bs28HasStoredValue):Object.values(byStage||{}).some(bs28HasStoredValue));
+ const hasPenalties=Object.values(event?.penalties||{}).some(byStage=>Array.isArray(byStage)?byStage.some(bs28HasStoredValue):Object.values(byStage||{}).some(bs28HasStoredValue));
+ const hasDraws=Object.values(event?.drawOrders||{}).some(bs28HasStoredValue)||Object.values(event?.drawLocks||{}).some(value=>value===true);
+ if(hasResults||hasPenalties||hasDraws)return false;
+ const plan=event?.groupRotationV28;
+ if(plan){
+  const hasLeaders=Object.values(plan.leaderSelections||{}).some(Boolean);
+  const hasGroups=Object.keys(plan.groups||{}).length>0;
+  const hasOwners=Object.keys(plan.stageOwners||{}).length>0;
+  const hasOrders=Object.values(plan.orders||{}).some(groupOrders=>Object.values(groupOrders||{}).some(bs28HasStoredValue));
+  const hasCatchup=Object.values(plan.lateCatchup||{}).some(stages=>Object.values(stages||{}).some(bs28HasStoredValue));
+  if(plan.enabled===true||plan.phase!=='SETUP'||plan.preparedGroups||hasLeaders||hasGroups||hasOwners||hasOrders||hasCatchup)return false;
+ }
+ const unsafeQueuedChange=pending.some(item=>queueEventId(item)===activeEventId()&&!['scoringFormat','cutoffs','gateTotals','penaltyRules','groupRotationV28'].includes(String(item.path||'')));
+ if(unsafeQueuedChange)return false;
+ const firebaseReachable=!!(online&&connectedToServer&&dbRef&&navigator.onLine!==false);
+ if(firebaseReachable)return false;
+ return true;
+}
+function bs28BuildLastStageRemoval(event,index,stageName){
+ if(!event)return null;
+ const cut=bs28RawArray(event.cutoffs);
+ if(cut.length!==index+1||index<1||bs28LastStageRemovalReason(event))return null;
+ const v=JSON.parse(JSON.stringify(event)),plan=v.groupRotationV28;
+ if(plan){
+  delete plan.stages?.[stageName];delete plan.stageOwners?.[stageName];
+  for(const [groupId,group] of Object.entries(plan.groups||{})){
+   if(group.currentStage===stageName)return null;
+   if(group.lastStage===stageName)delete group.lastStage;
+   if(group.completedStages)delete group.completedStages[stageName];
+   if(plan.orders?.[groupId])delete plan.orders[groupId][stageName];
+  }
+  for(const [driverId,stages] of Object.entries(plan.lateCatchup||{})){if(stages&&typeof stages==='object'){delete stages[stageName];if(!Object.keys(stages).length)delete plan.lateCatchup[driverId]}}
+  plan.revision=(plan.revision||0)+1;plan.audit=plan.audit||{};for(const [auditId,item] of Object.entries(plan.audit))if(item?.action==='OPEN_SS'&&String(item.stage)===stageName)delete plan.audit[auditId];plan.audit['remove-'+Date.now()]={action:'REMOVE_SS',stage:stageName,wasCancelled:!!(event.groupRotationV28?.stages?.[stageName]?.cancelled||event.groupRotationV28?.stages?.[stageName]?.included===false),at:Date.now()};
+ }
+ cut.pop();v.cutoffs=cut;const gates=bs28RawArray(v.gateTotals);gates.pop();v.gateTotals=gates;
+ v.drawOrders=v.drawOrders||{};v.drawLocks=v.drawLocks||{};delete v.drawOrders[index];delete v.drawLocks[index];
+ for(const [driverId,byStage] of Object.entries(v.results||{})){
+  if(Array.isArray(byStage)){byStage.pop();if(!byStage.length)delete v.results[driverId]}
+  else if(byStage&&typeof byStage==='object'){delete byStage[String(index)];if(!Object.keys(byStage).length)delete v.results[driverId]}
+ }
+ for(const [driverId,byStage] of Object.entries(v.penalties||{})){
+  if(Array.isArray(byStage)){byStage.pop();if(!byStage.length)delete v.penalties[driverId]}
+  else if(byStage&&typeof byStage==='object'){delete byStage[String(index)];if(!Object.keys(byStage).length)delete v.penalties[driverId]}
+ }
+ return v;
+}
 function bs28GroupIdsForCount(count,driverIds=Object.keys(data.drivers||{})){
  const n=Number(count),fallback=['A','B','C','D'].slice(0,n);
  if(!Number.isInteger(n)||n<2||n>4||driverIds.length<n)return fallback;
@@ -1249,7 +1301,7 @@ function bs28RenderMain(){
    return `<div class="bs28-group"><b>GROUP ${bs28Clean(g)} · ${bs28Clean(group.status||'WAITING')}</b>${leaderId?`<div><small>LEADER · #${bs28Clean(leader.num||'?')} ${bs28Clean(leader.name||leaderId)}</small></div>`:''}<div>Current: ${current} · ${group.currentStage?done+'/'+total+' saved':'Choose next SS'}${stateHint} · Completed: ${completed.join(', ')||'None'}</div>${outstanding.length?`<small>CATCH-UP REQUIRED: ${bs28Clean(outstanding.join(', '))}</small>`:''}<div><small>${memberIds.map(id=>'#'+bs28Clean(data.drivers[id]?.num||'?')+' '+bs28Clean(data.drivers[id]?.name||id)).join(' / ')}</small></div></div>`;
  }).join(''):'Start competition after selecting leaders, dividing groups and confirming the initial driver draw.';
  if($('addStage'))$('addStage').disabled=!!(running||pendingRun)||(!!plan&&!bs28CanWrite());
- if($('removeStage')){const removeReason=bs28LastStageRemovalReason(data),needsOnline=!!plan&&!bs28CanWrite();$('removeStage').dataset.bs28Guard=plan?'1':'0';$('removeStage').disabled=!!running||!!pendingRun||!!removeReason||needsOnline;$('removeStage').title=removeReason||(needsOnline?'Connect Main Control to Firebase and ensure it owns the organiser session.':'Remove the final SS only if it has never been opened, assigned or used, or has been cancelled, and has no result/penalty history.');}
+ if($('removeStage')){const removeReason=bs28LastStageRemovalReason(data),localEmptyRemoval=bs28CanRemoveEmptyEventLocally(data),needsOnline=!!plan&&!bs28CanWrite()&&!localEmptyRemoval;$('removeStage').dataset.bs28Guard=plan?'1':'0';$('removeStage').disabled=!!running||!!pendingRun||!!removeReason||needsOnline;$('removeStage').title=removeReason||(localEmptyRemoval?'Empty new event: remove this unused SS locally; the change will sync when Firebase reconnects.':needsOnline?'Connect Main Control to Firebase and ensure it owns the organiser session.':'Remove the final SS only if it has never been opened, assigned or used, or has been cancelled, and has no result/penalty history.');}
  const lateGroup=$('bs28LateGroup');if(lateGroup){const old=lateGroup.value;lateGroup.innerHTML=bs28BaseGroups(plan).map(([id])=>`<option value="${id}">Group ${id}</option>`).join('');if(old&&lateGroup.querySelector('option[value="'+old+'"]'))lateGroup.value=old}
  $('bs28LatePanel').style.display=mode==='RACING'?'block':'none';
  const needed=[];Object.entries(plan.lateCatchup||{}).forEach(([id,stages])=>Object.entries(stages).forEach(([s,x])=>{if(x.status==='REQUIRED'&&plan.stages?.[s]?.included&&!plan.stages[s].cancelled)needed.push({id,s})}));
@@ -1329,44 +1381,30 @@ async function bs28AddStage(){
  },undefined,false);if(!tx.committed)throw Error('Event was modified during the operation.');if(tx.snapshot?.val)data=normalizeData(tx.snapshot.val());persist();render();bs28RenderMain();bs28Show('SS added from Section 5 and automatically included in Group Rotation as CLOSED. Set cutoff/gates, SAVE all change, then OPEN when ready.')}catch(e){bs28Show('Add stage failed: '+e.message,true)}
 }
 async function bs28RemoveLastStage(){
- if(!bs28CanWrite())return bs28Show('Connect Main Control to Firebase and ensure it owns the organiser session before removing an SS.',true);
- const eventId=activeEventId(),event=(await dbRef.once('value')).val()||data,index=bs28RawArray(event.cutoffs).length-1,stageName=bs28Core.ss(index);
+ const eventId=activeEventId(),canWrite=bs28CanWrite(),localOnly=!canWrite&&bs28CanRemoveEmptyEventLocally(data);
+ if(!canWrite&&!localOnly)return bs28Show('Connect Main Control to Firebase and ensure it owns the organiser session before removing an SS. Offline removal is available only for a completely empty, unused new event.',true);
+ const event=canWrite?((await dbRef.once('value')).val()||data):clone(data),index=bs28RawArray(event.cutoffs).length-1,stageName=bs28Core.ss(index);
  const reason=bs28LastStageRemovalReason(event);if(reason)return bs28Show(reason,true);
- const liveLock=(await app.database().ref('stageLocks/'+eventId+'/'+stageName).once('value')).val();if(liveLock)return bs28Show(stageName+' has an active marshal stage lock. Resolve the run before removing it.',true);
- const inbox=(await app.database().ref('marshalRecoveryInbox/'+eventId).once('value')).val()||{};
- const unresolved=Object.values(inbox).some(u=>Object.values(u||{}).some(t=>t?.status==='pending'&&Number(t.stageIndex)===index));
- if(unresolved)return bs28Show(stageName+' has a pending marshal recovery upload. Resolve it before removing the SS.',true);
+ if(canWrite){
+  const liveLock=(await app.database().ref('stageLocks/'+eventId+'/'+stageName).once('value')).val();if(liveLock)return bs28Show(stageName+' has an active marshal stage lock. Resolve the run before removing it.',true);
+  const inbox=(await app.database().ref('marshalRecoveryInbox/'+eventId).once('value')).val()||{};
+  const unresolved=Object.values(inbox).some(u=>Object.values(u||{}).some(t=>t?.status==='pending'&&Number(t.stageIndex)===index));
+  if(unresolved)return bs28Show(stageName+' has a pending marshal recovery upload. Resolve it before removing the SS.',true);
+ }
  const wasCancelled=!!(event.groupRotationV28?.stages?.[stageName]?.cancelled||event.groupRotationV28?.stages?.[stageName]?.included===false);
- const message='Remove '+stageName+' permanently from Event ID '+eventId+'?'+(wasCancelled?' This SS is cancelled.':' This SS has never been opened, assigned or used.')+' No saved result or penalty history exists. The SS count and gate setup will be reduced by one.';
+ const message='Remove '+stageName+' permanently from Event ID '+eventId+'?'+(wasCancelled?' This SS is cancelled.':' This SS has never been opened, assigned or used.')+' No saved result or penalty history exists.'+(localOnly?' The removal will be saved locally and queued for Firebase sync.':' The SS count and gate setup will be reduced by one.');
  if(!confirm(message))return;
  try{
-  const tx=await dbRef.transaction(current=>{
-   if(!current)return;const cut=bs28RawArray(current.cutoffs);if(cut.length!==index+1||index<1)return;
-   if(bs28LastStageRemovalReason(current))return;
-   const v=JSON.parse(JSON.stringify(current)),p=v.groupRotationV28;
-   if(p){
-    delete p.stages?.[stageName];delete p.stageOwners?.[stageName];
-    for(const [groupId,group] of Object.entries(p.groups||{})){
-     if(group.currentStage===stageName)return;
-     if(group.lastStage===stageName)delete group.lastStage;
-     if(group.completedStages)delete group.completedStages[stageName];
-     if(p.orders?.[groupId])delete p.orders[groupId][stageName];
-    }
-    for(const [driverId,stages] of Object.entries(p.lateCatchup||{})){if(stages&&typeof stages==='object'){delete stages[stageName];if(!Object.keys(stages).length)delete p.lateCatchup[driverId]}}
-    p.revision=(p.revision||0)+1;p.audit=p.audit||{};p.audit['remove-'+Date.now()]={action:'REMOVE_SS',stage:stageName,wasCancelled,at:Date.now()};
-   }
-   cut.pop();v.cutoffs=cut;const gates=bs28RawArray(v.gateTotals);gates.pop();v.gateTotals=gates;
-   v.drawOrders=v.drawOrders||{};v.drawLocks=v.drawLocks||{};delete v.drawOrders[index];delete v.drawLocks[index];
-   for(const [driverId,byStage] of Object.entries(v.results||{})){
-    if(Array.isArray(byStage)){byStage.pop();if(!byStage.length)delete v.results[driverId]}
-    else if(byStage&&typeof byStage==='object'){delete byStage[String(index)];if(!Object.keys(byStage).length)delete v.results[driverId]}
-   }
-   for(const [driverId,byStage] of Object.entries(v.penalties||{})){
-    if(Array.isArray(byStage)){byStage.pop();if(!byStage.length)delete v.penalties[driverId]}
-    else if(byStage&&typeof byStage==='object'){delete byStage[String(index)];if(!Object.keys(byStage).length)delete v.penalties[driverId]}
-   }
-   return v;
-  },undefined,false);
+  if(localOnly){
+   const updated=bs28BuildLastStageRemoval(event,index,stageName);if(!updated)throw Error(bs28LastStageRemovalReason(data)||'The event is no longer an empty, unused event. Refresh and review the last SS.');
+   const previousData=clone(data),previousPending=clone(pending),previousStage=stage;
+   data=normalizeData(updated);stage=Math.min(stage,index-1);localStorage.setItem('bs28-stage',String(Math.max(0,index-1)));persist();
+   const writes=[['cutoffs',data.cutoffs],['gateTotals',data.gateTotals],['groupRotationV28',data.groupRotationV28],['drawOrders/'+index,null],['drawLocks/'+index,null]];
+   let queueOk=true;for(const [path,value] of writes)if(!enqueue(path,value,eventId))queueOk=false;
+   if(!queueOk){pending=previousPending;savePendingQueue();data=normalizeData(previousData);stage=previousStage;localStorage.setItem('bs28-stage',String(stage));persist();render();bs28RenderMain();return bs28Show('Could not save the offline sync queue. The SS removal was rolled back. Export a backup and reconnect before trying again.',true)}
+   render();bs28RenderMain();setMsg('SS removal saved locally for Event ID '+eventId+'. Reconnect Main Control to Firebase to sync the change before starting the race.');bs28Show(stageName+' removed from the empty new event. The change is queued and will sync when Firebase reconnects.');return;
+  }
+  const tx=await dbRef.transaction(current=>bs28BuildLastStageRemoval(current,index,stageName),undefined,false);
   if(!tx.committed){const latest=(await dbRef.once('value')).val()||data;throw Error(bs28LastStageRemovalReason(latest)||'The event changed during removal. Refresh and check the last SS before trying again.')}
   if(tx.snapshot?.val)data=normalizeData(tx.snapshot.val());stage=Math.min(stage,index-1);localStorage.setItem('bs28-stage',String(Math.max(0,index-1)));persist();render();bs28RenderMain();bs28Show(stageName+' removed successfully. Other SS, groups and historical records were preserved.');
  }catch(e){bs28Show('Remove SS failed: '+e.message,true)}
