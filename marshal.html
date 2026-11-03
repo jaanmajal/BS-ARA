@@ -902,7 +902,7 @@ body.marshal-view #bs28MarshalPanel.bs28-rotation-below{
     <div class="bs28-rotation-body">
 
   <h2 id="bs28MarshalHeading">GROUP ROTATION · NEXT STAGE</h2>
-  <small class="muted" style="display:block;margin:-8px 0 12px">v28.6.1 · MARSHAL DIRECT DRAW · MAIN CAN BE CLOSED</small>
+  <small class="muted" style="display:block;margin:-8px 0 12px">v28.6.2 · MARSHAL DIRECT DRAW · MAIN CAN BE CLOSED</small>
   <p class="muted" id="bs28MarshalInfo">Waiting for group assignment.</p>
   <div id="bs28Selection" class="bs28-next-panel" style="display:none">
     <h3>SELECT AVAILABLE GROUP &amp; SS</h3>
@@ -2138,15 +2138,33 @@ async function bs28SelectSS(){
    }
    const g=old.groups?.[groupId];
    if(!g){transactionFailureReason='Group '+groupId+' no longer exists.';return;}
-   if(Number(g.visitIndex||0)!==expectedVisit||g.currentStage!==expectedStage||
-      bs28Core.memberIds(g.members).slice().sort().join('|')!==memberSignature){
-    transactionFailureReason='Another marshal updated '+bs28GroupName(groupId)+' before this draw was saved.';return;
+   const liveVisit=Number(g.visitIndex||0);
+   const liveStage=g.currentStage||null;
+   const sameMembership=bs28Core.memberIds(g.members).slice().sort().join('|')===memberSignature;
+   if(!sameMembership){
+    transactionFailureReason='The driver membership of '+bs28GroupName(groupId)+' changed while preparing the draw. Refresh and select the group again.';return;
+   }
+   // Main Control automatically completes a group as soon as every result is
+   // confirmed. That can happen between this marshal's initial read and this
+   // Firebase transaction. Treat that exact completion as success, not as a
+   // competing-marshal conflict, and do not increment visitIndex twice.
+   const stillAtSnapshot=liveVisit===expectedVisit&&liveStage===expectedStage;
+   const alreadyCompletedByCoordinator=!!(
+    expectedStage&&liveStage===null&&g.lastStage===expectedStage&&
+    g.completedStages?.[expectedStage]===true&&liveVisit===expectedVisit+1
+   );
+   const stillChoosingFromSnapshot=!expectedStage&&liveStage===null&&liveVisit===expectedVisit;
+   if(!stillAtSnapshot&&!alreadyCompletedByCoordinator&&!stillChoosingFromSnapshot){
+    transactionFailureReason=liveStage?
+     bs28GroupName(groupId)+' has already moved to '+liveStage+'. Refresh and choose the next SS for its current visit.':
+     bs28GroupName(groupId)+' changed state while preparing the draw. Refresh and select again.';
+    return;
    }
    if(!bs28GroupDestinations(old,groupId,event).includes(dest)){
-    transactionFailureReason=dest+' is no longer OPEN and available. Another group may have claimed it.';return;
+    transactionFailureReason=dest+' is no longer OPEN and available. Another group may have been assigned there.';return;
    }
    const next=JSON.parse(JSON.stringify(old)),target=next.groups[groupId];
-   if(expectedStage){
+   if(expectedStage&&!alreadyCompletedByCoordinator){
      if(next.stageOwners?.[expectedStage]!==groupId){
       transactionFailureReason=expectedStage+' is no longer assigned to '+bs28GroupName(groupId)+'.';return;
      }
@@ -2160,6 +2178,12 @@ async function bs28SelectSS(){
      target.status='CHOOSING';
      next.audit=next.audit||{};
      next.audit['complete-'+groupId+'-'+expectedStage+'-'+requestId]={action:'COMPLETE_SS',groupId,stage:expectedStage,at:now};
+   }else if(alreadyCompletedByCoordinator){
+     // Verify the completed stage's saved results once more, but preserve the
+     // coordinator's completion record and visitIndex unchanged.
+     if(!bs28Core.allResultsConfirmed(target,event,expectedStage)){
+      transactionFailureReason='Main Control marked '+expectedStage+' complete, but its saved results could not be reconfirmed. Refresh before drawing.';return;
+     }
    }
    const incomingVisit=Number(target.visitIndex)||0;
    const reserved=bs28Core.reserveForRequest(next,{requestId,groupId,destination:dest,visitIndex:incomingVisit},order,{},now);
@@ -2214,7 +2238,7 @@ $('bs28NextGroup')?.addEventListener('change',e=>{
 $('bs28NextSS')?.addEventListener('change',bs28RenderMarshal);
 $('bs28SwitchButton')?.addEventListener('click',bs28SelectSS);
 
-window.BS28_MARSHAL_READY=true;window.BS28_MARSHAL_VERSION="28.6.1";setInterval(()=>{if(bs28IsActive())bs28RenderMarshal()},1800);bs28RenderMarshal();
+window.BS28_MARSHAL_READY=true;window.BS28_MARSHAL_VERSION="28.6.2";setInterval(()=>{if(bs28IsActive())bs28RenderMarshal()},1800);bs28RenderMarshal();
 })();
 /* System-wide uppercase for human-readable text fields, including dynamically rendered inputs. */
 (function installUppercaseWordInputs(){
