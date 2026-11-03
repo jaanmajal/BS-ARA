@@ -747,8 +747,7 @@ body.marshal-view #raceControlPanel .marshal-alarm-control #alarmStatus.alarm-on
 .bs28-next-panel h3{margin-top:0}
 .bs28-next-fields{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin:12px 0}
 .bs28-next-fields label{font-size:.92rem;font-weight:750;color:#e3f4ff;display:block;min-width:0}
-.bs28-next-fields select{width:100%;margin-top:7px;min-height:48px;border-radius:9px;font-size:1rem}
-.bs28-select-progress{font-size:.91rem;font-weight:700;margin:9px 0;color:#c0dbd0}
+.bs28-next-fields select{width:100%;margin-top:7px;min-height:48px;border-radius:9px;font-size:1rem}.bs28-select-progress{font-size:.91rem;font-weight:700;margin:9px 0;color:#c0dbd0}
 .bs28-waiting-summary{font-size:.88rem;font-weight:800;line-height:1.5;background:rgba(9,57,43,.58);border:1px solid #3e987b;border-radius:9px;padding:10px 12px;color:#bff9e4}
 .bs28-waiting-summary.is-pending{background:rgba(120,83,20,.16);border-color:#9f7936;color:#f3dfb2}
 #bs28SwitchButton{width:100%;min-height:49px;margin:6px 0 10px}
@@ -903,7 +902,7 @@ body.marshal-view #bs28MarshalPanel.bs28-rotation-below{
     <div class="bs28-rotation-body">
 
   <h2 id="bs28MarshalHeading">GROUP ROTATION · NEXT STAGE</h2>
-  <small class="muted" style="display:block;margin:-8px 0 12px">v28.6 · MARSHAL DIRECT DRAW · MAIN CAN BE CLOSED</small>
+  <small class="muted" style="display:block;margin:-8px 0 12px">v28.6.1 · MARSHAL DIRECT DRAW · MAIN CAN BE CLOSED</small>
   <p class="muted" id="bs28MarshalInfo">Waiting for group assignment.</p>
   <div id="bs28Selection" class="bs28-next-panel" style="display:none">
     <h3>SELECT AVAILABLE GROUP &amp; SS</h3>
@@ -1497,8 +1496,7 @@ async function submitQueuedResultsForReview(){
  try{
   for(const item of items){
    const match=/^results\/([^/]+)\/(\d+)$/.exec(String(item.path||''));
-   if(!match)continue;
-   const driverId=match[1],stageIndex=Number(match[2]);
+   if(!match)continue;const driverId=match[1],stageIndex=Number(match[2]);
    const resultValue=clone(item.value);
    if(!resultValue||!['finish','dnf','dns'].includes(String(resultValue.status||''))){failed++;setMsg('Cannot submit invalid local result at '+item.path+'. Export a backup.',true);continue;}
    const keyPart=String(resultValue.runId||('saved-'+String(resultValue.at||'unknown'))).replace(/[.#$\[\]/]/g,'_').slice(0,100);
@@ -2119,29 +2117,42 @@ async function bs28SelectSS(){
  const eid=activeEventId(),root=app.database().ref('events/'+eid),planRef=root.child('groupRotationV28'),now=Date.now();
  const requestId='marshal'+now.toString(36)+Math.random().toString(36).slice(2,9);
  bs28Submitting=true;
- $('bs28SwitchStatus').textContent='VERIFYING SAVED RESULTS and reserving '+dest+'…';
+ $('bs28SwitchStatus').textContent='SAVING OFFICIAL DRAW for '+dest+'…';
+ let transactionFailureReason='';
+ let officialDrawSaved=false;
  try{
-  // Fetch server-confirmed results and all stage locks immediately before the
-  // transaction. A stage with an active/unknown run lock is NEVER moved.
-  const [eventSnap,lockSnap]=await Promise.all([root.once('value'),app.database().ref('stageLocks/'+eid).once('value')]);
-  const event=eventSnap.val(),locks=lockSnap.val()||{},plan=event?.groupRotationV28,group=plan?.groups?.[groupId];
-  if(!bs28GroupDestinations(plan,groupId,event).includes(dest))throw Error('Group is not complete, or destination SS is no longer OPEN/FREE.');
-  if(locks[dest])throw Error(dest+' still has a run lock. Complete or safely reset that run first.');
-  if(group.currentStage&&locks[group.currentStage])throw Error(group.currentStage+' has an active run lock. SAVE the result and release the lock before moving.');
-  // The exact member list and last stage are bound to server-saved results.
+  // Group/SS selection does not acquire or require a timer stage lock.
+  // The official group reservation and draw are saved atomically in the
+  // Group Rotation plan. The existing stage lock is checked only on START.
+  const eventSnap=await root.once('value');
+  const event=eventSnap.val(),plan=event?.groupRotationV28,group=plan?.groups?.[groupId];
+  if(!bs28GroupDestinations(plan,groupId,event).includes(dest))throw Error('The selected group is no longer ready, or '+dest+' is no longer available.');
+  // Bind this one draw to the current group visit and fixed membership.
   const expectedStage=group.currentStage||null,expectedVisit=Number(group.visitIndex||0);
   const expectedMembers=bs28Core.memberIds(group.members);
   const order=bs28Core.shuffle(expectedMembers),memberSignature=expectedMembers.slice().sort().join('|');
   const tx=await planRef.transaction(old=>{
-   if(!old?.enabled||old.phase!=='RACING')return;
+   transactionFailureReason='';
+   if(!old?.enabled||old.phase!=='RACING'){
+    transactionFailureReason='The event is not in the active Group Rotation phase.';return;
+   }
    const g=old.groups?.[groupId];
-   if(!g||Number(g.visitIndex||0)!==expectedVisit||g.currentStage!==expectedStage||
-      bs28Core.memberIds(g.members).slice().sort().join('|')!==memberSignature)return;
-   if(!bs28GroupDestinations(old,groupId,event).includes(dest))return;
-   if(locks[dest]||(expectedStage&&locks[expectedStage]))return;
+   if(!g){transactionFailureReason='Group '+groupId+' no longer exists.';return;}
+   if(Number(g.visitIndex||0)!==expectedVisit||g.currentStage!==expectedStage||
+      bs28Core.memberIds(g.members).slice().sort().join('|')!==memberSignature){
+    transactionFailureReason='Another marshal updated '+bs28GroupName(groupId)+' before this draw was saved.';return;
+   }
+   if(!bs28GroupDestinations(old,groupId,event).includes(dest)){
+    transactionFailureReason=dest+' is no longer OPEN and available. Another group may have claimed it.';return;
+   }
    const next=JSON.parse(JSON.stringify(old)),target=next.groups[groupId];
    if(expectedStage){
-     if(next.stageOwners?.[expectedStage]!==groupId||!bs28Core.allResultsConfirmed(target,event,expectedStage))return;
+     if(next.stageOwners?.[expectedStage]!==groupId){
+      transactionFailureReason=expectedStage+' is no longer assigned to '+bs28GroupName(groupId)+'.';return;
+     }
+     if(!bs28Core.allResultsConfirmed(target,event,expectedStage)){
+      transactionFailureReason='Results for '+expectedStage+' are not all confirmed by Firebase yet.';return;
+     }
      target.completedStages=target.completedStages||{};target.completedStages[expectedStage]=true;
      target.lastStage=expectedStage;target.currentStage=null;
      target.visitIndex=(target.visitIndex||0)+1;
@@ -2152,21 +2163,46 @@ async function bs28SelectSS(){
    }
    const incomingVisit=Number(target.visitIndex)||0;
    const reserved=bs28Core.reserveForRequest(next,{requestId,groupId,destination:dest,visitIndex:incomingVisit},order,{},now);
-   if(!reserved)return;
-   // Check atomic internal consistency before saving official draw.
-   if(bs28Core.validatePlan(reserved).length)return;
+   if(!reserved){transactionFailureReason='Firebase could not reserve '+dest+' for '+bs28GroupName(groupId)+'. The group or stage may have changed.';return;}
+   // Keep the plan validator, but report its actual reason instead of a
+   // generic "another marshal claimed" message.
+   const validationErrors=bs28Core.validatePlan(reserved)||[];
+   if(validationErrors.length){
+    const details=validationErrors.slice(0,3).map(item=>typeof item==='string'?item:JSON.stringify(item)).join('; ');
+    transactionFailureReason='Group Rotation validation rejected the draw: '+details;return;
+   }
    return reserved;
   },undefined,false);
-  if(!tx.committed)throw Error('Another marshal claimed this group/SS, or its status changed. Refresh and choose an available SS.');
-  // The transaction is the official assignment. No organiser coordinator or
-  // rotationRequests acknowledgement is needed. Live event listener updates UI.
+  if(!tx.committed)throw Error(transactionFailureReason||'Firebase did not commit the official draw. Refresh and choose again.');
+  officialDrawSaved=true;
+  // The transaction is the official assignment. No organiser coordinator,
+  // group-selection lock, stage lock or admin PIN is needed for this step.
   localStorage.setItem(bs28RequestKey(),JSON.stringify({requestId,groupId,destination:dest,savedAt:now}));
   bs28NextGroupChoice='';bs28GroupUserChosen=false;
   $('bs28SwitchStatus').textContent=bs28GroupName(groupId)+' → '+dest+' · OFFICIAL DRAW SAVED. Race Control updating…';
-  // Pull the committed record in case the listener has not updated this phone yet.
-  await root.once('value');
+  const savedSnap=await root.once('value');
+  if(savedSnap.exists())data=normalizeData(savedSnap.val());
   bs28RenderMarshal();
- }catch(e){alert('NEXT DRAW NOT SAVED: '+e.message+'\nMain Control does not need to be online, but Firebase must be connected.');}
+ }catch(e){
+  // A competing marshal may have completed a valid draw at the same time.
+  // Reload the authoritative state so this phone never stays on stale options.
+  try{
+   const latest=await root.once('value');
+   if(latest.exists())data=normalizeData(latest.val());
+  }catch(refreshError){
+   console.warn('Could not refresh Group Rotation after draw attempt:',refreshError);
+  }
+  if(officialDrawSaved){
+   bs28RenderMarshal();
+   $('bs28SwitchStatus').textContent='OFFICIAL DRAW SAVED · Firebase committed the assignment, but this phone could not finish refreshing. Refresh this page before starting.';
+   alert('THE OFFICIAL DRAW WAS SAVED TO FIREBASE. This phone could not complete its refresh. Do not submit another draw. Refresh the marshal page; START remains manual.');
+  }else{
+   bs28NextGroupChoice='';bs28GroupUserChosen=false;
+   if($('bs28NextSS'))$('bs28NextSS').value='';
+   bs28RenderMarshal();
+   alert('NEXT DRAW NOT SAVED: '+e.message+'\n\nThe latest group and SS availability has been refreshed. Select again. No stage lock or admin PIN is required for selecting the next SS.');
+  }
+ }
  finally{bs28Submitting=false;bs28RenderMarshal()}
 }
 $('bs28NextGroup')?.addEventListener('change',e=>{
@@ -2178,7 +2214,7 @@ $('bs28NextGroup')?.addEventListener('change',e=>{
 $('bs28NextSS')?.addEventListener('change',bs28RenderMarshal);
 $('bs28SwitchButton')?.addEventListener('click',bs28SelectSS);
 
-window.BS28_MARSHAL_READY=true;window.BS28_MARSHAL_VERSION="28.6.0";setInterval(()=>{if(bs28IsActive())bs28RenderMarshal()},1800);bs28RenderMarshal();
+window.BS28_MARSHAL_READY=true;window.BS28_MARSHAL_VERSION="28.6.1";setInterval(()=>{if(bs28IsActive())bs28RenderMarshal()},1800);bs28RenderMarshal();
 })();
 /* System-wide uppercase for human-readable text fields, including dynamically rendered inputs. */
 (function installUppercaseWordInputs(){
