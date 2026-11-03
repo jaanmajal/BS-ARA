@@ -1,4 +1,4 @@
-<!doctype html><!-- v27.6.8: Android results vertical scrolling and horizontal detail-table swipes. --><!-- v27.6.6: updated penalty schedule, DNF minimum Gate-1 scoring, frozen DNF roster base, and official tie-break order. -->
+<!doctype html><!-- v28.6.3: aligned scoring reference and SORRCA point-out result display. --><!-- v27.6.8: Android results vertical scrolling and horizontal detail-table swipes. --><!-- v27.6.6: updated penalty schedule, DNF minimum Gate-1 scoring, frozen DNF roster base, and official tie-break order. -->
 <html lang="en">
 <head>
 <meta charset="utf-8">
@@ -355,6 +355,7 @@ body{height:auto;min-height:100vh;overflow-x:clip;overflow-y:visible;touch-actio
   ]);
 
   const BONUS_GATE_RULE_ID = 'sorrcca-bonus-gate';
+  const POINT_OUT_THRESHOLD = 60;
   const formatById = new Map(FORMATS.map(item => [item.id, item]));
 
   function normalizeFormat(value) {
@@ -411,6 +412,10 @@ body{height:auto;min-height:100vh;overflow-x:clip;overflow-y:visible;touch-actio
       if (!isBonusGateItem(item)) return sum;
       return sum + Math.max(0, Number(item?.count) || 1);
     }, 0);
+  }
+
+  function pointOutReached(penaltyValue) {
+    return Math.max(0, Number(penaltyValue) || 0) >= POINT_OUT_THRESHOLD;
   }
 
   function scoreStage(options) {
@@ -550,6 +555,8 @@ body{height:auto;min-height:100vh;overflow-x:clip;overflow-y:visible;touch-actio
     modifiedDnfBase,
     isBonusGateItem,
     bonusGateCount,
+    pointOutThreshold: POINT_OUT_THRESHOLD,
+    pointOutReached,
     scoreStage,
     statusPriority,
     compareOverall,
@@ -593,7 +600,7 @@ function totalRawTime(id){return data.cutoffs.reduce((sum,_,s)=>sum+(bs28ScoreSt
 function overallStatus(id){return data.cutoffs.some((_,s)=>bs28ScoreStage(s))&&data.cutoffs.every((_,s)=>!bs28ScoreStage(s)||!!result(id,s))?'FINISH':'PENDING'}
 function statusClass(status){return status==='FINISH'?'status-finish':status==='DNF'?'status-dnf':status==='DNS'?'status-dns':'status-pending'}
 function statusBadge(status){return `<span class="status-badge ${statusClass(status)}">${status==='FINISH'?'⚑ ':status==='DNF'?'✕ ':status==='DNS'?'— ':''}${esc(status)}</span>`}
-function stageProgress(r,s){if(!r)return '—';if(r.status==='dnf'){const total=Number(r.totalGates)||gateTotalForStage(s);return `${r.gatesCleared===undefined||r.gatesCleared===null?'?':r.gatesCleared}/${total} gates`}if(r.status==='dns')return 'Did not start';return fmt(rawTime('',s,r))}
+function stageProgress(r,s){if(!r)return '—';if(r.status==='dnf'){const total=Number(r.totalGates)||gateTotalForStage(s),progress=`${r.gatesCleared===undefined||r.gatesCleared===null?'?':r.gatesCleared}/${total} gates`;return r.pointOut?'SORRCA point-out · 60 penalty points · '+progress:progress}if(r.status==='dns')return 'Did not start';return fmt(rawTime('',s,r))}
 function driversSorted(){return Object.entries(data.drivers).sort((a,b)=>String(a[1]?.num??'').localeCompare(String(b[1]?.num??''),undefined,{numeric:true})||String(a[1]?.name??'').localeCompare(String(b[1]?.name??'')))}
 function allDriverRecords(){return driversSorted().map(([id,d])=>({id,d,total:totalPoints(id),last:stagePoints(id,data.cutoffs.length-1)??-1,recorded:recordedCount(id),finishes:finishStageCount(id),dnfs:data.cutoffs.filter((_,s)=>result(id,s)?.status==='dnf').length,dns:data.cutoffs.filter((_,s)=>result(id,s)?.status==='dns').length,time:totalRawTime(id),status:overallStatus(id),complete:overallStatus(id)==='FINISH'}))}
 function getFilteredRows(){const q=$('search').value.trim().toLowerCase(),filter=$('statusFilter').value,sort=$('sortBy').value;let rows=allDriverRecords().filter(r=>{const searchable=(`#${r.d.num||''} ${r.d.name||''}`).toLowerCase();if(q&&!searchable.includes(q))return false;if(currentView==='overall'){if(filter==='FINISH'&&r.status!=='FINISH')return false;if(filter==='PENDING'&&r.status!=='PENDING')return false;if(filter==='DNF'&&!data.cutoffs.some((_,s)=>result(r.id,s)?.status==='dnf'))return false;if(filter==='DNS'&&!data.cutoffs.some((_,s)=>result(r.id,s)?.status==='dns'))return false}else{const s=Number(currentView.split(':')[1]),rr=result(r.id,s),stageStatus=rr?String(rr.status||'').toUpperCase():'PENDING';if(filter!=='all'&&stageStatus!==filter)return false}return true});
