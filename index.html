@@ -237,25 +237,167 @@ body > section.card{scroll-margin-top:82px}
 .brand small{display:block;font-size:11px;line-height:1.35;letter-spacing:.075em;color:#bfd0e4}
 @media(max-width:700px){.brand-logo{width:62px;height:58px;flex:0 0 62px}.brand{gap:9px}.brand h1{font-size:clamp(20px,5vw,26px)}.brand small{font-size:9px;letter-spacing:.04em}}
 </style>
+
+<style id="bs2868-mobile-main-control">
+/* v28.6.8: iPhone-first presentation for Main Control only. Desktop layout and race logic remain unchanged. */
+#mainSectionShortcuts .bs-mobile-nav{flex:1;min-width:0}
+#mainSectionShortcuts .bs-mobile-nav>summary{display:none}
+#mainSectionShortcuts .bs-mobile-nav>.bs-nav-links{display:flex}
+@media(max-width:700px){
+  html{scroll-padding-top:76px}
+  body{width:100%;max-width:none;padding:8px 8px calc(14px + env(safe-area-inset-bottom,0px));overflow-x:hidden}
+  header{align-items:center;gap:8px;margin:2px 0 8px}
+  .brand{gap:8px;min-width:0;flex:1}
+  .brand-logo{width:52px;height:50px;flex:0 0 52px}
+  .brand h1{font-size:clamp(19px,5.2vw,24px);line-height:1.05;overflow-wrap:anywhere}
+  .brand small{font-size:9px;line-height:1.3;letter-spacing:.025em}
+  #status{max-width:100%;font-size:10px;line-height:1.3;padding:6px 9px;overflow-wrap:anywhere}
+  #mainScoringFormatBanner{margin:7px 0 9px;padding:9px 10px;border-width:2px!important;border-radius:11px;font-size:11px;line-height:1.45;letter-spacing:.025em}
+
+  /* Compact, expandable section navigation: no clipped horizontal row. */
+  #mainSectionShortcuts{position:sticky;top:4px;z-index:1000;display:block;width:100%;min-width:0;margin:7px 0 9px;padding:0;border:1px solid #375475;border-radius:11px;background:rgba(11,22,40,.97);box-shadow:0 5px 14px rgba(0,0,0,.22);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px)}
+  #mainSectionShortcuts .bs-nav-desktop-label{display:none}
+  #mainSectionShortcuts .bs-mobile-nav{display:block;width:100%;min-width:0}
+  #mainSectionShortcuts .bs-mobile-nav>summary{display:flex;align-items:center;gap:9px;min-height:44px;padding:7px 11px;list-style:none;cursor:pointer}
+  #mainSectionShortcuts .bs-mobile-nav>summary::-webkit-details-marker{display:none}
+  #mainSectionShortcuts .bs-mobile-nav>summary .bs-nav-label{font-size:10px;letter-spacing:.07em;font-weight:950;color:#bfd9f4;white-space:nowrap}
+  #mainSectionShortcuts .bs-nav-summary-text{flex:1;min-width:0;color:#e7f0fb;font-size:12px;font-weight:750}
+  #mainSectionShortcuts .bs-nav-chevron{font-size:20px;line-height:1;color:#93c5fd;transition:transform .15s ease}
+  #mainSectionShortcuts .bs-mobile-nav[open]>summary .bs-nav-chevron{transform:rotate(180deg)}
+  #mainSectionShortcuts .bs-mobile-nav:not([open])>.bs-nav-links{display:none!important}
+  #mainSectionShortcuts .bs-mobile-nav[open]>.bs-nav-links{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px;padding:0 8px 9px;overflow:visible}
+  #mainSectionShortcuts .bs-nav-link{display:flex;align-items:center;justify-content:center;min-width:0;min-height:40px;padding:7px 5px;border-radius:9px;font-size:11px;line-height:1.2;white-space:normal;text-align:center;overflow-wrap:anywhere}
+  #mainSectionShortcuts .bs-nav-link[href="#raceControlPanel"],#mainSectionShortcuts .bs-nav-link[href="#manualInputPanel"]{display:none}
+  body>section.card{scroll-margin-top:66px}
+
+  /* Less visual noise: connection state stays green, ordinary cards stay neutral. */
+  .card{width:100%;min-width:0;margin:8px 0;padding:12px;border:1px solid #30425e;border-radius:13px}
+  .card.firebase-online,.card.firebase-online:focus-within,#raceControlPanel.firebase-online,#raceControlPanel.firebase-online:focus-within{border:1px solid #30425e!important;box-shadow:none!important}
+  .sync-health{margin:7px 0;padding:9px 10px;border-radius:10px;font-size:11px;line-height:1.4}
+  #syncHealth{border-width:1px!important}
+  .sync-controls{margin:0 0 8px}
+  .sync-controls button,#retrySync{min-height:40px;padding:7px 11px;font-size:11px}
+  h2{font-size:17px;line-height:1.3;margin-bottom:9px}
+  h3{font-size:15px;line-height:1.3}
+  p{line-height:1.45}
+  details{margin:7px 0}
+  .card details>summary{display:block;min-height:44px;padding:10px 2px;font-size:15px;line-height:1.35;font-weight:850;cursor:pointer;overflow-wrap:anywhere}
+  .card details[open]>summary{margin-bottom:10px;padding-bottom:10px;border-bottom:1px solid #35445c}
+  .card details>summary::marker{color:#93c5fd}
+  .bs28-section{padding:11px;border-radius:13px}
+  .bs28-section summary{font-size:15px!important;line-height:1.35}
+  .bs28-section details[open]>summary{margin-bottom:10px}
+  .bs28-summary-state{font-size:9px;padding:3px 7px;margin-left:4px}
+  .bs28-section h3{font-size:14px;margin:14px 0 8px}
+  .bs28-coordinator{padding:9px 10px;font-size:12px;line-height:1.4}
+  .bs28-card-grid{grid-template-columns:minmax(0,1fr)!important;gap:7px;margin:9px 0}
+  .bs28-stage,.bs28-group{padding:10px;gap:7px}
+  .bs28-stage span,.bs28-group small{font-size:12px}
+  .bs28-stage .bs28-stage-status{font-size:10px;min-width:70px;padding:5px 8px}
+  .bs28-actions{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px}
+  .bs28-actions button{min-width:0;min-height:42px;padding:8px 6px;font-size:12px}
+  .bs28-stage select,.bs28-section select{min-height:44px;font-size:16px}
+  .bs28-order-row{align-items:flex-start;padding:9px 5px;font-size:12px}
+
+  /* Touch-friendly controls and predictable stacking. */
+  button,input,select,textarea{font-size:16px;max-width:100%}
+  button{min-height:44px;padding:9px 11px;line-height:1.25;white-space:normal}
+  input,select,textarea{min-height:44px;padding:9px 10px;border-radius:9px}
+  label{font-size:12px;line-height:1.35;margin-bottom:5px}
+  .row{display:grid;grid-template-columns:minmax(0,1fr);gap:7px;margin:8px 0}
+  .row>*{min-width:0;width:100%;max-width:100%;flex:none}
+  .flex{gap:7px;align-items:center}
+  .pill{font-size:10px}
+  .muted,small{line-height:1.45}
+  .scroll{width:100%;max-width:100%;overflow-x:auto;overflow-y:hidden;-webkit-overflow-scrolling:touch;overscroll-behavior-x:contain}
+  .scroll table{width:max-content;min-width:100%;font-size:12px}
+  .scroll th,.scroll td{padding:9px 8px;white-space:nowrap}
+
+  /* Driver registration and penalty setup keep related fields together. */
+  #mainDriverRegistration .row:has(#name){display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:stretch}
+  #mainDriverRegistration #name{min-width:0}
+  #mainDriverRegistration #add{width:auto;min-width:104px;padding-inline:10px}
+  #penaltyPanel .row{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px}
+  #penaltyPanel .row>*{min-width:0}
+  #penaltyPanel .row button{min-height:44px;font-size:12px;padding:8px 5px}
+  #penaltyPanel .scroll table{min-width:390px}
+  #mainLeaderboardPanel .scroll table{min-width:620px}
+  #mainDriverRegistration .scroll table{min-width:360px}
+
+  /* Group setup, SS setup, marshal access and Firebase settings. */
+  .stage-setup-row{grid-template-columns:minmax(0,1fr);gap:7px}
+  .stage-card-label{min-height:48px;font-size:18px}
+  .stage-setup-actions{display:grid;grid-template-columns:minmax(0,1fr);gap:7px}
+  .stage-setup-actions button{width:100%;min-width:0;min-height:44px}
+  .event-settings-fields{grid-template-columns:minmax(0,1fr);gap:9px;margin:10px 0}
+  .event-settings-fields input{min-height:44px;font-size:16px}
+  .event-settings-buttons{display:grid;grid-template-columns:minmax(0,1fr);gap:7px}
+  .event-settings-buttons button{width:100%;min-height:46px}
+  #marshalStageManagement .row{grid-template-columns:minmax(0,1fr)}
+  #marshalStageManagement .row button{width:100%;min-height:46px}
+  #marshalStageManagement #emergencyAdminResetPanel{margin:11px 0 9px!important;padding:11px!important;border-radius:11px!important}
+  #marshalStageManagement #emergencyAdminResetPanel h3{font-size:14px}
+  #marshalStageManagement #emergencyAdminResetPanel p{font-size:11px!important;line-height:1.45!important}
+  #marshalStageManagement #emergencyAdminResetAllLocks{min-height:54px!important;font-size:13px;line-height:1.3}
+  #marshalSharePanel{font-size:12px;line-height:1.5}
+  #marshalSharePanel a{overflow-wrap:anywhere}
+  #marshalSharePanel button,#showMarshalLink{display:block;width:100%;margin:7px 0 0 0;min-height:42px}
+  #eventUtilitiesPanel #eventScoringFormatEditor{padding:10px!important;margin:10px 0!important}
+  #eventUtilitiesPanel #eventScoringFormatEditor .row{display:grid;grid-template-columns:minmax(0,1fr);gap:7px}
+  #eventUtilitiesPanel #eventScoringFormatEditor .row>div{min-width:0!important;width:100%}
+  #eventUtilitiesPanel #eventScoringFormatSelect{min-height:46px}
+  #eventUtilitiesPanel #saveEventScoringFormat{min-height:46px}
+  #eventUtilitiesPanel #localDataManagement{padding:10px!important}
+  #eventUtilitiesPanel #clearLocalEventData{min-height:46px}
+  #eventRecoveryPanel .row{display:grid;grid-template-columns:minmax(0,1fr);gap:7px}
+  #eventRecoveryPanel .row button{width:100%;min-height:44px}
+  #eventRecoveryPanel label{display:block}
+  #eventRecoveryPanel input[type="file"]{font-size:13px;min-height:42px}
+  #eventRecoveryPanel .correction-selects,#eventRecoveryPanel .correction-compare-grid{grid-template-columns:minmax(0,1fr)}
+  #eventRecoveryPanel .correction-snapshot{padding:9px}
+  #eventRecoveryPanel .correction-penalty-row{grid-template-columns:minmax(0,1fr) 32px 48px 32px;gap:4px;padding:5px}
+  #eventRecoveryPanel .correction-penalty-row input{min-height:36px;height:36px;font-size:14px}
+  #eventRecoveryPanel .correction-penalty-step{width:32px;min-height:36px;height:36px;padding:0}
+  #eventRecoveryPanel .correction-save-row button{width:100%;max-width:none;min-height:48px}
+  #newRaceFormatPopup>div{width:100%!important;max-width:460px;padding:15px!important;border-radius:14px!important}
+  #newRaceFormatPopup .row{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px}
+  #newRaceFormatPopup .row button{min-width:0;min-height:44px;padding:8px 5px;font-size:12px}
+  footer{padding:16px 5px calc(12px + env(safe-area-inset-bottom,0px));font-size:10px;line-height:1.5;overflow-wrap:anywhere}
+}
+@media(max-width:380px){
+  body{padding-left:6px;padding-right:6px}
+  .brand-logo{width:46px;height:44px;flex-basis:46px}
+  .brand h1{font-size:18px}
+  .brand small{font-size:8px}
+  #mainSectionShortcuts .bs-mobile-nav[open]>.bs-nav-links{grid-template-columns:repeat(2,minmax(0,1fr))}
+  #mainDriverRegistration .row:has(#name){grid-template-columns:minmax(0,1fr)}
+  #mainDriverRegistration #add{width:100%}
+  #penaltyPanel .row{grid-template-columns:minmax(0,1fr)}
+}
+@media(prefers-reduced-motion:reduce){#mainSectionShortcuts .bs-nav-chevron{transition:none}}
+</style>
 </head><body>
 <header><div class="brand"><img src="logo.png" alt="RC CRAWLER Point and Time Attack System by TEC-ARTS CRAWLER" class="brand-logo"><div><h1>RC CRAWLER</h1><small>POINT &amp; TIME ATTACK SYSTEM · TEC-ARTS CRAWLER</small></div></div><span class="pill" id="status">Local mode</span></header>
 
 <div id="mainScoringFormatBanner" class="sync-health pending scoring-format-banner" role="status" aria-live="polite">SCORING FORMAT: NOT SELECTED</div>
 <nav id="mainSectionShortcuts" aria-label="Jump to Main Control section">
- <span class="bs-nav-label">JUMP TO</span>
- <div class="bs-nav-links">
-  <a class="bs-nav-link" href="#raceControlPanel">Race</a>
-  <a class="bs-nav-link" href="#manualInputPanel">Manual</a>
-  <a class="bs-nav-link" href="#mainLeaderboardPanel">Results</a>
-  <a class="bs-nav-link" href="#penaltyPanel">Penalties</a>
-  <a class="bs-nav-link" href="#mainDriverRegistration">Drivers</a>
-  <a class="bs-nav-link" href="#bs28Panel">Groups</a>
-  <a class="bs-nav-link" href="#stageGateSetup">SS Setup</a>
-  <a class="bs-nav-link" href="#marshalStageManagement">Marshals</a>
-  <a class="bs-nav-link" href="#eventSettingsPanel">Firebase</a>
-  <a class="bs-nav-link" href="#eventUtilitiesPanel">Utilities</a>
-  <a class="bs-nav-link" href="#eventRecoveryPanel">Recovery</a>
- </div>
+ <span class="bs-nav-label bs-nav-desktop-label">JUMP TO</span>
+ <details id="mainSectionShortcutsMenu" class="bs-mobile-nav">
+  <summary><span class="bs-nav-label">JUMP TO SECTION</span><span class="bs-nav-summary-text">Choose a section</span><span class="bs-nav-chevron" aria-hidden="true">⌄</span></summary>
+  <div class="bs-nav-links">
+   <a class="bs-nav-link" href="#raceControlPanel">Race</a>
+   <a class="bs-nav-link" href="#manualInputPanel">Manual</a>
+   <a class="bs-nav-link" href="#mainLeaderboardPanel">Results</a>
+   <a class="bs-nav-link" href="#penaltyPanel">Penalties</a>
+   <a class="bs-nav-link" href="#mainDriverRegistration">Drivers</a>
+   <a class="bs-nav-link" href="#bs28Panel">Groups</a>
+   <a class="bs-nav-link" href="#stageGateSetup">SS Setup</a>
+   <a class="bs-nav-link" href="#marshalStageManagement">Marshals</a>
+   <a class="bs-nav-link" href="#eventSettingsPanel">Firebase</a>
+   <a class="bs-nav-link" href="#eventUtilitiesPanel">Utilities</a>
+   <a class="bs-nav-link" href="#eventRecoveryPanel">Recovery</a>
+  </div>
+ </details>
 </nav>
 <script id="bs2854-shortcut-handler">
 (function(){'use strict';
@@ -269,6 +411,8 @@ body > section.card{scroll-margin-top:82px}
   event.preventDefault();
   const details=target.querySelector('details');
   if(details)details.open=true;
+  const mobileMenu=nav.querySelector('#mainSectionShortcutsMenu');
+  if(mobileMenu&&window.matchMedia('(max-width: 700px)').matches)mobileMenu.open=false;
   target.scrollIntoView({behavior:window.matchMedia('(prefers-reduced-motion: reduce)').matches?'instant':'smooth',block:'start'});
  });
 })();
