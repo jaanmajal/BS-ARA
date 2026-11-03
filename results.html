@@ -260,6 +260,11 @@ body{height:auto;min-height:100vh;overflow-x:clip;overflow-y:visible;touch-actio
 .bs28-m-free{border-color:#3ba980}.bs28-m-stage small{color:#d4e1f2}
 @media(max-width:520px){.bs28-card-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.bs28-stage,.bs28-group{padding:9px}.bs28-section h3{margin-top:14px}.bs28-section button{min-height:42px}}
 </style>
+<style>
+.scoring-format-banner{margin:10px 0 14px;padding:11px 14px;border:2px solid #a87922;border-radius:10px;background:#2a2111;color:#ffe3a3;font-size:13px;font-weight:950;letter-spacing:.055em;line-height:1.45;overflow-wrap:anywhere}
+.scoring-format-banner.online{border-color:#16834b;background:#0b2619;color:#9bf5c4}
+.scoring-format-banner.pending{border-color:#a87922;background:#2a2111;color:#ffe3a3}
+</style>
 </head>
 <body>
 <main class="shell">
@@ -273,6 +278,7 @@ body{height:auto;min-height:100vh;overflow-x:clip;overflow-y:visible;touch-actio
       <div class="meta-chip"><span class="symbol">⌁</span><div><small>FIREBASE EVENT ID</small><strong id="eventMetaId">—</strong></div></div>
     </div>
   </header>
+  <div id="resultsScoringFormatBanner" class="scoring-format-banner pending" role="status" aria-live="polite">SCORING FORMAT: LOADING…</div>
 
   <section class="toolbar" aria-label="Results controls">
     <nav class="tabs" id="tabs" aria-label="Leaderboard view">
@@ -646,7 +652,8 @@ function bs28RenderPublic(){
  }).join('');
 }
 
-function render(){renderTabs();renderSummary();renderStageStatus();renderTable();renderDriverDetail();bs28RenderPublic()}
+function renderScoringFormatIndicator(){const el=$('resultsScoringFormatBanner');if(!el)return;const format=BS28_SCORING.normalizeFormat(data.scoringFormat);el.textContent=format?'SCORING FORMAT: '+BS28_SCORING.formatLabel(format)+' · EVENT ID: '+eventId:'SCORING FORMAT: NOT SELECTED · WAITING FOR MAIN CONTROL';el.className='scoring-format-banner '+(format?'online':'pending')}
+function render(){renderScoringFormatIndicator();renderTabs();renderSummary();renderStageStatus();renderTable();renderDriverDetail();bs28RenderPublic()}
 function setConnection(state,detail){const el=$('connection');el.classList.toggle('online',state==='online');el.classList.toggle('offline',state!=='online');$('connectionTitle').textContent=state==='online'?'ONLINE':state==='connecting'?'CONNECTING':state==='error'?'ERROR':'OFFLINE';$('connectionDetail').textContent=detail|| (state==='online'?'Firebase connected':'Live updates unavailable')}
 function showMessage(text){$('message').textContent=text;$('message').classList.remove('hidden')}
 $('tabs').addEventListener('click',e=>{const b=e.target.closest('[data-view]');if(!b||b.disabled)return;currentView=b.dataset.view;renderTable();renderTabs();renderStageStatus()});
