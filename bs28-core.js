@@ -14,7 +14,7 @@
   const includedStages=v=>stageNames(v).filter(k=>v.stages[k]?.included===true&&v.stages[k]?.cancelled!==true);
   const shuffle=(ids,random)=>{const arr=[...ids].map(String);const rand=random||secureRandom;for(let i=arr.length-1;i>0;i--){const j=Math.floor(rand()*(i+1));[arr[i],arr[j]]=[arr[j],arr[i]]}return arr};
   function secureRandom(){if(typeof crypto==='undefined'||!crypto.getRandomValues)throw Error('Secure random source unavailable (use HTTPS).');const b=new Uint32Array(1);crypto.getRandomValues(b);return b[0]/4294967296}
-  function balancedGroups(ids,n,random){if(!Number.isInteger(n)||n<2||n>4)throw Error('Choose 2 to 4 groups.');const shuffled=shuffle(ids,random),groups={};for(let i=0;i<n;i++)groups[String.fromCharCode(65+i)]=[];shuffled.forEach((id,i)=>groups[String.fromCharCode(65+i%n)].push(id));return groups}
+  function balancedGroups(ids,n,random){if(!Number.isInteger(n)||n<1||n>9)throw Error('Choose 1 to 9 groups.');if(!Array.isArray(ids)||ids.length<n)throw Error('Register at least one driver per group.');const shuffled=shuffle(ids,random),groups={};for(let i=0;i<n;i++)groups[String.fromCharCode(65+i)]=[];shuffled.forEach((id,i)=>groups[String.fromCharCode(65+i%n)].push(id));return groups}
   const statusFor=v=>v?.status==='finish'||v?.status==='dnf'||v?.status==='dns';
   const allResultsConfirmed=(group,event,stage)=>memberIds(group?.members).length>0&&memberIds(group.members).every(id=>statusFor(event?.results?.[id]?.[stageIndex(stage)]));
   const completeForDriver=(plan,driverId,results)=>includedStages(plan).every(s=>statusFor(results?.[driverId]?.[stageIndex(s)]));
