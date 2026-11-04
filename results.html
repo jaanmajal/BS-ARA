@@ -265,6 +265,10 @@ body{height:auto;min-height:100vh;overflow-x:clip;overflow-y:visible;touch-actio
 .scoring-format-banner{margin:10px 0 14px;padding:11px 14px;border:2px solid #a87922;border-radius:10px;background:#2a2111;color:#ffe3a3;font-size:13px;font-weight:950;letter-spacing:.055em;line-height:1.45;overflow-wrap:anywhere}
 .scoring-format-banner.online{border-color:#16834b;background:#0b2619;color:#9bf5c4}
 .scoring-format-banner.pending{border-color:#a87922;background:#2a2111;color:#ffe3a3}
+.event-rules-row{display:flex;justify-content:flex-start;margin:-6px 0 12px}
+.event-rules-link{display:inline-flex;align-items:center;justify-content:center;min-height:38px;padding:8px 14px;border:1px solid #3d6a99;border-radius:8px;background:#173657;color:#eaf4ff;text-decoration:none;font-size:11px;font-weight:900;letter-spacing:.06em}
+.event-rules-link:hover,.event-rules-link:focus-visible{background:#245c82;border-color:#ffd000;color:#fff}
+.event-rules-link[aria-disabled="true"]{opacity:.45;pointer-events:none}
 </style>
 
 <style id="tecArtsBrandingUpdate">
@@ -337,23 +341,21 @@ body{height:auto;min-height:100vh;overflow-x:clip;overflow-y:visible;touch-actio
 }
 </style>
 
-<style id="clean-interface-style">
-/* Clean interface: keep empty guidance from taking up space. */
-#wakeState:empty,#nextDriverReadyMeta:empty{display:none}
-</style></head>
+</head>
 <body>
 <main class="shell">
   <header class="hero">
     <div class="hero-copy">
       <div class="hero-brand-lockup"><img class="hero-brand-logo" src="logo.png" alt="RC CRAWLER competition logo by TEC-ARTS CRAWLER"><div class="hero-brand-copy"><div class="event-kicker">SABAH RC CRAWLER COMPETITION</div>
       <h1>RC CRAWLER <span>POINT &amp; TIME ATTACK SYSTEM</span></h1>
-      </div></div>
+      <p class="hero-sub">Official timing · Scoring · Live competition results</p></div></div>
     </div>
     <div class="event-meta" aria-label="Firebase event information">
-      <div class="meta-chip"><span class="symbol">⌁</span><div><small>EVENT ID</small><strong id="eventMetaId">—</strong></div></div>
+      <div class="meta-chip"><span class="symbol">⌁</span><div><small>FIREBASE EVENT ID</small><strong id="eventMetaId">—</strong></div></div>
     </div>
   </header>
   <div id="resultsScoringFormatBanner" class="scoring-format-banner pending" role="status" aria-live="polite">SCORING FORMAT: LOADING…</div>
+  <div class="event-rules-row"><a id="eventRulesLink" class="event-rules-link" href="#" aria-disabled="true">VIEW EVENT RULES</a></div>
 
   <section class="toolbar" aria-label="Results controls">
     <nav class="tabs" id="tabs" aria-label="Leaderboard view">
@@ -387,18 +389,18 @@ body{height:auto;min-height:100vh;overflow-x:clip;overflow-y:visible;touch-actio
       <div class="last-updated"><span id="eventLabel">Event ID: —</span><span id="lastUpdated">Waiting for Firebase data</span></div>
     </article>
   <section class="stage-status-panel" aria-labelledby="stageStatusHeading">
-    <div class="panel-head"><div><h2 id="stageStatusHeading">Stages &amp; Pending Drivers</h2></div><span class="pill" id="openStageCount">0 stages open</span></div>
-    <div id="stageStatusGrid" class="stage-status-grid"><div class="empty">Waiting for stage status…</div></div>
+    <div class="panel-head"><div><h2 id="stageStatusHeading">Special Stage Status &amp; Pending Drivers</h2><p>Only stages with a saved draw and locked running order are OPEN. Completed drivers disappear from each pending list.</p></div><span class="pill" id="openStageCount">0 stages open</span></div>
+    <div id="stageStatusGrid" class="stage-status-grid"><div class="empty">Waiting for draw and lock status from Firebase…</div></div>
   </section>
     <aside class="panel detail" id="driverDetail" aria-live="polite">
-      <div class="panel-head"><div><h2>Driver Details</h2></div><span class="pill" id="detailStageCount">— stages</span></div>
-      <div id="detailContent" class="empty">Tap a driver for details.</div>
+      <div class="panel-head"><div><h2>Driver performance</h2><p>Tap a driver in the leaderboard to view details</p></div><span class="pill" id="detailStageCount">— stages</span></div>
+      <div id="detailContent" class="empty">Select a driver to see their stage times, penalty deductions, gate progress and points.</div>
     </aside>
   </section>
 
-  
-  
-  <section class="card" aria-label="Group rotation overview"><h2>GROUP ROTATION · LIVE</h2><div id="bs28PublicGroups" class="bs28-card-grid"><div class="muted">Waiting for group assignments…</div></div></section>
+  <p class="footer-caption" style="line-height:1.5;margin:8px 0 12px">Penalty reference: Touch -15 pts | Special Gate -5 pts | Outrack -10 pts | Roll Over -5 pts (crawler stops with all four tyres off the ground) | Jump Gate = DNF.</p>
+  <p class="footer-caption" style="line-height:1.5;margin:8px 0 12px">Penalty reference: Touch -15 pts | Special Gate -5 pts | Outrack -10 pts | Roll Over -5 pts (crawler stops with all four tyres off the ground) | Jump Gate = DNF.</p>
+  <section class="card" aria-label="Group rotation overview"><h2>GROUP ROTATION · LIVE</h2><p class="muted">Stages may be OPEN, CLOSED or CANCELLED. Completed historical records remain viewable.</p><div id="bs28PublicGroups" class="bs28-card-grid"><div class="muted">Waiting for group assignments…</div></div></section>
 <footer>
     <div class="brand-footer"><img src="logo.png" alt="RC CRAWLER logo by TEC-ARTS CRAWLER"><div><div class="brand-name">TEC-ARTS CRAWLER</div><small>SABAH · CRAWL HARD, COMPETE HARDER</small></div></div>
     <div class="footer-caption">RC CRAWLER · POINT &amp; TIME ATTACK SYSTEM · PUBLIC LIVE RESULTS</div>
@@ -749,7 +751,7 @@ function bs28RenderPublic(){
  }).join('');
 }
 
-function renderScoringFormatIndicator(){const el=$('resultsScoringFormatBanner');if(!el)return;const format=BS28_SCORING.normalizeFormat(data.scoringFormat);el.textContent=format?'SCORING FORMAT: '+BS28_SCORING.formatLabel(format)+' · EVENT ID: '+eventId:'SCORING FORMAT: NOT SELECTED · WAITING FOR MAIN CONTROL';el.className='scoring-format-banner '+(format?'online':'pending')}
+function renderScoringFormatIndicator(){const el=$('resultsScoringFormatBanner');if(!el)return;const format=BS28_SCORING.normalizeFormat(data.scoringFormat);el.textContent=format?'SCORING FORMAT: '+BS28_SCORING.formatLabel(format)+' · EVENT ID: '+eventId:'SCORING FORMAT: NOT SELECTED · WAITING FOR MAIN CONTROL';el.className='scoring-format-banner '+(format?'online':'pending');const link=$('eventRulesLink');if(link){link.href='rules.html?event='+encodeURIComponent(eventId);link.setAttribute('aria-disabled',format?'false':'true');link.title=format?'View the scoring and penalty rules for this event':'Select a scoring format in Main Control first'}}
 function render(){renderScoringFormatIndicator();renderTabs();renderSummary();renderStageStatus();renderTable();renderDriverDetail();bs28RenderPublic()}
 function setConnection(state,detail){const el=$('connection');el.classList.toggle('online',state==='online');el.classList.toggle('offline',state!=='online');$('connectionTitle').textContent=state==='online'?'ONLINE':state==='connecting'?'CONNECTING':state==='error'?'ERROR':'OFFLINE';$('connectionDetail').textContent=detail|| (state==='online'?'Firebase connected':'Live updates unavailable')}
 function showMessage(text){$('message').textContent=text;$('message').classList.remove('hidden')}

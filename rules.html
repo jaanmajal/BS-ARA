@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#070b10">
+<meta name="application-name" content="RC CRAWLER">
+<title>RC CRAWLER | EVENT RULES</title>
+<style>
+:root{color-scheme:dark;--bg:#070b10;--panel:#111b24;--line:#2b3b48;--text:#f4f6f8;--muted:#a8b4be;--yellow:#ffd000;--green:#27d17f;--red:#ff7168;font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+*{box-sizing:border-box}body{margin:0;min-height:100vh;background:radial-gradient(ellipse at 50% -20%,#293744 0,#0a1016 42%,var(--bg) 78%);color:var(--text)}
+.shell{width:min(100% - 28px,920px);margin:0 auto;padding:22px 0 34px}.top{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:16px}.brand{font-size:12px;font-weight:900;letter-spacing:.14em;color:var(--yellow)}.event{font-size:11px;color:var(--muted)}
+h1{font-size:clamp(26px,5vw,42px);line-height:1.05;margin:0 0 6px;font-weight:950;letter-spacing:-.035em}.subtitle{margin:0;color:var(--muted);font-size:13px}
+.status{margin:16px 0;padding:12px 14px;border:1px solid #246b48;border-radius:10px;background:#0a2016;color:#9bf5c4;font-size:12px;font-weight:800}.status.error{border-color:#73302e;background:#251111;color:#ffc2bd}.status.pending{border-color:#806222;background:#2a2111;color:#ffe3a3}
+.card{margin:13px 0;padding:17px;border:1px solid var(--line);border-radius:13px;background:linear-gradient(160deg,#111d27,#0b1219)}.eyebrow{margin:0 0 8px;color:var(--yellow);font-size:10px;font-weight:900;letter-spacing:.13em;text-transform:uppercase}.format-name{font-size:23px;font-weight:950;margin:0}.format-desc{margin:8px 0 0;color:#d5dfe7;font-size:13px;line-height:1.55}
+h2{font-size:14px;font-weight:950;letter-spacing:.07em;text-transform:uppercase;margin:0 0 12px}.rule-list{margin:0;padding-left:19px;color:#dce5ec;font-size:13px;line-height:1.65}.rule-list li+li{margin-top:5px}
+.table-wrap{overflow-x:auto}table{width:100%;border-collapse:collapse;font-size:13px}th,td{padding:10px 9px;border-bottom:1px solid #273744;text-align:left;vertical-align:top}th{color:#aebdca;font-size:10px;text-transform:uppercase;letter-spacing:.08em}td.value{font-weight:900;color:#ffe08a;white-space:nowrap}tr:last-child td{border-bottom:0}.empty{padding:12px;border:1px dashed #526477;border-radius:9px;color:#c7d4df;font-size:12px;line-height:1.5}
+.note{margin:10px 0 0;color:var(--muted);font-size:11px;line-height:1.5}.actions{display:flex;gap:9px;flex-wrap:wrap;margin-top:16px}.actions a{display:inline-flex;align-items:center;justify-content:center;min-height:40px;padding:9px 13px;border:1px solid #3d6a99;border-radius:8px;background:#173657;color:#eaf4ff;text-decoration:none;font-size:11px;font-weight:900;letter-spacing:.05em}.actions a.secondary{background:#111d27;border-color:#40505c;color:#dce5ec}.actions a:hover{border-color:var(--yellow)}.footer{text-align:center;color:#6f7c85;font-size:10px;letter-spacing:.08em;margin-top:24px}
+@media(max-width:600px){.shell{width:calc(100% - 18px);padding-top:14px}.card{padding:13px}.format-name{font-size:20px}th,td{padding:9px 7px}}
+</style>
+</head>
+<body>
+<main class="shell">
+  <div class="top"><div class="brand">RC CRAWLER · EVENT RULES</div><div class="event" id="eventIdLabel">EVENT ID · LOADING</div></div>
+  <header><h1>Rules of the Day</h1><p class="subtitle">Scoring and penalty settings for this event.</p></header>
+  <div id="connectionStatus" class="status pending" role="status" aria-live="polite">Connecting to event settings...</div>
+  <section class="card" aria-labelledby="formatHeading">
+    <p class="eyebrow">Selected scoring format</p>
+    <h2 id="formatHeading" class="format-name">Waiting for Main Control</h2>
+    <p id="formatDescription" class="format-desc">The selected event format will appear here.</p>
+  </section>
+  <section class="card" aria-labelledby="penaltyHeading">
+    <h2 id="penaltyHeading">Penalty settings</h2>
+    <div id="penaltySettings" class="empty">Loading penalty settings...</div>
+    <p id="penaltyNote" class="note">Values are read from Main Control for this Event ID.</p>
+  </section>
+  <section class="card" aria-labelledby="scoringHeading">
+    <h2 id="scoringHeading">How scoring works</h2>
+    <ul id="scoringRules" class="rule-list"><li>Waiting for event settings.</li></ul>
+  </section>
+  <section class="card" aria-labelledby="specialHeading">
+    <h2 id="specialHeading">Important rules</h2>
+    <ul id="specialRules" class="rule-list"><li>Waiting for event settings.</li></ul>
+  </section>
+  <div class="actions"><a id="backResults" href="results.html">BACK TO RESULTS</a><a class="secondary" id="mainControlLink" href="index.html">MAIN CONTROL</a></div>
+  <div class="footer">TEC-ARTS CRAWLER · RC CRAWLER</div>
+</main>
+<script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-database-compat.js"></script>
+<script src="firebase-config.js"></script>
+<script>
+(()=>{'use strict';
+const $=id=>document.getElementById(id);
+const params=new URLSearchParams(location.search);
+const requested=params.get('event');
+const eventId=requested&&/^[a-zA-Z0-9-]{1,80}$/.test(requested)?requested:(window.RC_EVENT_ID||'bs28-test');
+$('eventIdLabel').textContent='EVENT ID · '+eventId;
+$('backResults').href='results.html?event='+encodeURIComponent(eventId);
+$('mainControlLink').href='index.html?event='+encodeURIComponent(eventId);
+const FORMATS={
+ classic_bs:{name:'Classic BS',description:'Highest total points wins. Penalty values below are deducted from stage points.',scoring:['FINISH: position points minus the recorded penalty deductions. The stage score cannot be lower than 21 points.','DNF: fixed at 20 points.','DNS: 0 points.','Overall ranking: highest total points wins. Ties are decided by more FINISH results, then lower total raw time, then lower race number.'],special:['Jump Gate is recorded as DNF.','Penalty values are shared across all Special Stages.']},
+ modified_bs:{name:'Modified BS',description:'Highest total points wins, with a DNF score calculated from the registered driver count.',scoring:['FINISH: position points minus penalty deductions, with a minimum of one point above the calculated DNF base.','DNF: calculated from the registered driver count.','DNS: 0 points.','Overall ranking: highest total points wins. Ties are decided by more FINISH results, then lower total raw time, then lower race number.'],special:['Jump Gate is recorded as DNF.','Penalty values are shared across all Special Stages.']},
+ gate_bs:{name:'Gate BS',description:'Modified BS scoring with DNF points adjusted by the number of gates cleared.',scoring:['FINISH: position points minus penalty deductions, with a minimum of one point above the calculated DNF base.','DNF: calculated from the DNF base and the proportion of gates cleared. The minimum DNF score is 20 points.','DNS: 0 points.','The marshal must enter the number of gates cleared before saving a DNF.','Overall ranking: highest total points wins. Ties are decided by more FINISH results, then lower total raw time, then lower race number.'],special:['Jump Gate is recorded as DNF.','The total gate count is set in Main Control for each SS.','Penalty values are shared across all Special Stages.']},
+ pure_time_attack:{name:'Pure Time Attack',description:'Lowest adjusted time wins. Each penalty adds seconds to the recorded time.',scoring:['FINISH: adjusted time = recorded finish time + penalty seconds.','DNF: adjusted time starts at the SS cutoff time, then penalty seconds are added.','DNS: no adjusted time is recorded.','Overall ranking prioritises completed results, then FINISH count, DNF count and the lowest total adjusted time.'],special:['Jump Gate is recorded as DNF.','The SS cutoff time is configured in Main Control.','Penalty values below are seconds added per tap.']},
+ sorr_ca_class_1:{name:'SORRCA Class 1',description:'SORRCA Class 1 event. The scoring method and live penalty values below are loaded from this event in Main Control.',scoring:[],special:['Class-specific vehicle and course eligibility must follow the SORRCA rules adopted by the organiser. This page summarises the RC CRAWLER event scoring setup.']},
+ sorr_ca_class_2:{name:'SORRCA Class 2',description:'SORRCA Class 2 event. The scoring method and live penalty values below are loaded from this event in Main Control.',scoring:[],special:['Class-specific vehicle and course eligibility must follow the SORRCA rules adopted by the organiser. This page summarises the RC CRAWLER event scoring setup.']},
+ sorr_ca_class_3:{name:'SORRCA Class 3',description:'SORRCA Class 3 event. The scoring method and live penalty values below are loaded from this event in Main Control.',scoring:[],special:['Class-specific vehicle and course eligibility must follow the SORRCA rules adopted by the organiser. This page summarises the RC CRAWLER event scoring setup.']}
+};
+const esc=value=>String(value??'').replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
+const isSorrca=format=>String(format||'').startsWith('sorr_ca_class_');
+function normalizeRules(value){let raw=Array.isArray(value)?value:(value&&typeof value==='object'?Object.values(value):[]);const flat=[];const visit=item=>{if(Array.isArray(item)){item.forEach(visit);return}if(item&&typeof item==='object'){if(typeof item.name==='string'){flat.push(item);return}Object.values(item).forEach(visit)}};raw.forEach(visit);const seen=new Set();return flat.filter(rule=>{const name=String(rule.name||'').trim(),id=String(rule.id||'');const key=(id||name).toLowerCase();if(!name||seen.has(key))return false;seen.add(key);return true}).map(rule=>({...rule,name:String(rule.name).trim(),points:Number.isFinite(Number(rule.points))?Number(rule.points):0}))}
+function listHtml(items){return items.map(item=>'<li>'+esc(item)+'</li>').join('')}
+function renderPenaltySettings(data,format){
+ const rules=normalizeRules(data.penaltyRules),sorrca=isSorrca(format),time=format==='pure_time_attack',sorr2024=sorrCa2024(data,format);
+ const rows=rules.map(rule=>{
+  let value='';
+  if(time)value='+'+Math.abs(rule.points)+' sec / tap';
+  else if(sorrca)value=(rule.points<0?'-':'+')+Math.abs(rule.points)+' pts / tap'+(rule.points<0?' (award / progress)':' (points against)');
+  else value='-'+Math.abs(rule.points)+' pts / tap';
+  return '<tr><td>'+esc(rule.name)+'</td><td class="value">'+esc(value)+'</td></tr>';
+ });
+ if(sorrca){
+  const bonus=sorr2024?Number(data.sorrCaBonusPoints??-5):-10;
+  rows.push('<tr><td>'+(sorr2024?'Bonuses':'Bonus Gate')+'</td><td class="value">'+(bonus<0?'-':'+')+Math.abs(bonus)+' pts / gate'+(bonus<0?' (award)':'')+'</td></tr>');
+ }
+ if(!rows.length)return '<div class="empty">No penalty settings are saved for this event. Set the penalties in Main Control before starting the race.</div>';
+ return '<div class="table-wrap"><table><thead><tr><th>Penalty type</th><th>Value from Main Control</th></tr></thead><tbody>'+rows.join('')+'</tbody></table></div>';
+}
+function sorrCa2024(data,format){return isSorrca(format)&&normalizeRules(data.penaltyRules).some(rule=>String(rule.id||'')==='sorrcca-progress')}
+function renderEvent(data){
+ const format=String(data.scoringFormat||'').trim().toLowerCase(),info=FORMATS[format];
+ if(!info){$('formatHeading').textContent='Scoring format not selected';$('formatDescription').textContent='Select and save one of the seven formats in Main Control.';$('penaltySettings').innerHTML='<div class="empty">Penalty settings are not available until a scoring format is selected.</div>';$('scoringRules').innerHTML='<li>Waiting for Main Control.</li>';$('specialRules').innerHTML='<li>Choose a scoring format before the event starts.</li>';$('connectionStatus').textContent='EVENT SETTINGS LOADED';$('connectionStatus').className='status pending';return}
+ const sorrca=isSorrca(format),sorr2024=sorrCa2024(data,format);
+ $('formatHeading').textContent=info.name;
+ $('formatDescription').textContent=info.description;
+ $('penaltySettings').innerHTML=renderPenaltySettings(data,format);
+ $('penaltyNote').textContent='Live values from Main Control. Changes to saved settings appear here automatically; already recorded penalty taps keep their saved values.';
+ let scoring=info.scoring.slice(),special=info.special.slice();
+ if(sorrca&&sorr2024){
+  scoring=['FINISH: lower course points rank higher. Positive penalty values add points against; negative Progress values reduce the score.','BONUSES: each completed bonus gate applies the award value shown above.','DNF: 80 points less recorded Progress.','DNS: 110 points.','Point-out: 60 regular penalty points against.'];
+  special.push('The SORRCA 2024 scoring preset is active for this event.');
+ }else if(sorrca){
+  scoring=['FINISH: lower course points rank higher. Score = penalty points minus 2 points per gate cleared and 10 points per Bonus Gate.','DNF: 120 points.','DNS: 140 points.','Point-out: 60 penalty points converts the run to DNF.'];
+  special.push('The SORRCA 2024 preset is not active. This event is using the legacy SORRCA scoring method.');
+ }
+ if(!sorrca)special.push('Penalty values apply to all Special Stages (SS).');
+ $('scoringRules').innerHTML=listHtml(scoring);
+ $('specialRules').innerHTML=listHtml(special);
+ $('connectionStatus').textContent='LIVE EVENT SETTINGS · '+info.name.toUpperCase();
+ $('connectionStatus').className='status';
+}
+const config=window.RC_FIREBASE_CONFIG||{};
+if(!config.apiKey||!config.authDomain||!config.databaseURL||!config.projectId){$('connectionStatus').textContent='FIREBASE CONFIGURATION MISSING';$('connectionStatus').className='status error';$('penaltySettings').textContent='Cannot load the event penalty values. Check firebase-config.js.';}
+else{
+ try{
+  const app=firebase.initializeApp(config,'rc-crawler-event-rules-'+Math.random().toString(36).slice(2,8));
+  const db=app.database(),ref=db.ref('events/'+eventId);
+  ref.on('value',snap=>{
+   if(!snap.exists()){$('connectionStatus').textContent='EVENT NOT FOUND · '+eventId;$('connectionStatus').className='status error';$('formatHeading').textContent='Event not found';$('formatDescription').textContent='Check the Event ID or open this page from the Public Results link.';$('penaltySettings').innerHTML='<div class="empty">No event settings were found in Firebase.</div>';return}
+   renderEvent(snap.val()||{});
+  },error=>{$('connectionStatus').textContent='CANNOT LOAD EVENT SETTINGS';$('connectionStatus').className='status error';$('penaltySettings').innerHTML='<div class="empty">Firebase read failed: '+esc(error.message)+'</div>';});
+ }catch(error){$('connectionStatus').textContent='FIREBASE ERROR';$('connectionStatus').className='status error';$('penaltySettings').textContent=error.message;}
+}
+})();
+</script>
+</body>
+</html>

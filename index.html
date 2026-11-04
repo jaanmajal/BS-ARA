@@ -384,6 +384,8 @@ body > section.card{scroll-margin-top:82px}
 /* Clean interface: keep empty guidance from taking up space. */
 #wakeState:empty,#nextDriverReadyMeta:empty{display:none}
 </style><style id="section-layout-update">
+html{overflow-anchor:none}
+
 /* Numbered sections share one accordion on every screen size. */
 body>section.card>details[data-main-section]{margin:0}
 details[data-main-section]>summary{font-size:clamp(14px,1.5vw,19px);line-height:1.45;min-height:44px;padding:10px 2px;cursor:pointer;font-weight:850;text-transform:uppercase;overflow-wrap:anywhere}
@@ -443,11 +445,11 @@ details[data-main-section]>summary:focus-visible{outline:2px solid #93c5fd;outli
 
 
 <section class="card" id="manualInputPanel"><details><summary>Manual Time</summary><div class="row"><div><label>Manual elapsed time</label><input id="manualTime" type="text" placeholder="Phone: 021435 = 02:14.35" inputmode="numeric" pattern="[0-9]*" autocomplete="off" enterkeyhint="done" aria-describedby="manualTimeHelp"><small id="manualTimeHelp" class="muted">021435 = 02:14.35 · or mm:ss.cc</small></div><div><label>Manual result status</label><select id="manualStatus"><option value="finish">Finish</option><option value="dnf">DNF</option><option value="dns">DNS</option></select></div><button id="prepareManual" class="primary">Review Result</button></div><div id="manualStatusMessage" class="muted" aria-live="polite"></div></details></section>
-<section class="card" id="mainDriverRegistration"><details data-main-section="" name="main-control-sections"><summary>1. DRIVER REGISTRATION</summary><div class="row"><input id="num" type="hidden"><input id="name" placeholder="Driver / Team Name" aria-label="Driver or team name" autocomplete="name"><button id="add" type="button">Register driver</button></div><div class="scroll"><table><thead><tr><th>Race #</th><th>Driver / Team</th><th>Action</th></tr></thead><tbody id="roster"></tbody></table></div></details></section>
-<section class="card" id="penaltyPanel"><details data-main-section="" name="main-control-sections"><summary>2. PENALTIES SETUP</summary><div class="flex"><span class="pill">All SS</span></div><p class="muted">Applies to all SS. Changes affect future taps only.</p><h3 style="font-size:15px;margin:14px 0 8px">SHARED PENALTY TYPES</h3><div class="row"><div><label>Penalty type name</label><input id="penaltyName" data-admin-control="" placeholder="e.g. Gate violation"></div><div><label>Point deduction per tap</label><input id="penaltyPoints" data-admin-control="" type="number" step="1" min="0" max="9999" value="5" inputmode="numeric"></div><button id="addPenaltyType" class="primary" data-admin-control="">+ Add penalty type</button><button id="applyFinalPenaltyPreset" type="button" data-admin-control="">Apply Format Preset</button></div><div class="scroll"><table><thead><tr><th>Penalty type</th><th>Points deducted each</th><th>Actions</th></tr></thead><tbody id="penaltyRulesBody"></tbody></table></div></details></section>
-<section class="card" id="stageGateSetup"><details data-main-section="" name="main-control-sections"><summary>3. STAGE SETUP</summary><p class="muted stage-setup-note">Only unused stages can be removed.</p><div id="stageSetupRows" class="stage-setup-rows"></div><div class="stage-setup-actions"><button id="addStage" class="primary">+ Add SS</button><button id="removeStage" class="warn">− Remove last SS</button><button id="saveStageSetupAll" class="start" data-admin-control="">Save Changes</button></div></details></section>
+<section class="card" id="mainDriverRegistration"><details data-main-section=""><summary>1. DRIVER REGISTRATION</summary><div class="row"><input id="num" type="hidden"><input id="name" placeholder="Driver / Team Name" aria-label="Driver or team name" autocomplete="name"><button id="add" type="button">Register driver</button></div><div class="scroll"><table><thead><tr><th>Race #</th><th>Driver / Team</th><th>Action</th></tr></thead><tbody id="roster"></tbody></table></div></details></section>
+<section class="card" id="penaltyPanel"><details data-main-section=""><summary>2. PENALTIES SETUP</summary><div class="flex"><span class="pill">All SS</span></div><p class="muted">Applies to all SS. Changes affect future taps only.</p><h3 style="font-size:15px;margin:14px 0 8px">SHARED PENALTY TYPES</h3><div class="row"><div><label>Penalty type name</label><input id="penaltyName" data-admin-control="" placeholder="e.g. Gate violation"></div><div><label>Point deduction per tap</label><input id="penaltyPoints" data-admin-control="" type="number" step="1" min="0" max="9999" value="5" inputmode="numeric"></div><button id="addPenaltyType" class="primary" data-admin-control="">+ Add penalty type</button><button id="applyFinalPenaltyPreset" type="button" data-admin-control="">Apply Format Preset</button></div><div class="scroll"><table><thead><tr><th>Penalty type</th><th>Points deducted each</th><th>Actions</th></tr></thead><tbody id="penaltyRulesBody"></tbody></table></div></details></section>
+<section class="card" id="stageGateSetup"><details data-main-section=""><summary>3. STAGE SETUP</summary><p class="muted stage-setup-note">Only unused stages can be removed.</p><div id="stageSetupRows" class="stage-setup-rows"></div><div class="stage-setup-actions"><button id="addStage" class="primary">+ Add SS</button><button id="removeStage" class="warn">− Remove last SS</button><button id="saveStageSetupAll" class="start" data-admin-control="">Save Changes</button></div></details></section>
 <section class="card bs28-section" id="bs28Panel" aria-label="Group rotation control">
-  <details data-main-section="" name="main-control-sections" id="bs28Details">
+  <details data-main-section="" id="bs28Details">
     <summary>4. GROUP ROTATION &amp; STAGE STATUS <span class="bs28-summary-state" id="bs28SummaryState">NOT CONFIGURED</span></summary>
   
   <div class="bs28-coordinator" id="bs28Coordinator" role="status">Coordinator awaits connection</div>
@@ -482,11 +484,11 @@ details[data-main-section]>summary:focus-visible{outline:2px solid #93c5fd;outli
   </div>
   </details>
 </section>
-<section class="card" id="mainLeaderboardPanel"><details data-main-section="" name="main-control-sections"><summary>5. LEADERBOARD</summary><div class="flex"><span class="pill" id="count"></span></div><div class="scroll"><table><thead><tr><th>Rank</th><th>Driver</th><th id="stageHeaders" colspan="1">Stages</th><th>Total</th><th>Status</th></tr></thead><tbody id="board"></tbody></table></div><div id="raceProgress" class="muted" style="margin-top:10px;font-weight:600"></div></details></section>
-<section id="eventRecoveryPanel" class="card"><details data-main-section="" name="main-control-sections"><summary>6. CORRECTIONS</summary><p class="muted">Blank keeps the current value; 0 removes a penalty count.</p><div class="row"><div><label for="correctionDriver">Driver to correct</label><select id="correctionDriver"></select></div><div><label for="correctionStage">Special Stage</label><select id="correctionStage"></select></div></div><div class="correction-compare-grid"><div class="correction-snapshot"><div class="correction-snapshot-title">Saved Result</div><div id="correctionBefore" class="correction-snapshot-body" aria-live="polite">Select a driver and SS.</div></div><div class="correction-snapshot after"><div class="correction-snapshot-title" id="correctionAfterTitle">Preview</div><div id="correctionAfter" class="correction-snapshot-body" aria-live="polite">Select a driver and SS.</div></div></div><div class="row"><div><label for="editStatus">New status (blank = keep current)</label><select id="editStatus" aria-label="Correction status"><option value="" selected>Keep current status</option><option value="finish">Finish</option><option value="dnf">DNF</option><option value="dns">DNS</option><option value="clear">Clear result</option></select></div><div><label for="editTime">Finish time (blank = keep current)</label><input id="editTime" placeholder="mm:ss.cc (finish only)" inputmode="numeric" autocomplete="off"></div><div id="correctionGateCountField"><label for="editGatesCleared">Gates cleared (DNF)</label><input id="editGatesCleared" type="number" min="0" step="1" inputmode="numeric" placeholder="Blank = keep current" disabled></div></div><div class="penalty-quick-wrap correction-penalty-section"><div class="flex"><strong>Penalty Counts</strong><span class="pill" id="correctionPenaltyTapTotal">0 taps</span></div><div id="correctionPenaltyDriverLabel" class="muted penalty-note">Select a driver and SS above.</div><p class="muted">Preview changes, then save the correction.</p><div id="correctionPenaltyCounters" class="correction-penalty-list"><div class="muted">Select a driver and SS.</div></div><div id="correctionPenaltySummary" class="ok correction-penalty-summary">Total taps: 0 • Deduction: 0 pts</div></div><div id="correctionInfo" class="muted" aria-live="polite" style="margin-top:8px"></div><div class="correction-save-row"><button id="correct" class="primary">Save Correction</button></div></details></section>
-<section class="card" id="marshalStageManagement"><details data-main-section="" name="main-control-sections"><summary>7. MARSHAL MANAGEMENT</summary><div class="marshal-access-controls"><div id="marshalAccessStatus" class="sync-health offline" role="status" aria-live="polite">OFFLINE · ACCESS UNVERIFIED</div><div class="row" id="marshalAccessActions"><button type="button" id="showMarshalLink" class="copy-link-button">Open Marshal Access</button><div class="marshal-access-close" id="marshalSharePanel"><button type="button" id="closeMarshalLink" class="copy-link-button marshal-link-close" aria-label="Close marshal access">Close Marshal Access</button></div></div></div><div class="row"><div><label for="marshalLockStage">Stage lock to reset</label><select id="marshalLockStage"></select></div><button type="button" id="resetMarshalStageLock" class="warn">Reset SS Lock</button></div><div id="marshalLockAdminStatus" class="muted" role="status" aria-live="polite">Select a stage. The single-stage reset releases only that SS lock.</div><div id="emergencyAdminResetPanel" style="margin:14px 0 10px;padding:14px;border:2px solid #a83242;border-radius:13px;background:linear-gradient(160deg,#32151e,#1d121a)"><h3 style="margin:0 0 6px;color:#ffd9df">EMERGENCY RESET</h3><p class="muted" style="font-size:12px;line-height:1.5;margin:0 0 10px">Stop all racing first. Releases all locks, revokes marshal links and discards unsaved timer runs. Saved results remain. Recover queued phone results before resetting; share the new marshal link afterward.</p><button type="button" id="emergencyAdminResetAllLocks" class="stop" style="width:100%;min-height:52px;font-weight:950">⚠ Reset All Locks</button><div id="emergencyAdminResetStatus" class="muted" role="status" aria-live="polite" style="font-size:12px;line-height:1.5;margin-top:9px">Requires the authorised organiser account and an active Firebase connection. A new marshal link is generated after reset.</div></div></details></section>
+<section class="card" id="mainLeaderboardPanel"><details data-main-section=""><summary>5. LEADERBOARD</summary><div class="flex"><span class="pill" id="count"></span></div><div class="scroll"><table><thead><tr><th>Rank</th><th>Driver</th><th id="stageHeaders" colspan="1">Stages</th><th>Total</th><th>Status</th></tr></thead><tbody id="board"></tbody></table></div><div id="raceProgress" class="muted" style="margin-top:10px;font-weight:600"></div></details></section>
+<section id="eventRecoveryPanel" class="card"><details data-main-section=""><summary>6. CORRECTIONS</summary><p class="muted">Blank keeps the current value; 0 removes a penalty count.</p><div class="row"><div><label for="correctionDriver">Driver to correct</label><select id="correctionDriver"></select></div><div><label for="correctionStage">Special Stage</label><select id="correctionStage"></select></div></div><div class="correction-compare-grid"><div class="correction-snapshot"><div class="correction-snapshot-title">Saved Result</div><div id="correctionBefore" class="correction-snapshot-body" aria-live="polite">Select a driver and SS.</div></div><div class="correction-snapshot after"><div class="correction-snapshot-title" id="correctionAfterTitle">Preview</div><div id="correctionAfter" class="correction-snapshot-body" aria-live="polite">Select a driver and SS.</div></div></div><div class="row"><div><label for="editStatus">New status (blank = keep current)</label><select id="editStatus" aria-label="Correction status"><option value="" selected>Keep current status</option><option value="finish">Finish</option><option value="dnf">DNF</option><option value="dns">DNS</option><option value="clear">Clear result</option></select></div><div><label for="editTime">Finish time (blank = keep current)</label><input id="editTime" placeholder="mm:ss.cc (finish only)" inputmode="numeric" autocomplete="off"></div><div id="correctionGateCountField"><label for="editGatesCleared">Gates cleared (DNF)</label><input id="editGatesCleared" type="number" min="0" step="1" inputmode="numeric" placeholder="Blank = keep current" disabled></div></div><div class="penalty-quick-wrap correction-penalty-section"><div class="flex"><strong>Penalty Counts</strong><span class="pill" id="correctionPenaltyTapTotal">0 taps</span></div><div id="correctionPenaltyDriverLabel" class="muted penalty-note">Select a driver and SS above.</div><p class="muted">Preview changes, then save the correction.</p><div id="correctionPenaltyCounters" class="correction-penalty-list"><div class="muted">Select a driver and SS.</div></div><div id="correctionPenaltySummary" class="ok correction-penalty-summary">Total taps: 0 • Deduction: 0 pts</div></div><div id="correctionInfo" class="muted" aria-live="polite" style="margin-top:8px"></div><div class="correction-save-row"><button id="correct" class="primary">Save Correction</button></div></details></section>
+<section class="card" id="marshalStageManagement"><details data-main-section=""><summary>7. MARSHAL MANAGEMENT</summary><div class="marshal-access-controls"><div id="marshalAccessStatus" class="sync-health offline" role="status" aria-live="polite">OFFLINE · ACCESS UNVERIFIED</div><div class="row" id="marshalAccessActions"><button type="button" id="showMarshalLink" class="copy-link-button">Open Marshal Access</button><div class="marshal-access-close" id="marshalSharePanel"><button type="button" id="closeMarshalLink" class="copy-link-button marshal-link-close" aria-label="Close marshal access">Close Marshal Access</button></div></div></div><div class="row"><div><label for="marshalLockStage">Stage lock to reset</label><select id="marshalLockStage"></select></div><button type="button" id="resetMarshalStageLock" class="warn">Reset SS Lock</button></div><div id="marshalLockAdminStatus" class="muted" role="status" aria-live="polite">Select a stage. The single-stage reset releases only that SS lock.</div><div id="emergencyAdminResetPanel" style="margin:14px 0 10px;padding:14px;border:2px solid #a83242;border-radius:13px;background:linear-gradient(160deg,#32151e,#1d121a)"><h3 style="margin:0 0 6px;color:#ffd9df">EMERGENCY RESET</h3><p class="muted" style="font-size:12px;line-height:1.5;margin:0 0 10px">Stop all racing first. Releases all locks, revokes marshal links and discards unsaved timer runs. Saved results remain. Recover queued phone results before resetting; share the new marshal link afterward.</p><button type="button" id="emergencyAdminResetAllLocks" class="stop" style="width:100%;min-height:52px;font-weight:950">⚠ Reset All Locks</button><div id="emergencyAdminResetStatus" class="muted" role="status" aria-live="polite" style="font-size:12px;line-height:1.5;margin-top:9px">Requires the authorised organiser account and an active Firebase connection. A new marshal link is generated after reset.</div></div></details></section>
 <section class="card" id="eventSettingsPanel">
-  <details data-main-section="" name="main-control-sections">
+  <details data-main-section="">
     <summary>8. EVENT CONNECTION</summary>
     <p class="muted event-settings-note">Use the same Event ID on all devices.</p>
     <div class="event-settings-fields">
@@ -501,7 +503,7 @@ details[data-main-section]>summary:focus-visible{outline:2px solid #93c5fd;outli
   </details>
 </section>
 <section class="card" id="eventUtilitiesPanel">
-  <details data-main-section="" name="main-control-sections">
+  <details data-main-section="">
     <summary>9. EVENT UTILITIES &amp; RECOVERY</summary>
     
     <div id="localDataManagement" style="margin:12px 0;padding:13px;border:1px solid #6b4d4d;border-radius:12px;background:#201722">
@@ -2086,14 +2088,26 @@ setInterval(()=>{bs28WatchInbox();bs28RenderMain()},1800);bs28WatchInbox();bs28R
  function closeChildren(detail){detail.querySelectorAll('details[open]').forEach(child=>{child.open=false;});}
  function collapseAll(){sections.forEach(detail=>{detail.open=false;closeChildren(detail);});if(menu)menu.open=false;}
  function openSection(detail){sections.forEach(other=>{if(other!==detail){other.open=false;closeChildren(other);}});detail.open=true;}
- collapseAll();
- // Native grouping plus a fallback for browsers without details[name] support.
- sections.forEach(detail=>{
-  detail.querySelector('summary').addEventListener('click',event=>{
-   event.preventDefault();
-   if(detail.open){detail.open=false;closeChildren(detail);}else openSection(detail);
+ function keepSummaryInPlace(summary,previousTop){
+  requestAnimationFrame(()=>{
+   const currentTop=summary.getBoundingClientRect().top;
+   const shift=currentTop-previousTop;
+   if(Math.abs(shift)>1)window.scrollBy(0,shift);
   });
-  detail.addEventListener('toggle',()=>{if(detail.open)openSection(detail);else closeChildren(detail);});
+ }
+ collapseAll();
+ // Main sections are exclusive through this script, not the browser's details[name] grouping.
+ // Keep the tapped heading at the same screen position when the previously open section closes.
+ sections.forEach(detail=>{
+  const summary=detail.querySelector('summary');
+  if(!summary)return;
+  summary.addEventListener('click',event=>{
+   event.preventDefault();
+   const previousTop=summary.getBoundingClientRect().top;
+   if(detail.open){detail.open=false;closeChildren(detail);}
+   else openSection(detail);
+   keepSummaryInPlace(summary,previousTop);
+  });
  });
  document.querySelectorAll('details[name="utilities-subsections"]').forEach(detail=>{
   detail.addEventListener('toggle',()=>{
@@ -2101,7 +2115,7 @@ setInterval(()=>{bs28WatchInbox();bs28RenderMain()},1800);bs28WatchInbox();bs28R
    document.querySelectorAll('details[name="utilities-subsections"]').forEach(other=>{if(other!==detail)other.open=false;});
   });
  });
- nav.addEventListener('click',event=>{
+ if(nav)nav.addEventListener('click',event=>{
   const link=event.target.closest('a[href^="#"]');
   if(!link||!nav.contains(link))return;
   const target=document.getElementById(link.hash.slice(1));
@@ -2112,11 +2126,11 @@ setInterval(()=>{bs28WatchInbox();bs28RenderMain()},1800);bs28WatchInbox();bs28R
  });
  window.addEventListener('pageshow',event=>{if(event.persisted)collapseAll();});
  const feedback=document.getElementById('quickLinkFeedback');
- document.getElementById('copyResultsLink').addEventListener('click',async()=>{
+ const copyResultsButton=document.getElementById('copyResultsLink');
+ if(copyResultsButton)copyResultsButton.addEventListener('click',async()=>{
   const url=document.getElementById('publicResultsLink').href;
-  try{await navigator.clipboard.writeText(url);feedback.textContent='Results link copied.';}
+  try{await navigator.clipboard.writeText(url);if(feedback)feedback.textContent='Results link copied.';}
   catch(error){window.prompt('Copy results link:',url);}
  });
 })();
-
 </script></body></html>
