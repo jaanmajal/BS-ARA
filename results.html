@@ -337,17 +337,20 @@ body{height:auto;min-height:100vh;overflow-x:clip;overflow-y:visible;touch-actio
 }
 </style>
 
-</head>
+<style id="clean-interface-style">
+/* Clean interface: keep empty guidance from taking up space. */
+#wakeState:empty,#nextDriverReadyMeta:empty{display:none}
+</style></head>
 <body>
 <main class="shell">
   <header class="hero">
     <div class="hero-copy">
       <div class="hero-brand-lockup"><img class="hero-brand-logo" src="logo.png" alt="RC CRAWLER competition logo by TEC-ARTS CRAWLER"><div class="hero-brand-copy"><div class="event-kicker">SABAH RC CRAWLER COMPETITION</div>
       <h1>RC CRAWLER <span>POINT &amp; TIME ATTACK SYSTEM</span></h1>
-      <p class="hero-sub">Official timing · Scoring · Live competition results</p></div></div>
+      </div></div>
     </div>
     <div class="event-meta" aria-label="Firebase event information">
-      <div class="meta-chip"><span class="symbol">⌁</span><div><small>FIREBASE EVENT ID</small><strong id="eventMetaId">—</strong></div></div>
+      <div class="meta-chip"><span class="symbol">⌁</span><div><small>EVENT ID</small><strong id="eventMetaId">—</strong></div></div>
     </div>
   </header>
   <div id="resultsScoringFormatBanner" class="scoring-format-banner pending" role="status" aria-live="polite">SCORING FORMAT: LOADING…</div>
@@ -384,18 +387,18 @@ body{height:auto;min-height:100vh;overflow-x:clip;overflow-y:visible;touch-actio
       <div class="last-updated"><span id="eventLabel">Event ID: —</span><span id="lastUpdated">Waiting for Firebase data</span></div>
     </article>
   <section class="stage-status-panel" aria-labelledby="stageStatusHeading">
-    <div class="panel-head"><div><h2 id="stageStatusHeading">Special Stage Status &amp; Pending Drivers</h2><p>Only stages with a saved draw and locked running order are OPEN. Completed drivers disappear from each pending list.</p></div><span class="pill" id="openStageCount">0 stages open</span></div>
-    <div id="stageStatusGrid" class="stage-status-grid"><div class="empty">Waiting for draw and lock status from Firebase…</div></div>
+    <div class="panel-head"><div><h2 id="stageStatusHeading">Stages &amp; Pending Drivers</h2></div><span class="pill" id="openStageCount">0 stages open</span></div>
+    <div id="stageStatusGrid" class="stage-status-grid"><div class="empty">Waiting for stage status…</div></div>
   </section>
     <aside class="panel detail" id="driverDetail" aria-live="polite">
-      <div class="panel-head"><div><h2>Driver performance</h2><p>Tap a driver in the leaderboard to view details</p></div><span class="pill" id="detailStageCount">— stages</span></div>
-      <div id="detailContent" class="empty">Select a driver to see their stage times, penalty deductions, gate progress and points.</div>
+      <div class="panel-head"><div><h2>Driver Details</h2></div><span class="pill" id="detailStageCount">— stages</span></div>
+      <div id="detailContent" class="empty">Tap a driver for details.</div>
     </aside>
   </section>
 
-  <p class="footer-caption" style="line-height:1.5;margin:8px 0 12px">Penalty reference: Touch -15 pts | Special Gate -5 pts | Outrack -10 pts | Roll Over -5 pts (crawler stops with all four tyres off the ground) | Jump Gate = DNF.</p>
-  <p class="footer-caption" style="line-height:1.5;margin:8px 0 12px">Penalty reference: Touch -15 pts | Special Gate -5 pts | Outrack -10 pts | Roll Over -5 pts (crawler stops with all four tyres off the ground) | Jump Gate = DNF.</p>
-  <section class="card" aria-label="Group rotation overview"><h2>GROUP ROTATION · LIVE</h2><p class="muted">Stages may be OPEN, CLOSED or CANCELLED. Completed historical records remain viewable.</p><div id="bs28PublicGroups" class="bs28-card-grid"><div class="muted">Waiting for group assignments…</div></div></section>
+  
+  
+  <section class="card" aria-label="Group rotation overview"><h2>GROUP ROTATION · LIVE</h2><div id="bs28PublicGroups" class="bs28-card-grid"><div class="muted">Waiting for group assignments…</div></div></section>
 <footer>
     <div class="brand-footer"><img src="logo.png" alt="RC CRAWLER logo by TEC-ARTS CRAWLER"><div><div class="brand-name">TEC-ARTS CRAWLER</div><small>SABAH · CRAWL HARD, COMPETE HARDER</small></div></div>
     <div class="footer-caption">RC CRAWLER · POINT &amp; TIME ATTACK SYSTEM · PUBLIC LIVE RESULTS</div>
