@@ -1,4 +1,4 @@
-<!doctype html><!-- v28.7.2: automatic SORRCA 2024 preset scoring; signed Progress, dynamic Bonuses and progress-aware DNF; no scale points. --><!-- v27.7.8: recovery inbox for stage-lock-rejected queued results; no direct overwrite. --><!-- v27.7.7: next-driver ready reminder, any pending driver selection, blank manual stopwatch. --><!-- v27.7.5: pin-authorized stage reset protected by Firebase Rules v7 run ID; avoids stale local transaction cache abort; legacy transaction fallback. --><!-- v27.6.6: updated penalty schedule, DNF minimum Gate-1 scoring, frozen DNF roster base, and official tie-break order. --><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#101827"><meta name="application-name" content="RC CRAWLER"><meta name="apple-mobile-web-app-title" content="RC CRAWLER"><link rel="icon" type="image/png" sizes="128x128" href="logo.png"><link rel="apple-touch-icon" href="logo.png"><title>RC CRAWLER | POINT &amp; TIME ATTACK SYSTEM - Marshal</title><style>
+<!doctype html><!-- v28.7.2: automatic SORRCA 2024 preset scoring; signed Progress, dynamic Bonuses and progress-aware DNF; no scale points. --><!-- v27.7.8: recovery inbox for stage-lock-rejected queued results; no direct overwrite. --><!-- v27.7.7: next-driver ready reminder, any pending driver selection, blank manual stopwatch. --><!-- v27.7.5: pin-authorized stage reset protected by Firebase Rules v7 run ID; avoids stale local transaction cache abort; legacy transaction fallback. --><!-- v27.6.6: updated penalty schedule, DNF minimum Gate-1 scoring, frozen DNF roster base, and official tie-break order. --><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#101827"><meta name="application-name" content="RC CRAWLER"><meta name="apple-mobile-web-app-title" content="RC CRAWLER"><link rel="icon" type="image/png" sizes="128x128" href="logo.png"><link rel="apple-touch-icon" href="logo.png"><title>RC CRAWLER | MARSHAL RACE CONTROL</title><style>
 <!-- v28.7.2: SORRCA signed Progress values survive reload; editable Bonus award value; saved bonus taps retain their original value. -->
 :root{font-family:system-ui,-apple-system,sans-serif;color:#edf3ff;background:#0a1120}*{box-sizing:border-box}body{margin:auto;max-width:980px;padding:18px}header,.flex{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}h1{font-size:25px;margin:0}h2{font-size:19px;margin:0 0 12px}.muted,small{color:#aab9ce}.card{background:#172238;border:1px solid #30425e;border-radius:16px;padding:16px;margin:14px 0}.card.firebase-online{border:4px solid #22c55e!important;box-shadow:0 0 0 1px rgba(34,197,94,.32),0 0 18px rgba(34,197,94,.24)!important;transition:border-color .15s ease,box-shadow .15s ease}.card.firebase-online:focus-within{border-color:#4ade80!important}button,input,select,textarea{font:inherit;border-radius:10px;border:1px solid #425572;padding:11px;background:#0c1729;color:white}button{cursor:pointer;font-weight:700}button:disabled{opacity:.4;cursor:default}.primary{background:#2563eb}.start{background:#168348}.stop{background:#b92d39}.warn{background:#8d5918}.row{display:flex;gap:8px;flex-wrap:wrap;margin:8px 0}.row>*{flex:1;min-width:120px}label{display:block;font-size:13px;color:#b8c7da;margin-bottom:4px}input,select{width:100%}.clock-wrap{display:flex;align-items:center;justify-content:center;gap:12px;flex-wrap:wrap;margin:10px 0}.clock{text-align:center;font-size:clamp(48px,10vw,90px);font-weight:800;font-variant-numeric:tabular-nums;letter-spacing:-3px;margin:0}.connection-indicator{font-size:14px;font-weight:900;letter-spacing:.04em;border:2px solid #ef4444;background:#651e2b;color:#ffe4e6;padding:9px 12px;white-space:nowrap}.connection-indicator.online{border-color:#22c55e;background:#14532d;color:#dcfce7}.connection-indicator.offline{border-color:#ef4444;background:#651e2b;color:#ffe4e6}.save-result{background:#087443;border-color:#22c55e}.confirm-stop{background:#c27a13;border-color:#f0b44d;color:#fff7e6}.fault-restart-button{background:#7c2d12;border:2px solid #fb923c;color:#fff7ed;min-height:50px;font-weight:900}.fault-restart-note{font-size:12px;color:#fed7aa;align-self:center}.confirm-stop-row{margin-top:6px}.confirm-stop-row button{width:100%;min-height:52px;font-size:17px}.manual-help{font-size:13px;line-height:1.5}.stage{display:flex;gap:8px}.stage button{flex:1}.selected{outline:3px solid #66b1ff}table{width:100%;border-collapse:collapse;font-size:14px}td,th{padding:10px 5px;border-bottom:1px solid #35445c;text-align:left}th{color:#b3c4db}.scroll{overflow:auto}.pill{border-radius:99px;background:#273a55;padding:5px 10px;font-size:12px}.error{color:#ff9f9f}.ok{color:#85e7ae}.hidden{display:none!important}details{margin:12px 0}summary{cursor:pointer;font-weight:700}.buttons button{min-height:65px;font-size:22px}.dns-row{display:flex;justify-content:flex-end;margin:-3px 0 6px}.dns-tab{flex:0 0 auto;min-width:64px;min-height:30px;padding:4px 13px;font-size:11px;font-weight:850;letter-spacing:.06em;border-radius:7px;background:#263b56;border:1px solid #6b86a8;color:#e4efff}.dns-tab:not(:disabled):hover{background:#345273}textarea{width:100%;min-height:100px}a{color:#8cc8ff}.brand{display:flex;align-items:center;gap:12px}.brand-logo{width:66px;height:66px;object-fit:contain;border-radius:9px}footer{text-align:center;color:#aab9ce;font-size:12px;padding:25px 0 15px;letter-spacing:.08em}.wake-state{font-size:13px;color:#b9d7ff;margin-top:8px}.row .alarm-icon{flex:0 0 44px;min-width:44px;width:44px;padding:7px 4px;font-size:19px;line-height:1}.alarm-row{align-items:center}.alarm-row #alarmStatus{flex:1;min-width:0}.timer-selectors>div{flex:1;min-width:130px}
 .penalty-quick-wrap{margin-top:12px;padding-top:12px;border-top:1px solid #35445c}
@@ -851,70 +851,306 @@ body.marshal-view .brand h1{font-size:clamp(22px,4vw,30px);line-height:1.05;lett
 body.marshal-view .brand small{display:block;font-size:11px;line-height:1.35;letter-spacing:.075em;color:#bfd0e4}
 @media(max-width:700px){body.marshal-view .brand-logo{width:62px;height:58px;flex:0 0 62px}body.marshal-view .brand{gap:9px}body.marshal-view .brand h1{font-size:clamp(20px,5vw,26px)}body.marshal-view .brand small{font-size:9px;letter-spacing:.04em}}
 </style>
+
+<style id="marshal-readability-20261104">
+/* Text-only readability update. Existing page layout and control positioning are unchanged. */
+body.marshal-view,
+body.marshal-view button,
+body.marshal-view input,
+body.marshal-view select,
+body.marshal-view textarea {
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+body.marshal-view { color:#f2f6fc; }
+body.marshal-view h1,
+body.marshal-view h2,
+body.marshal-view h3,
+body.marshal-view summary {
+  color:#f8fbff;
+  font-weight:850;
+}
+body.marshal-view .brand h1 {
+  color:#ffffff;
+  font-weight:950;
+  letter-spacing:.025em;
+}
+body.marshal-view .brand small {
+  color:#e4edf9 !important;
+  font-size:12px !important;
+  font-weight:750;
+  letter-spacing:.045em;
+}
+body.marshal-view .muted:not(.ok):not(.error) {
+  color:#d3deec !important;
+}
+body.marshal-view label {
+  color:#edf4ff !important;
+  font-weight:750;
+}
+body.marshal-view button {
+  font-family:inherit;
+  font-weight:850;
+}
+body.marshal-view button:disabled {
+  opacity:.58;
+  color:#d0dbea;
+}
+body.marshal-view input,
+body.marshal-view select,
+body.marshal-view textarea {
+  color:#ffffff;
+  font-weight:650;
+}
+body.marshal-view input::placeholder,
+body.marshal-view textarea::placeholder {
+  color:#b7c5d8;
+  opacity:1;
+}
+body.marshal-view a { color:#9bcaff; }
+body.marshal-view th {
+  color:#e4edf9;
+  font-weight:850;
+}
+body.marshal-view td { color:#f0f4fb; }
+body.marshal-view .marshal-control-head h2 {
+  color:#ffffff;
+  font-weight:900;
+}
+body.marshal-view .marshal-identity-copy strong {
+  color:#ffffff !important;
+  font-size:14px !important;
+  font-weight:900;
+}
+body.marshal-view .marshal-identity-copy small {
+  color:#d7e3f1 !important;
+  font-size:12px !important;
+}
+body.marshal-view .marshal-identity-saved-copy small {
+  color:#a8edc0 !important;
+  font-size:11px !important;
+  font-weight:850;
+}
+body.marshal-view .marshal-identity-saved-copy strong {
+  color:#ffffff !important;
+  font-size:18px !important;
+  font-weight:950;
+}
+body.marshal-view .marshal-identity-saved-copy span,
+body.marshal-view .marshal-identity-help {
+  color:#d6e4dc !important;
+  font-size:12px !important;
+}
+body.marshal-view .driver-selection-hint {
+  color:#e0eaf6 !important;
+  font-size:13px !important;
+  font-weight:650;
+  line-height:1.5;
+}
+body.marshal-view #runInfo,
+body.marshal-view #pendingStatus,
+body.marshal-view #manualStatusMessage,
+body.marshal-view #quickPenaltyStatus,
+body.marshal-view #bs28SwitchStatus {
+  color:#e4edf8 !important;
+  font-size:13px;
+  font-weight:650;
+  line-height:1.45;
+}
+body.marshal-view #raceControlPanel > small {
+  color:#d2deed !important;
+  font-size:12px !important;
+  line-height:1.45;
+}
+body.marshal-view .marshal-clock-caption {
+  color:#d9e7f7 !important;
+  font-size:12px;
+  font-weight:900;
+}
+body.marshal-view .marshal-manual-time label {
+  color:#f0f5fc !important;
+  font-size:12px !important;
+  font-weight:850;
+}
+body.marshal-view .marshal-manual-time small {
+  color:#d1deed !important;
+  font-size:11px !important;
+  line-height:1.35;
+}
+body.marshal-view .fault-restart-note,
+body.marshal-view .wake-state {
+  color:#d6e3f1 !important;
+  font-size:12px;
+}
+body.marshal-view .next-driver-kicker {
+  color:#ffe39a !important;
+  font-size:13px !important;
+  font-weight:950;
+}
+body.marshal-view #nextDriverReadyName {
+  color:#ffffff !important;
+  font-weight:950;
+}
+body.marshal-view #nextDriverReadyMeta {
+  color:#e1ebf7 !important;
+  font-size:13px !important;
+  font-weight:650;
+}
+body.marshal-view .penalty-note {
+  color:#d4e0ef !important;
+  font-size:12px !important;
+  line-height:1.45;
+}
+body.marshal-view .penalty-counter-name,
+body.marshal-view .penalty-count-number,
+body.marshal-view .penalty-counter-summary {
+  color:#f5f8ff !important;
+  font-weight:850;
+}
+body.marshal-view .penalty-counter-value,
+body.marshal-view .penalty-counter-total {
+  color:#d6e1ef !important;
+  font-size:12px !important;
+}
+body.marshal-view .quick-status {
+  color:#a7f3c2 !important;
+  font-size:12px !important;
+}
+body.marshal-view .bs28-section h2,
+body.marshal-view .bs28-section h3,
+body.marshal-view .bs28-rotation-summary-title {
+  color:#ffffff !important;
+  font-weight:900;
+}
+body.marshal-view .bs28-rotation-summary-subtitle,
+body.marshal-view .bs28-stage span,
+body.marshal-view .bs28-group small,
+body.marshal-view .bs28-order-row small,
+body.marshal-view .bs28-m-stage small,
+body.marshal-view .bs28-select-progress {
+  color:#d6e3f1 !important;
+  font-size:13px !important;
+}
+body.marshal-view .bs28-next-panel p,
+body.marshal-view .bs28-rotation-body p,
+body.marshal-view .bs28-waiting-summary {
+  color:#e0eaf5 !important;
+  font-size:13px !important;
+  line-height:1.5;
+}
+body.marshal-view .bs28-next-fields label {
+  color:#f0f6ff !important;
+  font-size:14px !important;
+  font-weight:800;
+}
+body.marshal-view .bs28-waiting-summary {
+  color:#d5ffeb !important;
+  font-weight:800;
+}
+body.marshal-view .bs28-order-row {
+  color:#f0f5fc;
+  font-size:14px;
+}
+body.marshal-view .marshal-connection > summary {
+  color:#ffffff !important;
+  font-size:15px !important;
+  font-weight:900;
+}
+body.marshal-view .marshal-connection-help,
+body.marshal-view .draw-intro,
+body.marshal-view .late-entry-help,
+body.marshal-view .stage-setup-note {
+  color:#d4e0ef !important;
+  font-size:13px !important;
+  line-height:1.5;
+}
+body.marshal-view .sync-health {
+  font-size:13px !important;
+  font-weight:800;
+  line-height:1.45;
+}
+body.marshal-view .sync-controls button {
+  font-size:12px !important;
+  font-weight:850;
+}
+body.marshal-view .ok { color:#86efac !important; }
+body.marshal-view .error { color:#fca5a5 !important; }
+@media(max-width:700px){
+  body.marshal-view .brand small { font-size:10px !important; }
+  body.marshal-view .driver-selection-hint { font-size:12px !important; }
+  body.marshal-view #runInfo,
+  body.marshal-view #pendingStatus,
+  body.marshal-view #manualStatusMessage,
+  body.marshal-view #quickPenaltyStatus { font-size:12px !important; }
+  body.marshal-view .penalty-note { font-size:11px !important; }
+}
+</style>
+
 </head><body class="marshal-view">
-<header><div class="brand"><img src="logo.png" alt="RC CRAWLER competition logo by TEC-ARTS CRAWLER" class="brand-logo"><div><h1>RC CRAWLER</h1><small>POINT &amp; TIME ATTACK SYSTEM · TEC-ARTS CRAWLER</small></div></div><span class="pill" id="status">Local mode</span></header>
-<div id="marshalScoringFormatBanner" class="sync-health" role="status" style="margin:8px 0 12px">SCORING FORMAT: NOT SELECTED - ask Main Control to select the event format.</div>
-<div id="syncHealth" class="sync-health offline" role="status" aria-live="polite">OFFLINE - local safety active; uploads wait until Firebase reconnects.</div><div class="sync-controls"><button id="exportPendingBackup" type="button">Export backup</button><button id="retrySync" type="button">Retry pending sync</button><button id="sendRecovery" type="button" style="background:#8b5e19;border-color:#bd9136;color:#fff">SEND QUEUED RESULT FOR ORGANISER REVIEW</button></div>
+<header><div class="brand"><img src="logo.png" alt="RC CRAWLER competition logo by TEC-ARTS CRAWLER" class="brand-logo"><div><h1>RC CRAWLER</h1><small>MARSHAL RACE CONTROL · POINT &amp; TIME ATTACK SYSTEM · TEC-ARTS CRAWLER</small></div></div><span class="pill" id="status">Local mode</span></header>
+<div id="marshalScoringFormatBanner" class="sync-health" role="status" style="margin:8px 0 12px">SCORING FORMAT: NOT SELECTED — Ask Main Control to select the event scoring format.</div>
+<div id="syncHealth" class="sync-health offline" role="status" aria-live="polite">OFFLINE — Changes are kept on this device and will sync when Firebase reconnects.</div><div class="sync-controls"><button id="exportPendingBackup" type="button">Export pending backup</button><button id="retrySync" type="button">Retry sync</button><button id="sendRecovery" type="button" style="background:#8b5e19;border-color:#bd9136;color:#fff">SEND QUEUED RESULT FOR ORGANISER REVIEW</button></div>
 <section class="card firebase-offline" id="raceControlPanel">
 <div class="marshal-identity" id="marshalIdentityPanel">
   <div class="marshal-identity-head">
     <div class="marshal-identity-icon"><span aria-hidden="true">♙</span></div>
-    <div class="marshal-identity-copy"><strong>MARSHAL IDENTIFICATION</strong><small id="marshalIdentityStatus">Enter your name once on this device.</small></div>
+    <div class="marshal-identity-copy"><strong>MARSHAL DETAILS</strong><small id="marshalIdentityStatus">Enter your name once. It will be saved on this device.</small></div>
     <span class="marshal-identity-badge unsaved" id="marshalIdentityBadge">NOT SAVED</span>
   </div>
   <div class="marshal-identity-saved hidden" id="marshalIdentitySavedView">
     <div class="marshal-identity-saved-icon" aria-hidden="true">✓</div>
-    <div class="marshal-identity-saved-copy"><small>ASSIGNED MARSHAL</small><strong id="marshalIdentityDisplayName">MARSHAL NAME</strong><span>Identity saved on this device</span></div>
+    <div class="marshal-identity-saved-copy"><small>CURRENT MARSHAL</small><strong id="marshalIdentityDisplayName">MARSHAL NAME</strong><span>Name saved on this device</span></div>
     <button id="editMarshalName" type="button" class="marshal-identity-edit">EDIT NAME</button>
   </div>
   <div class="marshal-identity-fields" id="marshalIdentityEditor">
     <label for="marshalNameInput">MARSHAL NAME</label>
     <div class="marshal-identity-input-row"><input id="marshalNameInput" type="text" maxlength="60" autocomplete="name" placeholder="Enter your full name"><button id="saveMarshalName" type="button">SAVE NAME</button></div>
-    <small class="marshal-identity-help">This name is attached to results submitted from this device.</small>
+    <small class="marshal-identity-help">Your name is recorded with each result saved from this device.</small>
   </div>
 </div>
-<div class="marshal-control-head"><h2>1. Race Control</h2><span class="pill connection-indicator offline" id="connectionIndicator" role="status" title="Not connected to Firebase. Results may remain only on this device.">OFFLINE</span></div>
+<div class="marshal-control-head"><h2>1. MARSHAL RACE CONTROL</h2><span class="pill connection-indicator offline" id="connectionIndicator" role="status" title="Not connected to Firebase. Results may remain only on this device.">OFFLINE</span></div>
 
 <div class="row timer-selectors"><div><label for="stageSelect">Special Stage</label><select id="stageSelect"></select></div><div><label for="driver">Driver</label><select id="driver"></select></div></div>
-<div class="driver-selection-hint">Choose any driver without a saved result in this SS. The next-driver reminder follows the top remaining driver in the SS running order.</div>
+<div class="driver-selection-hint">Select any driver who has not yet received a result for this SS. You may choose drivers in any order. The suggested next driver follows the saved SS running order.</div>
 <div id="runInfo" class="muted">Ready</div>
 <div id="bs28AssignmentNotice" role="status" aria-live="polite" style="display:none;padding:10px 12px;margin:9px 0;border:1px solid #3cbb83;border-radius:10px;background:#113426;color:#d1ffe5;font-weight:700"></div>
 <div id="bs28DrawPendingNotice" role="status" aria-live="polite" style="display:none;padding:10px 12px;margin:9px 0;border:1px solid #d49b3c;border-radius:10px;background:#332710;color:#ffe1a6;font-weight:750"></div>
-<div id="nextDriverReady" class="next-driver-ready hidden" role="status" aria-live="polite" aria-atomic="true"><span class="next-driver-icon" aria-hidden="true">📣</span><div class="next-driver-text"><span class="next-driver-kicker">NEXT DRIVER · GET READY</span><strong id="nextDriverReadyName">—</strong><small id="nextDriverReadyMeta">Next in the stage running order</small></div></div>
+<div id="nextDriverReady" class="next-driver-ready hidden" role="status" aria-live="polite" aria-atomic="true"><span class="next-driver-icon" aria-hidden="true">📣</span><div class="next-driver-text"><span class="next-driver-kicker">SUGGESTED NEXT DRIVER · PREPARE</span><strong id="nextDriverReadyName">—</strong><small id="nextDriverReadyMeta">Suggested next driver in the saved SS order</small></div></div>
 <div class="marshal-clock-stage"><div class="marshal-clock-caption">OFFICIAL RACE TIME</div><div class="clock" id="clock">00:00.00</div></div>
 <div class="row buttons marshal-primary-controls"><button class="start" id="start">▶ START</button><button class="stop" id="stop" disabled>■ STOP</button></div>
-<div class="row marshal-outcome-controls"><button class="warn" id="dnf" disabled title="Record DNF for timeout, crawler damage or Jump Gate; enter the valid gates cleared.">DNF</button><button class="dns-tab" id="markDns" type="button" title="Record the selected driver as Did Not Start">DNS</button></div>
+<div class="row marshal-outcome-controls"><button class="warn" id="dnf" disabled title="Record Did Not Finish. Any required DNF details will appear before saving.">DNF</button><button class="dns-tab" id="markDns" type="button" title="Record the selected driver as Did Not Start">DNS</button></div>
 <div class="marshal-manual-row">
   <div class="marshal-alarm-control"><button id="enableAlarm" class="alarm-icon alarm-enabled" title="Alarm is ON by default. Tap to test the sound." aria-label="Alarm is ON by default. Tap to test the sound." aria-pressed="true">🔊</button><span id="alarmStatus" class="muted alarm-on">ALARM ON</span></div>
-  <div class="marshal-manual-time"><label for="manualTime">MANUAL STOPWATCH</label><input id="manualTime" type="text" placeholder="" inputmode="numeric" pattern="[0-9]*" autocomplete="off" enterkeyhint="done" aria-describedby="manualTimeHelp"><small id="manualTimeHelp" class="muted">Phone: 021435 = 02:14.35 · Laptop: mm:ss.cc</small></div>
-  <button id="prepareManual" class="marshal-manual-save" type="button" title="Prepare manual finish time for review" aria-label="Prepare manual finish time for review"><span aria-hidden="true">▣</span><small>SAVE</small></button>
+  <div class="marshal-manual-time"><label for="manualTime">MANUAL FINISH TIME</label><input id="manualTime" type="text" placeholder="" inputmode="numeric" pattern="[0-9]*" autocomplete="off" enterkeyhint="done" aria-describedby="manualTimeHelp"><small id="manualTimeHelp" class="muted">Phone: enter digits (021435 = 02:14.35) · PC: enter mm:ss.cc</small></div>
+  <button id="prepareManual" class="marshal-manual-save" type="button" title="Set a manual finish time for review" aria-label="Set a manual finish time for review"><span aria-hidden="true">▣</span><small>SET TIME</small></button>
 </div>
 <div id="manualStatusMessage" class="muted" aria-live="polite"></div>
 <div id="wakeState" class="wake-state">Screen wake lock activates during timing where supported.</div>
-<div class="row resume-row hidden" id="resumeRow"><button class="resume-run" id="resumeRun" type="button">↩ UNDO STOP / RESUME RUN</button></div>
-<div class="row confirm-stop-row hidden" id="confirmStopRow"><button class="confirm-stop" id="confirmStop" type="button">✓ CONFIRM STOP — LOCK FINISH TIME</button></div>
-<div class="row fault-restart-row hidden" id="faultRestartRow"><button class="fault-restart-button" id="faultRestartButton" type="button">↻ RESTART FAULT START (60s)</button><span class="fault-restart-note" id="faultRestartNote">Available only when STOP is pressed within 60 seconds of START.</span></div>
-<div id="dnfProgressPanel" class="dnf-progress hidden"><strong>DNF gate progress — required before saving</strong><span class="pill" id="dnfProgressTotal">Total gates: 10</span><div class="row" id="dnfGateInputRow"><div><label for="dnfGatesCleared">Gate markers cleared by this driver</label><input id="dnfGatesCleared" type="number" min="0" max="10" step="1" inputmode="numeric" placeholder="Enter 0 to total gates"></div></div><div id="dnfProgressInfo" class="dnf-progress-info" aria-live="polite">Enter the number of gates cleared before saving DNF.</div></div>
-<div class="row buttons"><button class="primary save-result" id="saveResult" disabled>SAVE RESULT</button><span id="pendingStatus" class="muted">Stop, review penalties with the driver, CONFIRM STOP, then save.</span></div>
+<div class="row resume-row hidden" id="resumeRow"><button class="resume-run" id="resumeRun" type="button">↩ RESUME RUN</button></div>
+<div class="row confirm-stop-row hidden" id="confirmStopRow"><button class="confirm-stop" id="confirmStop" type="button">✓ CONFIRM FINISH TIME</button></div>
+<div class="row fault-restart-row hidden" id="faultRestartRow"><button class="fault-restart-button" id="faultRestartButton" type="button">↻ RETRY SAME RUN (60s)</button><span class="fault-restart-note" id="faultRestartNote">Available for 60 seconds after an accidental early STOP.</span></div>
+<div id="dnfProgressPanel" class="dnf-progress hidden"><strong>DNF RESULT DETAILS</strong><span class="pill" id="dnfProgressTotal">Total gates: 10</span><div class="row" id="dnfGateInputRow"><div><label for="dnfGatesCleared">Gate markers cleared by this driver</label><input id="dnfGatesCleared" type="number" min="0" max="10" step="1" inputmode="numeric" placeholder="Enter 0 to total gates"></div></div><div id="dnfProgressInfo" class="dnf-progress-info" aria-live="polite">Enter the number of gates cleared before saving DNF.</div></div>
+<div class="row buttons"><button class="primary save-result" id="saveResult" disabled>SAVE RESULT</button><span id="pendingStatus" class="muted">After STOP, check the finish time and penalties with the driver. Confirm the finish time, then select SAVE RESULT.</span></div>
 <div id="saveResultFeedback" class="save-result-feedback" role="status" aria-live="polite"></div>
-<small>Alarm is ON by default. Tap the speaker to test the sound. Keep this tab open. Confirm the stop time with the driver before saving.</small>
-<div class="penalty-quick-wrap"><div class="flex"><strong>Penalty tap counts</strong><span class="pill" id="penaltyTapTotal">0 taps</span></div><div id="penaltyCounterDriver" class="muted penalty-note">Tap + if penalty occur.</div><p class="muted penalty-note" style="margin:6px 0 0">Tap <b>+</b> to add a penalty, or <b>−</b> to correct the count. No admin PIN is required. <b>Roll Over:</b> count only when the crawler comes to a complete stop with all four tyres lifted off the ground; a brief bounce while moving does not count.</p><div id="penaltyCounters" class="penalty-counter-grid"><div class="muted">No penalty types configured yet.</div></div><div id="penaltyCounterSummary" class="ok penalty-counter-summary">Total taps: 0 • Point deduction: 0 pts</div><div id="quickPenaltyStatus" class="quick-status" aria-live="polite"></div></div>
+<small>Alarm is ON by default. Tap the speaker to test it. Keep this page open during racing. Confirm the recorded finish time with the driver before saving.</small>
+<div class="penalty-quick-wrap"><div class="flex"><strong>Penalty tap counts</strong><span class="pill" id="penaltyTapTotal">0 taps</span></div><div id="penaltyCounterDriver" class="muted penalty-note">Use + to record a penalty and − to correct a tap.</div><p class="muted penalty-note" style="margin:6px 0 0">Use <b>+</b> to record a penalty and <b>−</b> to correct a tap. No admin PIN is required. <b>Roll Over:</b> count only when the crawler has completely stopped with all four tyres off the ground. A brief bounce while moving does not count.</p><div id="penaltyCounters" class="penalty-counter-grid"><div class="muted">No penalty types configured yet.</div></div><div id="penaltyCounterSummary" class="ok penalty-counter-summary">Total taps: 0 • Point deduction: 0 pts</div><div id="quickPenaltyStatus" class="quick-status" aria-live="polite"></div></div>
 </section>
 
 <section class="card bs28-section bs28-rotation-below" id="bs28MarshalPanel" style="display:none" aria-label="Group rotation control">
   <details id="bs28RotationDetails" class="bs28-rotation-details">
     <summary>
       <span class="bs28-rotation-summary-title">↻ GROUP ROTATION CONTROL</span>
-      <span class="bs28-rotation-summary-subtitle">Select available group &amp; next SS</span>
+      <span class="bs28-rotation-summary-subtitle">Choose a completed group and an open SS</span>
     </summary>
     <div class="bs28-rotation-body">
 
-  <h2 id="bs28MarshalHeading">GROUP ROTATION · NEXT STAGE</h2>
-  <small class="muted" style="display:block;margin:-8px 0 12px">v28.6.3 · MARSHAL DIRECT DRAW · MAIN CAN BE CLOSED</small>
+  <h2 id="bs28MarshalHeading">GROUP ROTATION · NEXT SS ASSIGNMENT</h2>
+  <small class="muted" style="display:block;margin:-8px 0 12px">Official group assignments and next driver draws are saved to Firebase. Main Control can be offline during subsequent group rotations.</small>
   <p class="muted" id="bs28MarshalInfo">Waiting for group assignment.</p>
   <div id="bs28Selection" class="bs28-next-panel" style="display:none">
-    <h3>SELECT AVAILABLE GROUP &amp; SS</h3>
-    <p class="muted">Any authorized marshal phone may select a waiting group and an OPEN, unoccupied SS. No previous choice can freeze the dropdowns. Main Control creates the first draw. After each completed SS, Marshal saves the NEXT official draw directly to Firebase without Main Control online. The stage run lock and admin PIN are checked only when START is pressed.</p>
+    <h3>SELECT COMPLETED GROUP &amp; NEXT OPEN SS</h3>
+    <p class="muted">When a group has completed its current SS, select that group and an OPEN, unoccupied SS. Press ASSIGN GROUP &amp; DRAW to save the next official driver order to Firebase. Main Control does not need to stay online. The timer will not start automatically. Press START when the driver is ready; the system checks the stage assignment at that point.</p>
     <div id="bs28WaitingGroupsSummary" class="bs28-waiting-summary" role="status" aria-live="polite">Checking group completion…</div>
     <div class="bs28-next-fields">
       <label for="bs28NextGroup">Available Group
@@ -925,10 +1161,10 @@ body.marshal-view .brand small{display:block;font-size:11px;line-height:1.35;let
       </label>
     </div>
     <p id="bs28SelectedGroupProgress" class="bs28-select-progress" aria-live="polite"></p>
-    <button type="button" id="bs28SwitchButton" class="primary">CONFIRM NEXT SS &amp; AUTO DRAW</button>
+    <button type="button" id="bs28SwitchButton" class="primary">ASSIGN GROUP &amp; DRAW</button>
   </div>
   <p id="bs28SwitchStatus" class="muted" role="status" aria-live="polite"></p>
-  <h3>Official Group Running Order</h3>
+  <h3>CURRENT OFFICIAL DRIVER ORDER</h3>
   <div id="bs28RunningOrder" class="bs28-order"></div>
     </div>
   </details>
@@ -940,22 +1176,22 @@ body.marshal-view .brand small{display:block;font-size:11px;line-height:1.35;let
 
 
 <details id="marshalConnectionPanel" class="marshal-connection">
-  <summary>🌐 Connect to event / change Event ID</summary>
-  <p class="muted marshal-connection-help">When opened from the organiser’s event-specific marshal link, this page connects without a Firebase password. This event-specific link connects automatically. Enter and save your marshal name before starting the timer or tapping penalties. Anonymous Firebase sign-in must be enabled by the organiser.</p>
+  <summary>EVENT CONNECTION &amp; EVENT ID</summary>
+  <p class="muted marshal-connection-help">Open the event-specific link provided by Main Control. The page connects to the correct event automatically without an organiser password. Save your marshal name before starting the timer or recording penalties. Firebase anonymous sign-in must be enabled by the organiser.</p>
   <div id="marshalConnectionFields"></div>
 </details>
 
-<section class="card"><details><summary>3. Live points leaderboard</summary><div class="flex"><span class="pill" id="count"></span></div><div class="scroll"><table><thead><tr><th>Rank</th><th>Driver</th><th id="stageHeaders" colspan="1">Stages</th><th>Total</th><th>Status</th></tr></thead><tbody id="board"></tbody></table></div><div id="raceProgress" class="muted" style="margin-top:10px;font-weight:600"></div><small>Overall ranking: highest net points wins. FINISH and DNF net points cannot fall below the minimum Gate-1 score (round(DNF base / total gates)). DNF net = max(Gate-1 minimum, round(DNF base x gates cleared / total gates) minus point penalties). DNS = 0. If stage points tie, FINISH ranks above DNF. Overall tie-break: more FINISH results, higher SS4 net points, lower total raw time across FINISH stages, then lower race number. DNF base is frozen at the first official result; later entries do not change it. Gate totals lock after the first saved result in that SS.</small></details></section>
-<section class="card" id="penaltyPanel"><details><summary>4. Penalty Setup</summary><div class="flex"><span class="pill">Same rules for every SS</span></div><p class="muted">Configure each penalty type and its point deduction before racing. These shared rules apply to every SS. Edit these shared rules when no run is active. Roll Over applies only when the crawler comes to a complete stop with all four tyres lifted off the ground; a brief bounce or momentary lift while still moving does not count. Each tap deducts the configured number of points from that stage score; it does not add time or change the raw-time finishing order. Values are frozen when a tap is recorded, so editing a rule affects future taps only. Removing a rule does not erase penalties already recorded.</p><h3 style="font-size:15px;margin:14px 0 8px">Shared penalty types</h3><div class="row"><div><label>Penalty type name</label><input id="penaltyName" data-admin-control placeholder="e.g. Gate violation"></div><div><label>Point deduction per tap</label><input id="penaltyPoints" data-admin-control type="number" step="1" min="0" max="9999" value="5" inputmode="numeric"></div><button id="addPenaltyType" class="primary" data-admin-control>+ Add penalty type</button></div><div class="scroll"><table><thead><tr><th>Penalty type</th><th>Points deducted each</th><th>Actions</th></tr></thead><tbody id="penaltyRulesBody"></tbody></table></div></details></section>
+<section class="card"><details><summary>3. LIVE EVENT LEADERBOARD</summary><div class="flex"><span class="pill" id="count"></span></div><div class="scroll"><table><thead><tr><th>Rank</th><th>Driver</th><th id="stageHeaders" colspan="1">Stages</th><th>Total</th><th>Status</th></tr></thead><tbody id="board"></tbody></table></div><div id="raceProgress" class="muted" style="margin-top:10px;font-weight:600"></div><small>Leaderboard ranking and score calculations follow the scoring format selected for this event. The scoring-format banner above shows the active format. If you are unsure about a result, check with Main Control before making a correction.</small></details></section>
+<section class="card" id="penaltyPanel"><details><summary>4. PENALTY RULES &amp; VALUES</summary><div class="flex"><span class="pill">Same rules for every SS</span></div><p class="muted">Configure penalty types and values before racing. The same rules apply to every SS. The effect of a penalty depends on the selected scoring format: it may deduct points, add seconds, or use SORRCA penalty and award values. Roll Over counts only when the crawler has completely stopped with all four tyres off the ground; a brief bounce while moving does not count. Each recorded tap keeps the value that applied when it was recorded. Editing a rule changes future taps only. Removing a rule does not erase penalties already recorded. Edit shared rules only when no run is active.</p><h3 style="font-size:15px;margin:14px 0 8px">Shared penalty types</h3><div class="row"><div><label>Penalty type name</label><input id="penaltyName" data-admin-control placeholder="e.g. Gate violation"></div><div><label>Point deduction per tap</label><input id="penaltyPoints" data-admin-control type="number" step="1" min="0" max="9999" value="5" inputmode="numeric"></div><button id="addPenaltyType" class="primary" data-admin-control>+ Add penalty type</button></div><div class="scroll"><table><thead><tr><th>Penalty type</th><th>Points deducted each</th><th>Actions</th></tr></thead><tbody id="penaltyRulesBody"></tbody></table></div></details></section>
 
-<section class="card"><details><summary>5. Driver registration</summary><div class="row"><input id="num" placeholder="Race #" inputmode="numeric"><input id="name" placeholder="Driver name"><button id="add">Add driver</button></div><div class="scroll"><table><thead><tr><th>#</th><th>Driver</th><th>Action</th></tr></thead><tbody id="roster"></tbody></table></div></details></section>
+<section class="card"><details><summary>5. DRIVER LIST &amp; REGISTRATION</summary><div class="row"><input id="num" placeholder="Race #" inputmode="numeric"><input id="name" placeholder="Driver name"><button id="add">Add driver</button></div><div class="scroll"><table><thead><tr><th>#</th><th>Driver</th><th>Action</th></tr></thead><tbody id="roster"></tbody></table></div></details></section>
 
-<section class="card draw-spin-panel" id="drawSpinPanel"><details><summary>6. Driver Draw &amp; Spin</summary><p class="muted draw-intro">You can select stages, spin/redraw, lock/unlock orders, or add late drivers when no run is active. Create a separate randomized running order for each Special Stage. Register all drivers first, then spin and lock each SS order before racing. Once a result is saved for a stage, that stage's draw order is automatically locked. For simultaneous racing, use one phone per SS; each phone selects its own SS in Section 1 and all devices must use the same Firebase project and Event ID.</p><div class="draw-controls"><div><label for="drawStageSelect">Special Stage draw</label><select id="drawStageSelect" data-admin-control></select></div><div><label>Order status</label><div id="drawOrderStatus" class="pill">NOT DRAWN</div></div></div><div id="drawSpinDisplay" class="draw-spin-display" aria-live="polite">Choose a stage, then spin the driver order.</div><div class="draw-actions"><button id="spinDraw" class="primary" data-admin-control type="button">🎲 Spin / Redraw</button><button id="lockDrawOrder" class="start" data-admin-control type="button">🔒 Lock order</button><button id="unlockDrawOrder" class="warn" data-admin-control type="button">Unlock order</button></div><div class="late-entry-panel" id="lateEntryPanel"><div class="late-entry-title">➕ Late Driver Entry</div><p class="late-entry-help">For a driver arriving after racing starts, select the target SS above, enter their race number and name, then add them directly when no run is active. The late driver is inserted at a random position among remaining drivers in the selected SS. In other SS with an existing draw, they are appended to the end so the existing order stays stable. The driver will appear on the overall leaderboard.</p><div class="late-entry-fields"><div><label for="lateDriverNum">Race number</label><input id="lateDriverNum" data-admin-control type="text" inputmode="numeric" placeholder="e.g. 27" autocomplete="off"></div><div><label for="lateDriverName">Late driver name</label><input id="lateDriverName" data-admin-control type="text" placeholder="Driver name" autocomplete="off"></div><button id="addLateDriver" class="primary" data-admin-control type="button">🎲 Add late driver to selected SS</button></div><div id="lateEntryStatus" class="muted" style="font-size:12px;margin-top:8px" aria-live="polite"></div></div><div id="drawStateMessage" class="draw-state">No draw saved yet. The race driver list currently follows race number.</div><div class="draw-table scroll"><table><thead><tr><th>Draw</th><th>Driver</th><th>Stage status</th></tr></thead><tbody id="drawOrderBody"><tr><td colspan="3" class="muted">Register drivers to prepare a draw.</td></tr></tbody></table></div></details></section>
+<section class="card draw-spin-panel" id="drawSpinPanel"><details><summary>6. DRIVER DRAW &amp; RUNNING ORDER</summary><p class="muted draw-intro">Use this section to create and manage a separate random driver order for each Special Stage. Register all drivers first, select an SS, then spin and lock its running order before racing. A saved result automatically locks that SS order. For simultaneous racing, use one marshal device per SS. Each device selects its own SS in Section 1, and all devices must use the same Firebase project and Event ID.</p><div class="draw-controls"><div><label for="drawStageSelect">Special Stage draw</label><select id="drawStageSelect" data-admin-control></select></div><div><label>Order status</label><div id="drawOrderStatus" class="pill">NOT DRAWN</div></div></div><div id="drawSpinDisplay" class="draw-spin-display" aria-live="polite">Choose a stage, then spin the driver order.</div><div class="draw-actions"><button id="spinDraw" class="primary" data-admin-control type="button">🎲 Spin / Redraw</button><button id="lockDrawOrder" class="start" data-admin-control type="button">🔒 Lock order</button><button id="unlockDrawOrder" class="warn" data-admin-control type="button">Unlock order</button></div><div class="late-entry-panel" id="lateEntryPanel"><div class="late-entry-title">➕ Late Driver Entry</div><p class="late-entry-help">For a driver arriving after racing starts, select the target SS above, enter their race number and name, then add them directly when no run is active. The late driver is inserted at a random position among remaining drivers in the selected SS. In other SS with an existing draw, they are appended to the end so the existing order stays stable. The driver will appear on the overall leaderboard.</p><div class="late-entry-fields"><div><label for="lateDriverNum">Race number</label><input id="lateDriverNum" data-admin-control type="text" inputmode="numeric" placeholder="e.g. 27" autocomplete="off"></div><div><label for="lateDriverName">Late driver name</label><input id="lateDriverName" data-admin-control type="text" placeholder="Driver name" autocomplete="off"></div><button id="addLateDriver" class="primary" data-admin-control type="button">🎲 Add late driver to selected SS</button></div><div id="lateEntryStatus" class="muted" style="font-size:12px;margin-top:8px" aria-live="polite"></div></div><div id="drawStateMessage" class="draw-state">No draw saved yet. The race driver list currently follows race number.</div><div class="draw-table scroll"><table><thead><tr><th>Draw</th><th>Driver</th><th>Stage status</th></tr></thead><tbody id="drawOrderBody"><tr><td colspan="3" class="muted">Register drivers to prepare a draw.</td></tr></tbody></table></div></details></section>
 
-<section class="card" id="stageGateSetup"><details><summary>7. SS &amp; Gate Setup</summary><p class="muted stage-setup-note">Configure each Special Stage here. Edit the DNF cutoff and total gate markers for every SS, then tap <b>Save all change</b>. Total gate markers cannot be changed after any result has been saved for that SS.</p><div id="stageSetupRows" class="stage-setup-rows"></div><div class="stage-setup-actions"><button id="addStage" class="primary">+ Add SS</button><button id="removeStage" class="warn">− Remove last SS</button><button id="saveStageSetupAll" class="start" data-admin-control>Save all change</button></div></details></section>
+<section class="card" id="stageGateSetup"><details><summary>7. SPECIAL STAGE &amp; GATE SETUP</summary><p class="muted stage-setup-note">Configure each Special Stage here. Edit the DNF cutoff and total gate markers for every SS, then tap <b>Save all changes</b>. Total gate markers cannot be changed after any result has been saved for that SS.</p><div id="stageSetupRows" class="stage-setup-rows"></div><div class="stage-setup-actions"><button id="addStage" class="primary">+ Add SS</button><button id="removeStage" class="warn">− Remove last SS</button><button id="saveStageSetupAll" class="start" data-admin-control>Save all changes</button></div></details></section>
 
-<section class="card"><details><summary>🌐 Online sync setup (Firebase)</summary><p class="muted">RC CRAWLER v28 Firebase project fields are supplied by firebase-config.js. The organiser must first publish the correct Realtime Database URL in that file. Marshal links connect anonymously when Main Control opens marshal access; no organiser password is needed on the marshal phone. The Event ID must match on all devices. To change it while connected, disconnect first, edit the ID, then reconnect. Only enter your authorized organizer email and password when connecting; the app does not save those credentials. The public results link below includes the selected Event ID. Host this site on HTTPS (e.g. GitHub Pages) and use the SAME Firebase Realtime Database on every device. Local mode does NOT synchronize devices.</p><div class="row"><div><label>Firebase API key</label><input id="apiKey" placeholder="Firebase apiKey" readonly></div><div><label>Firebase auth domain</label><input id="authDomain" placeholder="project.firebaseapp.com" readonly></div></div><div class="row"><div><label>Firebase database URL</label><input id="databaseURL" placeholder="https://project-default-rtdb.firebaseio.com" readonly></div><div><label>Firebase project ID</label><input id="projectId" placeholder="project-id" readonly></div></div><div class="row"><div><label>Event ID (same on all devices)</label><input id="eventId" value="bs28-test" maxlength="80" placeholder="e.g. bs28-test" autocapitalize="off" spellcheck="false"><div class="muted">Editable and saved on this device. Letters, numbers and hyphens only. Disconnect before changing while online.</div></div><div><label>Firebase email</label><input id="email" type="email" placeholder="organizer@example.com" autocomplete="off"></div><div><label>Firebase password</label><input id="password" type="password" placeholder="Password" autocomplete="off"></div></div><div class="row"><button id="connect" class="primary">Connect / sign in</button><button id="disconnect">Disconnect</button></div><div class="muted" style="margin-top:8px">Public results for this Event ID: <a id="publicResultsLink" href="results.html?event=bs28-test" target="_blank" rel="noopener">Open public results</a>. Share the generated link with spectators.</div><div class="muted marshal-share-link" style="margin-top:8px">Marshal Race Control for this Event ID: <a id="marshalLink" href="marshal.html?event=bs28-test" target="_blank" rel="noopener">Open marshal control</a> <button type="button" id="copyMarshalLink" class="copy-link-button">Copy marshal link</button><small class="marshal-share-help">Share this link with the marshal. It opens Section 1 only and preselects this Event ID.</small></div><div id="syncMsg" class="muted"></div></details><details><summary>💾 Backups, import, corrections</summary><div class="row"><button id="export">Export JSON backup</button><button id="snapshotDownload">Download latest safety backup</button><button id="historyDownload">Export correction history</button><span id="safetyStatus" class="muted" role="status"></span><button id="csv">Export CSV leaderboard</button><label>Import JSON backup<input type="file" id="import" accept=".json,application/json"></label></div><p class="muted">Choose a driver and SS to compare the saved record with your proposed correction. Result status, time/gate progress and penalty counts are saved together. Leave a penalty count blank to keep its recorded value; enter 0 to remove that penalty type.</p><div class="row"><div><label for="correctionDriver">Driver to correct</label><select id="correctionDriver"></select></div><div><label for="correctionStage">Special Stage</label><select id="correctionStage"></select></div></div><div class="correction-compare-grid"><div class="correction-snapshot"><div class="correction-snapshot-title">Recorded before correction</div><div id="correctionBefore" class="correction-snapshot-body" aria-live="polite">Select a driver and SS.</div></div><div class="correction-snapshot after"><div class="correction-snapshot-title" id="correctionAfterTitle">After correction preview</div><div id="correctionAfter" class="correction-snapshot-body" aria-live="polite">Select a driver and SS.</div></div></div><div class="row"><div><label for="editStatus">New status (blank = keep current)</label><select id="editStatus" aria-label="Correction status"><option value="" selected>Keep current status</option><option value="finish">Finish</option><option value="dnf">DNF</option><option value="dns">DNS</option><option value="clear">Clear result</option></select></div><div><label for="editTime">Finish time (blank = keep current)</label><input id="editTime" placeholder="mm:ss.cc (finish only)" inputmode="numeric" autocomplete="off"></div><div id="correctionGateCountField"><label for="editGatesCleared">Gates cleared (DNF)</label><input id="editGatesCleared" type="number" min="0" step="1" inputmode="numeric" placeholder="Blank = keep current" disabled></div></div><div class="penalty-quick-wrap correction-penalty-section"><div class="flex"><strong>Penalty counts to save with correction</strong><span class="pill" id="correctionPenaltyTapTotal">0 taps</span></div><div id="correctionPenaltyDriverLabel" class="muted penalty-note">Select a driver and SS above.</div><p class="muted">The input shows the currently recorded tap count. Use <b>−</b> and <b>+</b>, or type a number, to prepare a correction. Changes are preview-only and do not overwrite saved data until you press <b>Save Correction</b>. Enter <b>0</b> to remove all taps of that type.</p><div id="correctionPenaltyCounters" class="correction-penalty-list"><div class="muted">Select a driver and SS.</div></div><div id="correctionPenaltySummary" class="ok correction-penalty-summary">Total taps: 0 • Deduction: 0 pts</div></div><div id="correctionInfo" class="muted" aria-live="polite" style="margin-top:8px"></div><div class="correction-save-row"><button id="correct" class="primary">Save result + penalties together</button></div></details></section>
-<section class="card clear-race-panel" id="clearRaceDataPanel"><details><summary>🗑 New Race — Clear All Race Data</summary><p class="clear-race-warning"><b>Destructive action:</b> clears registered drivers, results, penalty records, late-entry records, SS draw orders and draw locks for the currently selected Firebase Event ID on all connected devices. It keeps SS cutoff times, gate totals, shared penalty rules, Firebase configuration and Event ID. This action requires a live Firebase connection and zero pending uploads. Local safety snapshots are kept for recovery.</p><div class="clear-race-controls"><div><label for="clearRacePassword">Reset password</label><input id="clearRacePassword" type="password" inputmode="numeric" maxlength="6" placeholder="6-digit reset password" autocomplete="new-password"></div><button id="clearAllRaceData" type="button">🗑 Clear all race data</button></div><div id="clearRaceDataStatus" class="clear-race-status muted" role="status" aria-live="polite">Connect to Firebase and sync all pending changes before starting a new race.</div></details></section>
+<section class="card"><details><summary>FIREBASE PROJECT INFORMATION</summary><p class="muted">RC CRAWLER v28 Firebase project fields are supplied by firebase-config.js. The organiser must first publish the correct Realtime Database URL in that file. Marshal links connect anonymously when Main Control opens marshal access; no organiser password is needed on the marshal phone. The Event ID must match on all devices. To change it while connected, disconnect first, edit the ID, then reconnect. Only enter your authorized organizer email and password when connecting; the app does not save those credentials. The public results link below includes the selected Event ID. Host this site on HTTPS (e.g. GitHub Pages) and use the SAME Firebase Realtime Database on every device. Local mode does NOT synchronize devices.</p><div class="row"><div><label>Firebase API key</label><input id="apiKey" placeholder="Firebase apiKey" readonly></div><div><label>Firebase auth domain</label><input id="authDomain" placeholder="project.firebaseapp.com" readonly></div></div><div class="row"><div><label>Firebase database URL</label><input id="databaseURL" placeholder="https://project-default-rtdb.firebaseio.com" readonly></div><div><label>Firebase project ID</label><input id="projectId" placeholder="project-id" readonly></div></div><div class="row"><div><label>Event ID (same on all devices)</label><input id="eventId" value="bs28-test" maxlength="80" placeholder="e.g. bs28-test" autocapitalize="off" spellcheck="false"><div class="muted">Editable and saved on this device. Letters, numbers and hyphens only. Disconnect before changing while online.</div></div><div><label>Firebase email</label><input id="email" type="email" placeholder="organizer@example.com" autocomplete="off"></div><div><label>Firebase password</label><input id="password" type="password" placeholder="Password" autocomplete="off"></div></div><div class="row"><button id="connect" class="primary">Connect / sign in</button><button id="disconnect">Disconnect</button></div><div class="muted" style="margin-top:8px">Public results for this Event ID: <a id="publicResultsLink" href="results.html?event=bs28-test" target="_blank" rel="noopener">Open public results</a>. Share the generated link with spectators.</div><div class="muted marshal-share-link" style="margin-top:8px">Marshal Race Control for this Event ID: <a id="marshalLink" href="marshal.html?event=bs28-test" target="_blank" rel="noopener">Open marshal control</a> <button type="button" id="copyMarshalLink" class="copy-link-button">Copy marshal link</button><small class="marshal-share-help">Share this link with the marshal. It opens Section 1 only and preselects this Event ID.</small></div><div id="syncMsg" class="muted"></div></details><details><summary>BACKUPS, RESULT RECOVERY &amp; CORRECTIONS</summary><div class="row"><button id="export">Export JSON backup</button><button id="snapshotDownload">Download latest safety backup</button><button id="historyDownload">Export correction history</button><span id="safetyStatus" class="muted" role="status"></span><button id="csv">Export CSV leaderboard</button><label>Import JSON backup<input type="file" id="import" accept=".json,application/json"></label></div><p class="muted">Choose a driver and SS to compare the saved record with your proposed correction. Result status, time/gate progress and penalty counts are saved together. Leave a penalty count blank to keep its recorded value; enter 0 to remove that penalty type.</p><div class="row"><div><label for="correctionDriver">Driver to correct</label><select id="correctionDriver"></select></div><div><label for="correctionStage">Special Stage</label><select id="correctionStage"></select></div></div><div class="correction-compare-grid"><div class="correction-snapshot"><div class="correction-snapshot-title">Recorded before correction</div><div id="correctionBefore" class="correction-snapshot-body" aria-live="polite">Select a driver and SS.</div></div><div class="correction-snapshot after"><div class="correction-snapshot-title" id="correctionAfterTitle">After correction preview</div><div id="correctionAfter" class="correction-snapshot-body" aria-live="polite">Select a driver and SS.</div></div></div><div class="row"><div><label for="editStatus">New status (blank = keep current)</label><select id="editStatus" aria-label="Correction status"><option value="" selected>Keep current status</option><option value="finish">Finish</option><option value="dnf">DNF</option><option value="dns">DNS</option><option value="clear">Clear result</option></select></div><div><label for="editTime">Finish time (blank = keep current)</label><input id="editTime" placeholder="mm:ss.cc (finish only)" inputmode="numeric" autocomplete="off"></div><div id="correctionGateCountField"><label for="editGatesCleared">Gates cleared (DNF)</label><input id="editGatesCleared" type="number" min="0" step="1" inputmode="numeric" placeholder="Blank = keep current" disabled></div></div><div class="penalty-quick-wrap correction-penalty-section"><div class="flex"><strong>Penalty counts to save with correction</strong><span class="pill" id="correctionPenaltyTapTotal">0 taps</span></div><div id="correctionPenaltyDriverLabel" class="muted penalty-note">Select a driver and SS above.</div><p class="muted">The input shows the currently recorded tap count. Use <b>−</b> and <b>+</b>, or type a number, to prepare a correction. Changes are preview-only and do not overwrite saved data until you press <b>Save Correction</b>. Enter <b>0</b> to remove all taps of that type.</p><div id="correctionPenaltyCounters" class="correction-penalty-list"><div class="muted">Select a driver and SS.</div></div><div id="correctionPenaltySummary" class="ok correction-penalty-summary">Total taps: 0 • Deduction: 0 pts</div></div><div id="correctionInfo" class="muted" aria-live="polite" style="margin-top:8px"></div><div class="correction-save-row"><button id="correct" class="primary">Save result + penalties together</button></div></details></section>
+<section class="card clear-race-panel" id="clearRaceDataPanel"><details><summary>RESET EVENT — CLEAR ALL RACE DATA</summary><p class="clear-race-warning"><b>Destructive action:</b> clears registered drivers, results, penalty records, late-entry records, SS draw orders and draw locks for the currently selected Firebase Event ID on all connected devices. It keeps SS cutoff times, gate totals, shared penalty rules, Firebase configuration and Event ID. This action requires a live Firebase connection and zero pending uploads. Local safety snapshots are kept for recovery.</p><div class="clear-race-controls"><div><label for="clearRacePassword">Reset password</label><input id="clearRacePassword" type="password" inputmode="numeric" maxlength="6" placeholder="6-digit reset password" autocomplete="new-password"></div><button id="clearAllRaceData" type="button">🗑 Clear all race data</button></div><div id="clearRaceDataStatus" class="clear-race-status muted" role="status" aria-live="polite">Connect to Firebase and sync all pending changes before starting a new race.</div></details></section>
 
 <footer>© TEC-ARTS CRAWLER • RC CRAWLER · POINT &amp; TIME ATTACK SYSTEM · ALL RIGHTS RESERVED</footer><script>
 (function(){
@@ -1642,7 +1878,7 @@ function render(){
      const upcomingId=pendingStageDriverIds(running.s,running.id)[0];
      const upcoming=upcomingId?data.drivers[upcomingId]:null;
      const name=upcoming?'#'+upcoming.num+' — '+upcoming.name:'No other driver waiting';
-     const meta=upcoming?'SS'+(running.s+1)+' · First remaining in the running order':'All remaining drivers already have results or are currently running';
+     const meta=upcoming?'SS'+(running.s+1)+' · First remaining in the saved SS order':'No other driver is waiting in this SS';
      if($('nextDriverReadyName').textContent!==name)$('nextDriverReadyName').textContent=name;
      if($('nextDriverReadyMeta').textContent!==meta)$('nextDriverReadyMeta').textContent=meta;
    }
@@ -1652,8 +1888,8 @@ function render(){
  else if(pendingRun){$('runInfo').textContent=`SS${pendingRun.s+1} • ${data.drivers[pendingRun.id]?.name||'Driver'} • ${pendingRun.status.toUpperCase()} ${fmt(pendingRun.ms)} • NOT SAVED - review penalties, then SAVE RESULT`;}
  else if(!id){$('runInfo').textContent=drivers.length?`All registered drivers already have a saved result for SS${stage+1}. Select another SS or use protected corrections to change a saved result.`:'No registered drivers. Add drivers in Section 5.';}
  else{$('runInfo').textContent=`SS${stage+1} • ${data.drivers[id]?.name||'Add a driver'} • ${!r?'Ready':r.status==='finish'?`Raw ${fmt(r.ms)} • ${scoreDisplay(pts)}`:r.status.toUpperCase()+' • '+scoreDisplay(pts)}`;}
- $('start').disabled=blocked||!id||!BS28_SCORING.normalizeFormat(data.scoringFormat);$('stop').disabled=!running||!!pendingRun;$('dnf').disabled=!running||!!pendingRun||!BS28_SCORING.normalizeFormat(data.scoringFormat);$('markDns').disabled=blocked||!id||!!result(id,stage)||!BS28_SCORING.normalizeFormat(data.scoringFormat);const needsStopConfirm=!!(pendingRun&&(pendingRun.requiresStopConfirmation||pendingRun.source==='timer')&&!pendingRun.confirmed);$('resumeRow').classList.toggle('hidden',!(pendingRun&&pendingRun.source==='timer'&&pendingRun.status==='finish'&&!pendingRun.confirmed));$('resumeRun').disabled=!(pendingRun&&pendingRun.source==='timer'&&pendingRun.status==='finish'&&!pendingRun.confirmed);$('confirmStopRow').classList.toggle('hidden',!needsStopConfirm);$('confirmStop').disabled=!needsStopConfirm;const faultRestartVisible=!!(pendingRun&&pendingRun.source==='timer'&&pendingRun.restartEligible&&Number(pendingRun.restartExpiresAt)>Date.now());$('faultRestartRow').classList.toggle('hidden',!faultRestartVisible);$('faultRestartButton').disabled=!faultRestartVisible;if(faultRestartVisible){const seconds=Math.max(0,Math.ceil((pendingRun.restartExpiresAt-Date.now())/1000));$('faultRestartButton').textContent='↻ RESTART FAULT START ('+seconds+'s)';} $('saveResult').disabled=!pendingRun||savingResult||!BS28_SCORING.normalizeFormat(data.scoringFormat)||((pendingRun.requiresStopConfirmation||pendingRun.source==='timer')&&!pendingRun.confirmed);$('prepareManual').disabled=!!running||!id||!BS28_SCORING.normalizeFormat(data.scoringFormat);$('prepareManual').title=pendingRun?'Update pending finish time for review':'Prepare manual finish time for review';$('prepareManual').setAttribute('aria-label',pendingRun?'Update pending finish time for review':'Prepare manual finish time for review');$('add').disabled=blocked;
- $('pendingStatus').textContent=pendingRun?`Pending ${pendingRun.status.toUpperCase()} for #${data.drivers[pendingRun.id]?.num||''} ${data.drivers[pendingRun.id]?.name||''} - review penalty counts before saving.`:'STOP captures the time. Review penalties with the driver, press CONFIRM STOP to lock the time, then SAVE RESULT.';
+ $('start').disabled=blocked||!id||!BS28_SCORING.normalizeFormat(data.scoringFormat);$('stop').disabled=!running||!!pendingRun;$('dnf').disabled=!running||!!pendingRun||!BS28_SCORING.normalizeFormat(data.scoringFormat);$('markDns').disabled=blocked||!id||!!result(id,stage)||!BS28_SCORING.normalizeFormat(data.scoringFormat);const needsStopConfirm=!!(pendingRun&&(pendingRun.requiresStopConfirmation||pendingRun.source==='timer')&&!pendingRun.confirmed);$('resumeRow').classList.toggle('hidden',!(pendingRun&&pendingRun.source==='timer'&&pendingRun.status==='finish'&&!pendingRun.confirmed));$('resumeRun').disabled=!(pendingRun&&pendingRun.source==='timer'&&pendingRun.status==='finish'&&!pendingRun.confirmed);$('confirmStopRow').classList.toggle('hidden',!needsStopConfirm);$('confirmStop').disabled=!needsStopConfirm;const faultRestartVisible=!!(pendingRun&&pendingRun.source==='timer'&&pendingRun.restartEligible&&Number(pendingRun.restartExpiresAt)>Date.now());$('faultRestartRow').classList.toggle('hidden',!faultRestartVisible);$('faultRestartButton').disabled=!faultRestartVisible;if(faultRestartVisible){const seconds=Math.max(0,Math.ceil((pendingRun.restartExpiresAt-Date.now())/1000));$('faultRestartButton').textContent='↻ RETRY SAME RUN ('+seconds+'s)';} $('saveResult').disabled=!pendingRun||savingResult||!BS28_SCORING.normalizeFormat(data.scoringFormat)||((pendingRun.requiresStopConfirmation||pendingRun.source==='timer')&&!pendingRun.confirmed);$('prepareManual').disabled=!!running||!id||!BS28_SCORING.normalizeFormat(data.scoringFormat);$('prepareManual').title=pendingRun?'Update pending finish time for review':'Prepare manual finish time for review';$('prepareManual').setAttribute('aria-label',pendingRun?'Update pending finish time for review':'Prepare manual finish time for review');$('add').disabled=blocked;
+ $('pendingStatus').textContent=pendingRun?`Pending ${pendingRun.status.toUpperCase()} for #${data.drivers[pendingRun.id]?.num||''} ${data.drivers[pendingRun.id]?.name||''} - review penalty counts before saving.`:'After STOP, check the finish time and penalty counts with the driver. Confirm the finish time, then press SAVE RESULT.';
  $('manualStatusMessage').textContent=pendingRun?`Pending ${pendingRun.status.toUpperCase()} for #${data.drivers[pendingRun.id]?.num||''} ${data.drivers[pendingRun.id]?.name||''} • Current time ${fmt(pendingRun.ms||0)}. Enter a corrected FINISH time here, then update it before saving.`:'';
  $('roster').innerHTML=drivers.map(([id,d])=>{const late=data.lateEntries?.[id];return `<tr><td>${escape(d.num)}</td><td>${escape(d.name)}${late?` <span class="late-entry-badge">LATE ENTRY · SS${Number(late.targetStage)+1}</span>`:''}</td><td><button type="button" class="primary" data-edit-driver="${escape(id)}" data-admin-control>Edit name</button> <button type="button" data-remove="${escape(id)}">Remove</button></td></tr>`}).join('');
  const entries=drivers.map(([id,d])=>{const rs=data.cutoffs.map((_,s)=>result(id,s));const done=rs.filter((r,i)=>bs28OfficialScoreStage(i)&&r?.status==='finish').length;const dnf=rs.filter((r,i)=>bs28OfficialScoreStage(i)&&r?.status==='dnf').length;const dns=rs.filter((r,i)=>bs28OfficialScoreStage(i)&&r?.status==='dns').length;const complete=rs.some((r,i)=>bs28OfficialScoreStage(i))&&rs.every((r,i)=>!bs28OfficialScoreStage(i)||!!r);const total=totalPoints(id);const lastOfficial=data.cutoffs.map((_,si)=>si).filter(bs28OfficialScoreStage).pop();const lastPoints=lastOfficial===undefined?-1:(stagePoints(id,lastOfficial)??-1);const recorded=stagesRecorded(id);const time=totalRawTime(id);const status=complete?'FINISH':'PENDING';return{id,d,rs,done,dnf,dns,finishes:done,dnfs:dnf,complete,total,lastPoints,recorded,time,status}}).sort((a,b)=>BS28_SCORING.compareOverall({...a,number:a.d.num},{...b,number:b.d.num},data.scoringFormat));
@@ -1712,8 +1948,8 @@ async function restartFaultedAttempt(){
  $('clock').textContent='00:00.00';
  $('manualTime').value='';
  render();
- $('quickPenaltyStatus').textContent='Faulty start cleared. Stage lock retained. Press START to begin a new attempt.';
- setMsg('Faulty start reset locally. The stage lock remains reserved by this marshal. The timer has NOT started; press START when ready.');
+ $('quickPenaltyStatus').textContent='Same-run retry prepared. Stage lock retained. Press START to begin the run again.';
+ setMsg('Same-run retry prepared. The stage lock remains reserved by this marshal. The timer has NOT started; press START when ready.');
 }
 function setPendingRun(record){if(record.status==='dnf')soundAlarm();const keepActiveTimer=record.source==='timer'&&record.status==='finish'&&!!running;const activeStartAt=running?.startAt;const stoppedAt=Number(record.stoppedAt)||Date.now();const runStartAt=Number(record.startAt)||Number(activeStartAt)||0;if(!keepActiveTimer){try{localStorage.removeItem(activeRunKey)}catch(e){}}if(running&&!keepActiveTimer){clearInterval(tick);tick=null;running=null;releaseWake()}const next={...record,at:record.at||Date.now(),...(runStartAt?{startAt:runStartAt}:{}),...(record.source==='timer'?{stoppedAt,restartEligible:record.restartEligible===true&&runStartAt>0&&stoppedAt-runStartAt<=60000,restartExpiresAt:record.restartEligible===true?stoppedAt+60000:0,requiresStopConfirmation:true,confirmed:false}: {})};if(next.status==='dnf'&&!usesSorrca2024Preset()){next.totalGates=gateTotalForStage(next.s);if(next.gatesCleared===undefined)delete next.gatesCleared}else if(usesSorrca2024Preset()){delete next.gatesCleared;delete next.totalGates}else{delete next.gatesCleared;delete next.totalGates}pendingRun=next;if(pendingRun.restartEligible&&pendingRun.restartExpiresAt>Date.now())setTimeout(()=>{if(pendingRun&&pendingRun.restartExpiresAt&&Date.now()>=pendingRun.restartExpiresAt)render()},Math.max(0,pendingRun.restartExpiresAt-Date.now()+50));localStorage.setItem(pendingRunKey,JSON.stringify(pendingRun));localStorage.setItem(lastClockKey,String(pendingRun.ms||0));$('clock').textContent=fmt(pendingRun.ms||0);render();syncManualOverrideInputs();$('quickPenaltyStatus').textContent=pendingRun.status==='dnf'?'DNF pending. Enter gates cleared, review penalties with the driver, CONFIRM STOP, then SAVE RESULT.':'Stop time captured. Review penalties with the driver, then CONFIRM STOP to lock the time before SAVE RESULT. You may override the pending time in Section 2 before saving.'}
 function prepareRunResult(status,ms){if(!running)return;const active=running,stoppedAt=Date.now(),elapsedBeforeStop=stoppedAt-Number(active.startAt||stoppedAt);setPendingRun({id:active.id,s:active.s,status,ms:status==='dnf'?data.cutoffs[active.s]:ms,source:'timer',startAt:active.startAt,stoppedAt,restartEligible:status==='finish'&&elapsedBeforeStop>=0&&elapsedBeforeStop<=60000,restartExpiresAt:status==='finish'&&elapsedBeforeStop>=0&&elapsedBeforeStop<=60000?stoppedAt+60000:0,stageLockRunId:active.stageLockRunId||localStageLock?.runId||null,overwriteAuthorized:!!active.overwriteAuthorized,...(status==='dnf'&&!usesSorrca2024Preset()?{totalGates:gateTotalForStage(active.s)}:{})})}
@@ -1991,7 +2227,7 @@ function bs28RenderMarshal(){
  const stageResultsSaved=!!(stageGroup&&current&&bs28Core.allResultsConfirmed(stageGroup,data,current));
  const stageChoosing=stageGroup?.status==='CHOOSING'&&!current;
  if(stageGroup){
-  $('bs28MarshalHeading').textContent='GROUP ROTATION · V28.6';
+  $('bs28MarshalHeading').textContent='GROUP ROTATION · ACTIVE';
   $('bs28MarshalInfo').textContent=ready?
    `CURRENT: ${bs28GroupName(stageGroupId)} · ${current} · ${bs28Core.memberIds(stageGroup.members).filter(id=>bs28Core.statusFor(data.results?.[id]?.[bs28Core.stageIndex(current)])).length}/${bs28Core.memberIds(stageGroup.members).length} saved · ${stageGroup.status}`:
    stageGroup.status==='FINISHED'?'This group has completed all required stages.':
@@ -2000,7 +2236,7 @@ function bs28RenderMarshal(){
   if(stageChoosing&&!running&&!pendingRun)$('runInfo').textContent=bs28GroupName(stageGroupId)+' completed '+(last||'its previous stage')+' — choose the next SS in the Group Rotation panel.';
   if(ready&&stageResultsSaved&&!running&&!pendingRun)$('runInfo').textContent=bs28GroupName(stageGroupId)+' — all results saved. Select the next OPEN SS below; the stage must have no active run lock.';
  }else{
-  $('bs28MarshalHeading').textContent='GROUP ROTATION · NEXT STAGE';
+  $('bs28MarshalHeading').textContent='GROUP ROTATION · NEXT SS ASSIGNMENT';
   $('bs28MarshalInfo').textContent='No group currently owns the selected SS. Once a group finishes, choose it from the completed-group dropdown below.';
  }
  // Retain existing legacy control restrictions in marshal mode.
@@ -2101,7 +2337,7 @@ function bs28RenderMarshal(){
   'Saved results still being verified or last run lock is active. Finish and SAVE all results before switching.':
   'No group ready to move. Groups appear here automatically after their current SS is completed and confirmed.';
  else if(!available.length)status.textContent='No OPEN and unoccupied SS available for '+bs28GroupName(selectedGroupId)+'. Ask Main Control to OPEN a free SS.';
- else if(!destSelect.value)status.textContent='Select the AVAILABLE SS, then press CONFIRM NEXT SS & AUTO DRAW.';
+ else if(!destSelect.value)status.textContent='Choose an OPEN SS, then press ASSIGN GROUP & DRAW.';
  else if(pendingRequest)status.textContent='PREVIOUS SS CHOICE IS BEING PROCESSED. You can change Group or SS and confirm another choice. Timer START stays manual.';
  else status.textContent='READY · '+bs28GroupName(selectedGroupId)+' → '+destSelect.value+'. Choose any OPEN, unoccupied SS. Timer starts only after START.';
 
