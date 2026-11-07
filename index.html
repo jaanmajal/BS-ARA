@@ -513,8 +513,19 @@ details[data-main-section]>summary:focus-visible{outline:2px solid #93c5fd;outli
       <div id="localDataManagementStatus" class="muted" role="status" aria-live="polite" style="font-size:12px;margin:0 0 10px">Checking local event cache...</div>
       <button type="button" id="clearLocalEventData" class="warn" style="width:100%">Clear Local Cache</button>
     </div>
-    <button type="button" id="prepareNewRaceOffline" class="warn" style="display:none">NEW RACE PREPARATION</button>
-    <p id="newRacePreparationHelp" class="muted" style="display:none">Save a different Event ID while disconnected, then press NEW RACE PREPARATION. A scoring-format popup will appear before the new race is created. Pending uploads for other events remain separate.</p>
+    <div id="racePreparationResetPanel" style="margin:12px 0;padding:13px;border:2px solid #f5b942;border-radius:12px;background:#201b12">
+      <h3 style="margin:0 0 6px">RACE PREPARATION &amp; RESET</h3>
+      <small class="muted">MAIN UPDATE · 08 NOV 2026 · RACE CONTROLS V3</small>
+      <div style="margin-top:12px">
+        <button type="button" id="prepareNewRaceOffline" class="warn" style="width:100%">Prepare New Race — New Event ID</button>
+        <p id="newRacePreparationHelp" class="muted">Disconnect from Firebase, choose and save a different Event ID in Event Connection, then press Prepare New Race. Password required.</p>
+      </div>
+      <div style="margin-top:12px;border-top:1px solid #6b542a;padding-top:12px">
+        <button type="button" id="clearRaceResults" class="warn" style="width:100%">Clear Results &amp; Restart Race — Current Event</button>
+        <p class="muted">Connect as the active organiser. Clear results, penalties, group assignments, leaders and draw progress. Keep registered drivers and race settings. All timers and stage locks must be resolved. Requires password, backup and CLEAR RESULTS confirmation.</p>
+        <p id="clearRaceStatus" class="muted" role="status" aria-live="polite"></p>
+      </div>
+    </div>
     <div id="eventScoringFormatEditor" style="margin:12px 0;padding:13px;border:1px solid #425572;border-radius:12px;background:#101a2b">
       <h3 style="margin:0 0 6px">EVENT SCORING FORMAT</h3>
       <p class="muted" style="font-size:12px;line-height:1.5;margin:0 0 10px">Format locks after the first driver draw.</p>
@@ -567,7 +578,7 @@ details[data-main-section]>summary:focus-visible{outline:2px solid #93c5fd;outli
       <small class="muted">Do not clear an unfinished run until the marshal confirms it has ended.</small>
     </div>
     
-  <details name="utilities-subsections" id="eventBackupsPanel"><summary>9.1 BACKUPS &amp; IMPORT / EXPORT</summary><div class="row"><button id="export">Export JSON backup</button><button id="snapshotDownload">Download latest safety backup</button><button id="historyDownload">Export correction history</button><span id="safetyStatus" class="muted" role="status"></span><button id="csv">Export CSV leaderboard</button><label>Import JSON backup<input type="file" id="import" accept=".json,application/json"></label></div></details><details name="utilities-subsections" id="marshalRecoveryPanel"><summary>9.2 RECOVERY INBOX</summary><p class="muted">Review queued phone results before approving recovery.</p><div class="row"><button id="loadMarshalRecovery" type="button" class="primary">Load Recovery Results</button><span id="marshalRecoveryStatus" class="muted" role="status" aria-live="polite">Sign in to Firebase first.</span></div><div id="marshalRecoveryList" aria-live="polite" style="display:grid;gap:10px;margin-top:12px"></div></details><details name="utilities-subsections"><summary>9.4 CLEAR RESULTS &amp; RESTART RACE</summary><p class="muted">Clear all race results, penalties and draw progress. Keep drivers, groups and race settings. Requires organiser login, password and backup. All timers must be stopped.</p><button type="button" id="clearRaceResults" class="warn">Clear Results &amp; Restart Race</button><p id="clearRaceStatus" class="muted" role="status" aria-live="polite"></p></details><details name="utilities-subsections" class="event-advanced-details"><summary>9.3 ORGANISER DIAGNOSTICS</summary><button type="button" id="copyOrganiserUid">Copy signed-in organiser UID</button></details></details>
+  <details name="utilities-subsections" id="eventBackupsPanel"><summary>9.1 BACKUPS &amp; IMPORT / EXPORT</summary><div class="row"><button id="export">Export JSON backup</button><button id="snapshotDownload">Download latest safety backup</button><button id="historyDownload">Export correction history</button><span id="safetyStatus" class="muted" role="status"></span><button id="csv">Export CSV leaderboard</button><label>Import JSON backup<input type="file" id="import" accept=".json,application/json"></label></div></details><details name="utilities-subsections" id="marshalRecoveryPanel"><summary>9.2 RECOVERY INBOX</summary><p class="muted">Review queued phone results before approving recovery.</p><div class="row"><button id="loadMarshalRecovery" type="button" class="primary">Load Recovery Results</button><span id="marshalRecoveryStatus" class="muted" role="status" aria-live="polite">Sign in to Firebase first.</span></div><div id="marshalRecoveryList" aria-live="polite" style="display:grid;gap:10px;margin-top:12px"></div></details><details name="utilities-subsections" class="event-advanced-details"><summary>9.3 ORGANISER DIAGNOSTICS</summary><button type="button" id="copyOrganiserUid">Copy signed-in organiser UID</button></details></details>
 </section>
 <nav aria-label="Event quick links" class="card" id="eventQuickLinks"><div class="event-link-row"><strong>MARSHAL</strong><div id="marshalQuickActions" class="event-link-actions"><a id="marshalLink" href="marshal.html?event=bs28-test&marshal=1" target="_blank" rel="noopener">Go to Marshal ↗</a><button type="button" id="copyMarshalLink" class="copy-link-button">Copy Marshal Link</button></div></div><div class="event-link-row"><strong>RESULTS</strong><div id="resultsQuickActions" class="event-link-actions"><a id="publicResultsLink" href="results.html?event=bs28-test" target="_blank" rel="noopener">Go to Results ↗</a><button type="button" id="copyResultsLink">Copy Results Link</button></div></div><div id="quickLinkFeedback" role="status" aria-live="polite"></div></nav>
 
@@ -1082,7 +1093,7 @@ function updateEventScoringFormatUI(){
  else if(current){status.textContent='EDITABLE - current format: '+BS28_SCORING.formatLabel(current)+'. Changes are allowed until the first driver draw in any group.';status.className='ok'}
  else{status.textContent='NOT SET - choose and save a scoring format before the first driver draw.';status.className='muted'}
 }
-function updateNewRacePreparationUI(){const target=String($('eventId')?.value||'').trim(),source=localStorage.getItem(dataEventKey)||localStorage.getItem(eventStorageKey)||window.RC_EVENT_ID||'bs28-test',valid=/^[a-zA-Z0-9-]{1,80}$/.test(target),show=valid&&target!==source&&!online,button=$('prepareNewRaceOffline'),help=$('newRacePreparationHelp'),select=$('newRaceScoringFormatSelect');if(button)button.style.display=show?'inline-block':'none';if(help)help.style.display=show?'block':'none';if(select){if(show&&select.dataset.eventId!==target){select.dataset.eventId=target;select.value=BS28_SCORING.normalizeFormat(localStorage.getItem('bs28-test-new-race-format:'+target))||''}select.disabled=!show||!!running||!!pendingRun}}
+function updateNewRacePreparationUI(){const target=String($('eventId')?.value||'').trim(),source=localStorage.getItem(dataEventKey)||localStorage.getItem(eventStorageKey)||window.RC_EVENT_ID||'bs28-test',valid=/^[a-zA-Z0-9-]{1,80}$/.test(target),show=valid&&target!==source&&!online,button=$('prepareNewRaceOffline'),help=$('newRacePreparationHelp'),select=$('newRaceScoringFormatSelect');if(button){button.style.display='block';button.title='Prepare a fresh race using a different Event ID. Password required.'}if(help){help.style.display='block';help.textContent=online?'Disconnect from Firebase first. Then choose and save a different Event ID in Event Connection to prepare a new race.':!valid?'Enter and save a valid new Event ID in Event Connection first.':target===source?'Choose and save a different Event ID in Event Connection first. To reuse this event, use Clear Results & Restart Race below.':'Ready to prepare Event '+target+'. Choose the scoring format and enter the preparation password.'}if(select){if(show&&select.dataset.eventId!==target){select.dataset.eventId=target;select.value=BS28_SCORING.normalizeFormat(localStorage.getItem('bs28-test-new-race-format:'+target))||''}select.disabled=!show||!!running||!!pendingRun}}
 function render(){
  renderScoringFormatIndicator();
  updateNewRacePreparationUI();
@@ -1358,13 +1369,11 @@ function buildRestartedRace(event,resetId,now,uid){
  for(const field of ['results','penalties','drawOrders','drawLocks','drawFairness','dnfRosterCount','lateEntries'])delete next[field];
  const plan=next.groupRotationV28;
  if(plan){
-  const prepared={},leaders={...plan.leaderSelections};
-  for(const [id,g] of Object.entries(plan.groups||{})){
-   if(g.type==='CATCHUP')continue;
-   prepared[id]=bs28Core.memberIds(g.members);
-   if(g.leaderId)leaders[id]=g.leaderId;
-  }
-  if(Object.keys(prepared).length){plan.preparedGroups=prepared;plan.setupGroupIds=Object.keys(prepared);plan.setupGroupCount=Object.keys(prepared).length;plan.leaderSelections=leaders;}
+  // A restart returns to leader selection and allows a completely new group draw.
+  plan.preparedGroups=null;
+  plan.leaderSelections={};
+  plan.setupGroupIds=[];
+  delete plan.dividedAt;
   plan.enabled=false;plan.phase='SETUP';plan.groupCount=0;
   plan.groups={};plan.orders={};plan.stageOwners={};plan.lateCatchup={};
   for(const field of ['startedAt','scoringFormatLockedAt','scoringFormatLockReason','finishedAt'])delete plan[field];
@@ -1382,7 +1391,7 @@ async function clearResultsRestartRace(){
  if(running||savingResult||flushing||bs28PulseBusy)return alert('Stop and resolve active timers, saves and sync before clearing results.');
  if(prompt('Enter the Prepare New Race password to clear results:')!==PREPARE_NEW_RACE_PASSWORD)return alert('Cancelled or incorrect password. No results cleared.');
  const eventId=activeEventId(),db=app.database(),status=$('clearRaceStatus');
- if(prompt('Event '+eventId+'\nClear ALL results, penalties, pending finish records and draw progress? Drivers, groups and settings are kept. A backup will download first. Marshal access will close; share the NEW link after setup.\n\nType CLEAR RESULTS to continue:')!=='CLEAR RESULTS')return;
+ if(prompt('Event '+eventId+'\nClear ALL results, penalties, pending finish records, group assignments, leaders and draw progress? Registered drivers and race settings are kept. A backup will download first. Marshal access will close; share the NEW link after setup.\n\nType CLEAR RESULTS to continue:')!=='CLEAR RESULTS')return;
  clearRaceBusy=true;$('clearRaceResults').disabled=true;
  let gated=false,written=false;
  try{
@@ -1418,13 +1427,13 @@ async function clearResultsRestartRace(){
   status.textContent='Clearing results and resetting race progress…';
   await db.ref().update(updates);written=true;
   const verified=await read('events');
-  if(verified?.raceResetId!==resetId||Object.keys(verified.results||{}).length||Object.keys(verified.penalties||{}).length)throw Error('Reset write needs verification. Refresh before racing.');
+  if(verified?.raceResetId!==resetId||Object.keys(verified.results||{}).length||Object.keys(verified.penalties||{}).length||verified.groupRotationV28?.preparedGroups||Object.keys(verified.groupRotationV28?.leaderSelections||{}).length||Object.keys(verified.groupRotationV28?.groups||{}).length)throw Error('Reset write needs verification. Refresh before racing.');
   reconcileRaceRestart(verified);
   data=normalizeData(verified);persist();
   localStorage.setItem(marshalTokenKey(eventId),newToken);
   controlRunPendingSave=false;localStorage.removeItem('bs28-test-control-run-pending:'+eventId);
   bs28Preview=null;render();bs28RenderMain();updateMarshalAccessUI(false,eventId);updatePublicResultsLink();updateSyncHealth();
-  status.textContent='Results cleared. Drivers, groups and settings preserved. Select starting stages and make a fresh draw in Group Rotation, then open Marshal Access and share the NEW link.';
+  status.textContent='Results, group assignments and leaders cleared. Registered drivers and race settings preserved. Choose group count and leaders, DIVIDE GROUPS, select starting stages and CONFIRM & START EVENT. Then open Marshal Access and share the NEW link.';
  }catch(e){status.textContent=(written?'Reset was written; follow-up needs attention: ':'Results were not confirmed cleared: ')+e.message+(gated?' Marshal access remains closed.':'');alert(status.textContent)}
  finally{clearRaceBusy=false;$('clearRaceResults').disabled=false;}
 }
