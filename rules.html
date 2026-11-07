@@ -15,7 +15,7 @@ h1{font-size:clamp(26px,5vw,42px);line-height:1.05;margin:0 0 6px;font-weight:95
 .card{margin:13px 0;padding:17px;border:1px solid var(--line);border-radius:13px;background:linear-gradient(160deg,#111d27,#0b1219)}.eyebrow{margin:0 0 8px;color:var(--yellow);font-size:10px;font-weight:900;letter-spacing:.13em;text-transform:uppercase}.format-name{font-size:23px;font-weight:950;margin:0}.format-desc{margin:8px 0 0;color:#d5dfe7;font-size:13px;line-height:1.55}
 h2{font-size:14px;font-weight:950;letter-spacing:.07em;text-transform:uppercase;margin:0 0 12px}.rule-list{margin:0;padding-left:19px;color:#dce5ec;font-size:13px;line-height:1.65}.rule-list li+li{margin-top:5px}
 .table-wrap{overflow-x:auto}table{width:100%;border-collapse:collapse;font-size:13px}th,td{padding:10px 9px;border-bottom:1px solid #273744;text-align:left;vertical-align:top}th{color:#aebdca;font-size:10px;text-transform:uppercase;letter-spacing:.08em}td.value{font-weight:900;color:#ffe08a;white-space:nowrap}tr:last-child td{border-bottom:0}.empty{padding:12px;border:1px dashed #526477;border-radius:9px;color:#c7d4df;font-size:12px;line-height:1.5}
-.note{margin:10px 0 0;color:var(--muted);font-size:11px;line-height:1.5}.actions{display:flex;gap:9px;flex-wrap:wrap;margin-top:16px}.actions a{display:inline-flex;align-items:center;justify-content:center;min-height:40px;padding:9px 13px;border:1px solid #3d6a99;border-radius:8px;background:#173657;color:#eaf4ff;text-decoration:none;font-size:11px;font-weight:900;letter-spacing:.05em}.actions a.secondary{background:#111d27;border-color:#40505c;color:#dce5ec}.actions a:hover{border-color:var(--yellow)}.footer{text-align:center;color:#6f7c85;font-size:10px;letter-spacing:.08em;margin-top:24px}
+.note{margin:10px 0 0;color:var(--muted);font-size:11px;line-height:1.5}.actions{display:flex;gap:9px;flex-wrap:wrap;margin-top:16px}.actions a{display:inline-flex;align-items:center;justify-content:center;min-height:40px;padding:9px 13px;border:1px solid #3d6a99;border-radius:8px;background:#173657;color:#eaf4ff;text-decoration:none;font-size:11px;font-weight:900;letter-spacing:.05em}.actions a.secondary{background:#111d27;border-color:#40505c;color:#dce5ec}.actions a:hover{border-color:var(--yellow)}.actions>*:not(#backResults){display:none!important}.footer{text-align:center;color:#6f7c85;font-size:10px;letter-spacing:.08em;margin-top:24px}
 @media(max-width:600px){.shell{width:calc(100% - 18px);padding-top:14px}.card{padding:13px}.format-name{font-size:20px}th,td{padding:9px 7px}}
 </style>
 </head>
@@ -42,7 +42,7 @@ h2{font-size:14px;font-weight:950;letter-spacing:.07em;text-transform:uppercase;
     <h2 id="specialHeading">Important rules</h2>
     <ul id="specialRules" class="rule-list"><li>Waiting for event settings.</li></ul>
   </section>
-  <div class="actions"><a id="backResults" href="results.html">BACK TO RESULTS</a><a class="secondary" id="mainControlLink" href="index.html">MAIN CONTROL</a></div>
+  <div class="actions"><a id="backResults" href="results.html">BACK TO RESULTS</a></div>
   <div class="footer">TEC-ARTS CRAWLER · RC CRAWLER</div>
 </main>
 <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-app-compat.js"></script>
@@ -55,8 +55,22 @@ const params=new URLSearchParams(location.search);
 const requested=params.get('event');
 const eventId=requested&&/^[a-zA-Z0-9-]{1,80}$/.test(requested)?requested:(window.RC_EVENT_ID||'bs28-test');
 $('eventIdLabel').textContent='EVENT ID · '+eventId;
-$('backResults').href='results.html?event='+encodeURIComponent(eventId);
-$('mainControlLink').href='index.html?event='+encodeURIComponent(eventId);
+const backToMarshal=params.get('from')==='marshal';
+if(backToMarshal){
+ const backUrl=new URL('marshal.html',location.href);
+ backUrl.searchParams.set('event',eventId);
+ if(params.get('marshal')==='1'){
+  backUrl.searchParams.set('marshal','1');
+  const token=params.get('token');if(token)backUrl.searchParams.set('token',token);
+ }
+ $('backResults').href=backUrl.href;
+ $('backResults').textContent='BACK TO MARSHAL';
+}else{
+ const backUrl=new URL('results.html',location.href);
+ backUrl.searchParams.set('event',eventId);
+ $('backResults').href=backUrl.href;
+ $('backResults').textContent='BACK TO RESULTS';
+}
 const FORMATS={
  classic_bs:{name:'Classic BS',description:'Highest total points wins. Penalty values below are deducted from stage points.',scoring:['FINISH: position points minus the recorded penalty deductions. The stage score cannot be lower than 21 points.','DNF: fixed at 20 points.','DNS: 0 points.','Overall ranking: highest total points wins. Ties are decided by more FINISH results, then lower total raw time, then lower race number.'],special:['Jump Gate is recorded as DNF.','Penalty values are shared across all Special Stages.']},
  modified_bs:{name:'Modified BS',description:'Highest total points wins, with a DNF score calculated from the registered driver count.',scoring:['FINISH: position points minus penalty deductions, with a minimum of one point above the calculated DNF base.','DNF: calculated from the registered driver count.','DNS: 0 points.','Overall ranking: highest total points wins. Ties are decided by more FINISH results, then lower total raw time, then lower race number.'],special:['Jump Gate is recorded as DNF.','Penalty values are shared across all Special Stages.']},
