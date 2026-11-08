@@ -2206,14 +2206,27 @@ async function bs28RegisterLate(){
 }
 async function bs28ScheduleCatchup(driver,stage){
  if(!bs28CanWrite()||!bs28IsActive())return bs28Show('Main Control must be connected.',true);
- const p=bs28Plan(),ticket=p?.lateCatchup?.[driver]?.[stage],base=p?.groups?.[ticket?.groupId];if(!ticket||ticket.status!=='REQUIRED'||!base)return;
- if(base.currentStage)return bs28Show('Finish the base group current SS before scheduling a catch-up.',true);
- const lock=(await app.database().ref('stageLocks/'+activeEventId()+'/'+stage).once('value')).val();if(lock)return bs28Show(stage+' has an active run lock.',true);
- if(!confirm('Schedule catch-up for #'+data.drivers[driver]?.num+' '+data.drivers[driver]?.name+' at '+stage+'? The SS must be OPEN and unoccupied.'))return;
- const id='C'+driver,now=Date.now();try{const tx=await bs28EventRef().transaction(old=>{
-  if(!old?.enabled||!old.lateCatchup?.[driver]?.[stage]||old.lateCatchup[driver][stage].status!=='REQUIRED'||old.stageOwners?.[stage]||!old.stages?.[stage]?.open||old.groups?.[ticket.groupId]?.currentStage)return;
+ const p=bs28Plan(),ticket=p?.lateCatchup?.[driver]?.[stage],base=p?.groups?.[ticket?.groupId];
+ if(!ticket||ticket.status!=='REQUIRED'||!base)return bs28Show('This catch-up is no longer waiting to be scheduled. Refresh the race status.',true);
+ const id='C'+driver,other=Object.entries(p.lateCatchup?.[driver]||{}).find(([s,t])=>s!==stage&&t?.status==='IN_PROGRESS');
+ if(other||p.groups?.[id]?.currentStage||Object.values(p.stageOwners||{}).some(owner=>String(owner)===id))return bs28Show('This driver already has a catch-up assigned. Finish and SAVE that SS before scheduling another.',true);
+ if(!p.stages?.[stage]?.included||p.stages[stage].cancelled||!p.stages[stage].open||p.stageOwners?.[stage])return bs28Show(stage+' is CLOSED, cancelled, or occupied by another group.',true);
+ if(!confirm('Schedule catch-up for #'+data.drivers[driver]?.num+' '+data.drivers[driver]?.name+' at '+stage+'? The original group may continue its current SS. Make sure this driver is not running another SS.'))return;
+ // A catch-up is independent of the base group's currentStage, but never
+ // reserve a second SS for a driver with an unfinished live timer.
+ const locks=(await app.database().ref('stageLocks/'+activeEventId()).once('value')).val()||{};
+ if(locks[stage])return bs28Show(stage+' has an active run lock.',true);
+ const driverLock=Object.entries(locks).find(([,lock])=>lock?.status==='running'&&String(lock.driverId||'')===String(driver));
+ if(driverLock)return bs28Show('Driver is currently running at '+driverLock[0]+'. STOP and SAVE that run before scheduling catch-up.',true);
+ const now=Date.now();try{const tx=await bs28EventRef().transaction(old=>{
+  const t=old?.lateCatchup?.[driver]?.[stage],g=old?.groups?.[ticket.groupId],prior=old?.groups?.[id];
+  if(!old?.enabled||!t||t.status!=='REQUIRED'||t.groupId!==ticket.groupId||!g||g.type==='CATCHUP'||!g.members?.[driver]||old.stageOwners?.[stage]||!old.stages?.[stage]?.included||old.stages[stage].cancelled||!old.stages[stage].open)return;
+  if(prior?.currentStage||Object.values(old.stageOwners||{}).some(owner=>String(owner)===id)||Object.entries(old.lateCatchup?.[driver]||{}).some(([s,x])=>s!==stage&&x?.status==='IN_PROGRESS'))return;
   const v=JSON.parse(JSON.stringify(old));v.stageOwners[stage]=id;v.groups[id]={id,type:'CATCHUP',baseGroupId:ticket.groupId,members:{[driver]:true},currentStage:stage,lastStage:null,completedStages:{},status:'READY',visitIndex:0};v.orders[id]={[stage]:{drawId:id+':'+stage+':0',order:[driver],createdAt:now}};v.lateCatchup[driver][stage].status='IN_PROGRESS';v.revision=(v.revision||0)+1;return v;
- },undefined,false);if(!tx.committed)throw Error('Stage already taken or no longer OPEN.');bs28Show('Catch-up scheduled at '+stage+'. Marshal can select '+stage+' and start the driver manually.')}catch(e){bs28Show('Catch-up scheduling failed: '+e.message,true)}
+ },undefined,false);if(!tx.committed)throw Error('SS was claimed, or this driver already has another catch-up. Refresh and retry.');
+ if(tx.snapshot?.val()){data.groupRotationV28=tx.snapshot.val();bs28RenderMain();}
+ bs28Show('Catch-up scheduled at '+stage+'. Marshal can select '+stage+' for this driver while the original group continues.');
+ }catch(e){bs28Show('Catch-up scheduling failed: '+e.message,true)}
 }
 // Recover only an orphaned lock whose EXACT runId already has a verified
 // online FINISH/DNF/DNS. Never unlock an active or unsaved run.
