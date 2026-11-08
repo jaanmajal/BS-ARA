@@ -1,4 +1,4 @@
-<!doctype html><!-- v28.7.7: emergency reset preserves unfinished SS assignments; single-gate DNF automatically records 1/1. --><!-- v28.7.4: fair-random group draws and actual first-starter history. --><!-- v28.7.2: automatic SORRCA 2024 preset scoring; signed Progress, dynamic Bonuses and progress-aware DNF; no scale points. --><!-- v27.7.8: recovery inbox for stage-lock-rejected queued results; no direct overwrite. --><!-- v27.7.7: next-driver ready reminder, any pending driver selection, blank manual stopwatch. --><!-- v27.7.5: pin-authorized stage reset protected by Firebase Rules v7 run ID; avoids stale local transaction cache abort; legacy transaction fallback. --><!-- v27.6.6: updated penalty schedule, DNF minimum Gate-1 scoring, frozen DNF roster base, and official tie-break order. --><!-- v28.7.7: verified first-start history; no duplicate history writes; weighted fair draws retained. -->
+<!doctype html><!-- v28.7.5: marshal-side verified completion releases stale SS reservations when Main Control is offline. --><!-- v28.7.7: emergency reset preserves unfinished SS assignments; single-gate DNF automatically records 1/1. --><!-- v28.7.4: fair-random group draws and actual first-starter history. --><!-- v28.7.2: automatic SORRCA 2024 preset scoring; signed Progress, dynamic Bonuses and progress-aware DNF; no scale points. --><!-- v27.7.8: recovery inbox for stage-lock-rejected queued results; no direct overwrite. --><!-- v27.7.7: next-driver ready reminder, any pending driver selection, blank manual stopwatch. --><!-- v27.7.5: pin-authorized stage reset protected by Firebase Rules v7 run ID; avoids stale local transaction cache abort; legacy transaction fallback. --><!-- v27.6.6: updated penalty schedule, DNF minimum Gate-1 scoring, frozen DNF roster base, and official tie-break order. --><!-- v28.7.7: verified first-start history; no duplicate history writes; weighted fair draws retained. -->
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#101827"><meta name="application-name" content="RC CRAWLER"><meta name="apple-mobile-web-app-title" content="RC CRAWLER"><link rel="icon" type="image/png" sizes="128x128" href="logo.png"><link rel="apple-touch-icon" href="logo.png"><title>RC CRAWLER | MARSHAL RACE CONTROL</title><style>
 <!-- v28.7.2: SORRCA signed Progress values survive reload; editable Bonus award value; saved bonus taps retain their original value. -->
 :root{font-family:system-ui,-apple-system,sans-serif;color:#edf3ff;background:#0a1120}*{box-sizing:border-box}body{margin:auto;max-width:980px;padding:18px}header,.flex{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}h1{font-size:25px;margin:0}h2{font-size:19px;margin:0 0 12px}.muted,small{color:#aab9ce}.card{background:#172238;border:1px solid #30425e;border-radius:16px;padding:16px;margin:14px 0}.card.firebase-online{border:4px solid #22c55e!important;box-shadow:0 0 0 1px rgba(34,197,94,.32),0 0 18px rgba(34,197,94,.24)!important;transition:border-color .15s ease,box-shadow .15s ease}.card.firebase-online:focus-within{border-color:#4ade80!important}button,input,select,textarea{font:inherit;border-radius:10px;border:1px solid #425572;padding:11px;background:#0c1729;color:white}button{cursor:pointer;font-weight:700}button:disabled{opacity:.4;cursor:default}.primary{background:#2563eb}.start{background:#168348}.stop{background:#b92d39}.warn{background:#8d5918}.row{display:flex;gap:8px;flex-wrap:wrap;margin:8px 0}.row>*{flex:1;min-width:120px}label{display:block;font-size:13px;color:#b8c7da;margin-bottom:4px}input,select{width:100%}.clock-wrap{display:flex;align-items:center;justify-content:center;gap:12px;flex-wrap:wrap;margin:10px 0}.clock{text-align:center;font-size:clamp(48px,10vw,90px);font-weight:800;font-variant-numeric:tabular-nums;letter-spacing:-3px;margin:0}.connection-indicator{font-size:14px;font-weight:900;letter-spacing:.04em;border:2px solid #ef4444;background:#651e2b;color:#ffe4e6;padding:9px 12px;white-space:nowrap}.connection-indicator.online{border-color:#22c55e;background:#14532d;color:#dcfce7}.connection-indicator.offline{border-color:#ef4444;background:#651e2b;color:#ffe4e6}.save-result{background:#087443;border-color:#22c55e}.confirm-stop{background:#087443;border-color:#22c55e;color:#ffffff}.fault-restart-button{background:#7c2d12;border:2px solid #fb923c;color:#fff7ed;min-height:50px;font-weight:900}.fault-restart-note{font-size:12px;color:#fed7aa;align-self:center}.confirm-stop-row{margin-top:6px}.confirm-stop-row button{width:100%;min-height:52px;font-size:17px}.manual-help{font-size:13px;line-height:1.5}.stage{display:flex;gap:8px}.stage button{flex:1}.selected{outline:3px solid #66b1ff}table{width:100%;border-collapse:collapse;font-size:14px}td,th{padding:10px 5px;border-bottom:1px solid #35445c;text-align:left}th{color:#b3c4db}.scroll{overflow:auto}.pill{border-radius:99px;background:#273a55;padding:5px 10px;font-size:12px}.error{color:#ff9f9f}.ok{color:#85e7ae}.hidden{display:none!important}details{margin:12px 0}summary{cursor:pointer;font-weight:700}.buttons button{min-height:65px;font-size:22px}.dns-row{display:flex;justify-content:flex-end;margin:-3px 0 6px}.dns-tab{flex:0 0 auto;min-width:64px;min-height:30px;padding:4px 13px;font-size:11px;font-weight:850;letter-spacing:.06em;border-radius:7px;background:#263b56;border:1px solid #6b86a8;color:#e4efff}.dns-tab:not(:disabled):hover{background:#345273}textarea{width:100%;min-height:100px}a{color:#8cc8ff}.brand{display:flex;align-items:center;gap:12px}.brand-logo{width:66px;height:66px;object-fit:contain;border-radius:9px}footer{text-align:center;color:#aab9ce;font-size:12px;padding:25px 0 15px;letter-spacing:.08em}.wake-state{font-size:13px;color:#b9d7ff;margin-top:8px}.row .alarm-icon{flex:0 0 44px;min-width:44px;width:44px;padding:7px 4px;font-size:19px;line-height:1}.alarm-row{align-items:center}.alarm-row #alarmStatus{flex:1;min-width:0}.timer-selectors>div{flex:1;min-width:130px}
@@ -2356,6 +2356,71 @@ function bs28GroupDestinations(plan,groupId,event){
  if(g.currentStage&&tentative.stageOwners[g.currentStage]===groupId)delete tentative.stageOwners[g.currentStage];
  return bs28Core.stageNames(tentative).filter(s=>s!==g.currentStage&&bs28Core.availability(tentative,groupId,s,{})==='AVAILABLE');
 }
+// Main Control normally releases completed group reservations. If Main Control is
+// offline, an authorised marshal performs the same verified, idempotent cleanup.
+// A stage is released only after every member has an official Firebase result and
+// any remaining timer lock is proven to belong to that exact saved run.
+let bs28MarshalReconcileBusy=false,bs28MarshalReconcileLast=0;
+async function bs28ReconcileCompletedGroups(){
+ if(bs28MarshalReconcileBusy||!marshalLinkMode||!bs28IsActive()||!online||!connectedToServer||!navigator.onLine||!app||!dbRef||!marshalSessionVerified||savingResult)return;
+ if(Date.now()-bs28MarshalReconcileLast<1200)return;
+ bs28MarshalReconcileLast=Date.now();bs28MarshalReconcileBusy=true;
+ try{
+  const eid=activeEventId(),root=app.database().ref('events/'+eid),snapshot=await root.once('value'),event=snapshot.val();
+  const plan=event?.groupRotationV28;if(!plan?.enabled)return;
+  let changed=false;
+  for(const [groupId,group] of Object.entries(plan.groups||{})){
+   const ss=group?.currentStage;if(!ss||!bs28Core.allResultsConfirmed(group,event,ss))continue;
+   const si=bs28Core.stageIndex(ss);if(si<0)continue;
+   const lockRef=app.database().ref('stageLocks/'+eid+'/'+ss);
+   let lock=(await lockRef.once('value')).val();
+   if(lock){
+    // Only the marshal session that owns this lock may release it. Never clear
+    // another marshal's live/unknown run just because an older result exists.
+    if(String(lock.authUid||'')!==String(auth?.currentUser?.uid||''))continue;
+    const released=await releaseStageLockIfResultAlreadySaved(lock,eid,si);
+    if(!released)lock=(await lockRef.once('value')).val();else lock=null;
+    if(lock)continue;
+   }
+   const completedAt=Date.now();
+   const tx=await root.child('groupRotationV28').transaction(old=>{
+    const live=old?.groups?.[groupId];
+    if(!old?.enabled||!live||live.currentStage!==ss||old.stageOwners?.[ss]!==groupId)return;
+    if(!bs28Core.allResultsConfirmed(live,event,ss))return;
+    const next=JSON.parse(JSON.stringify(old)),g=next.groups[groupId];
+    g.currentStage=null;g.lastStage=ss;g.completedStages=g.completedStages||{};g.completedStages[ss]=true;
+    g.visitIndex=(g.visitIndex||0)+1;delete next.stageOwners[ss];
+    if(g.type==='CATCHUP'){
+     g.status='FINISHED';
+     const who=bs28Core.memberIds(g.members)[0];
+     if(who&&next.lateCatchup?.[who]?.[ss])next.lateCatchup[who][ss].status='DONE';
+    }else{
+     const required=bs28Core.includedStages(next);
+     const missing=required.some(st=>!g.completedStages?.[st]);
+     const due=Object.values(next.lateCatchup||{}).some(byStage=>Object.entries(byStage||{}).some(([st,t])=>t?.groupId===groupId&&t.status!=='DONE'&&required.includes(st)));
+     g.status=missing||due?'CHOOSING':'FINISHED';
+    }
+    for(const [gid,base] of Object.entries(next.groups||{})){
+     if(base.type==='CATCHUP'||base.currentStage||base.status!=='CHOOSING')continue;
+     const required=bs28Core.includedStages(next);
+     const missing=required.some(st=>!base.completedStages?.[st]);
+     const due=Object.values(next.lateCatchup||{}).some(byStage=>Object.entries(byStage||{}).some(([st,t])=>t?.groupId===gid&&t.status!=='DONE'&&required.includes(st)));
+     if(!missing&&!due)base.status='FINISHED';
+    }
+    next.revision=(next.revision||0)+1;next.audit=next.audit||{};
+    next.audit['complete-'+groupId+'-'+ss]={action:'COMPLETE_SS',groupId,stage:ss,at:completedAt,source:'MARSHAL_OFFLINE_RECOVERY'};
+    return next;
+   },undefined,false);
+   if(tx.committed&&tx.snapshot?.val){
+    event.groupRotationV28=tx.snapshot.val();data=normalizeData(event);
+    try{localStorage.setItem(key,JSON.stringify(data))}catch(e){console.warn('BS28: local cache update after group completion failed',e)}
+    changed=true;
+   }
+  }
+  if(changed){render();bs28RenderMarshal();}
+ }catch(e){console.warn('BS28 marshal-side completed-group reconciliation failed',e)}
+ finally{bs28MarshalReconcileBusy=false}
+}
 const bs28SavedGroupKey=()=>'bs-style-v28-marshal-group:'+activeEventId();
 const bs28RequestKey=()=>'bs-style-v28-marshal-request:'+activeEventId();
 const bs28CurrentStage=()=>bs28Core.ss(stage);
@@ -2893,7 +2958,9 @@ $('bs28NextGroup')?.addEventListener('change',e=>{
 $('bs28NextSS')?.addEventListener('change',bs28RenderMarshal);
 $('bs28SwitchButton')?.addEventListener('click',bs28SelectSS);
 
-window.BS28_MARSHAL_READY=true;window.BS28_MARSHAL_VERSION="28.7.4";setInterval(()=>{if(bs28IsActive())bs28RenderMarshal()},1800);bs28RenderMarshal();
+window.BS28_MARSHAL_READY=true;window.BS28_MARSHAL_VERSION="28.7.5";
+setInterval(()=>{if(bs28IsActive())bs28ReconcileCompletedGroups().finally(()=>bs28RenderMarshal())},1800);
+bs28ReconcileCompletedGroups().finally(()=>bs28RenderMarshal());
 })();
 /* System-wide uppercase for human-readable text fields, including dynamically rendered inputs. */
 (function installUppercaseWordInputs(){
