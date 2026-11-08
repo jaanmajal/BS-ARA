@@ -1,0 +1,22 @@
+RC CRAWLER v28.8.2 - REQUIRED GITHUB PAGES UPDATE
+
+This package fixes the Group Rotation initialization error caused by the
+missing bs28-core.js dependency in the published repository.
+
+UPLOAD ALL FOUR FILES TO THE ROOT OF THE SAME GITHUB REPOSITORY:
+  1. index.html             REPLACE the existing file
+  2. marshal.html           REPLACE the existing file
+  3. bs28-core.js           ADD this missing file
+  4. bs28-coordinator.js    ADD this missing file
+
+Keep all four files beside firebase-config.js. Do not put them in a subfolder.
+Do not replace or delete firebase-config.js. Do not change Firebase Rules or
+clear the Firebase event data for this issue.
+
+After committing the files to the main branch, wait for GitHub Pages to finish
+deploying. Then open the website and do a hard refresh (Ctrl+F5 on Windows).
+The Main Control footer should show v28.8.2. If the Group Rotation panel reports
+that a shared library is missing, check that both .js files are in the same
+repository root as index.html.
+
+The package also uses the existing logo.jpg asset from this repository.
