@@ -1,4 +1,4 @@
-<!doctype html><!-- v28.7.5: marshal-side verified completion releases stale SS reservations when Main Control is offline. --><!-- v28.7.7: emergency reset preserves unfinished SS assignments; single-gate DNF automatically records 1/1. --><!-- v28.7.4: fair-random group draws and actual first-starter history. --><!-- v28.7.2: automatic SORRCA 2024 preset scoring; signed Progress, dynamic Bonuses and progress-aware DNF; no scale points. --><!-- v27.7.8: recovery inbox for stage-lock-rejected queued results; no direct overwrite. --><!-- v27.7.7: next-driver ready reminder, any pending driver selection, blank manual stopwatch. --><!-- v27.7.5: pin-authorized stage reset protected by Firebase Rules v7 run ID; avoids stale local transaction cache abort; legacy transaction fallback. --><!-- v27.6.6: updated penalty schedule, DNF minimum Gate-1 scoring, frozen DNF roster base, and official tie-break order. --><!-- v28.7.7: verified first-start history; no duplicate history writes; weighted fair draws retained. -->
+<!doctype html><!-- v28.8.1: catch-up START guards and fail-closed completion checks; Firebase coordinator required. --><!-- v28.7.5: marshal-side verified completion releases stale SS reservations when Main Control is offline. --><!-- v28.7.7: emergency reset preserves unfinished SS assignments; single-gate DNF automatically records 1/1. --><!-- v28.7.4: fair-random group draws and actual first-starter history. --><!-- v28.7.2: automatic SORRCA 2024 preset scoring; signed Progress, dynamic Bonuses and progress-aware DNF; no scale points. --><!-- v27.7.8: recovery inbox for stage-lock-rejected queued results; no direct overwrite. --><!-- v27.7.7: next-driver ready reminder, any pending driver selection, blank manual stopwatch. --><!-- v27.7.5: pin-authorized stage reset protected by Firebase Rules v7 run ID; avoids stale local transaction cache abort; legacy transaction fallback. --><!-- v27.6.6: updated penalty schedule, DNF minimum Gate-1 scoring, frozen DNF roster base, and official tie-break order. --><!-- v28.7.7: verified first-start history; no duplicate history writes; weighted fair draws retained. -->
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#101827"><meta name="application-name" content="RC CRAWLER"><meta name="apple-mobile-web-app-title" content="RC CRAWLER"><link rel="icon" type="image/png" sizes="128x128" href="logo.png"><link rel="apple-touch-icon" href="logo.png"><title>RC CRAWLER | MARSHAL RACE CONTROL</title><style>
 <!-- v28.7.2: SORRCA signed Progress values survive reload; editable Bonus award value; saved bonus taps retain their original value. -->
 :root{font-family:system-ui,-apple-system,sans-serif;color:#edf3ff;background:#0a1120}*{box-sizing:border-box}body{margin:auto;max-width:980px;padding:18px}header,.flex{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}h1{font-size:25px;margin:0}h2{font-size:19px;margin:0 0 12px}.muted,small{color:#aab9ce}.card{background:#172238;border:1px solid #30425e;border-radius:16px;padding:16px;margin:14px 0}.card.firebase-online{border:4px solid #22c55e!important;box-shadow:0 0 0 1px rgba(34,197,94,.32),0 0 18px rgba(34,197,94,.24)!important;transition:border-color .15s ease,box-shadow .15s ease}.card.firebase-online:focus-within{border-color:#4ade80!important}button,input,select,textarea{font:inherit;border-radius:10px;border:1px solid #425572;padding:11px;background:#0c1729;color:white}button{cursor:pointer;font-weight:700}button:disabled{opacity:.4;cursor:default}.primary{background:#2563eb}.start{background:#168348}.stop{background:#b92d39}.warn{background:#8d5918}.row{display:flex;gap:8px;flex-wrap:wrap;margin:8px 0}.row>*{flex:1;min-width:120px}label{display:block;font-size:13px;color:#b8c7da;margin-bottom:4px}input,select{width:100%}.clock-wrap{display:flex;align-items:center;justify-content:center;gap:12px;flex-wrap:wrap;margin:10px 0}.clock{text-align:center;font-size:clamp(48px,10vw,90px);font-weight:800;font-variant-numeric:tabular-nums;letter-spacing:-3px;margin:0}.connection-indicator{font-size:14px;font-weight:900;letter-spacing:.04em;border:2px solid #ef4444;background:#651e2b;color:#ffe4e6;padding:9px 12px;white-space:nowrap}.connection-indicator.online{border-color:#22c55e;background:#14532d;color:#dcfce7}.connection-indicator.offline{border-color:#ef4444;background:#651e2b;color:#ffe4e6}.save-result{background:#087443;border-color:#22c55e}.confirm-stop{background:#087443;border-color:#22c55e;color:#ffffff}.fault-restart-button{background:#7c2d12;border:2px solid #fb923c;color:#fff7ed;min-height:50px;font-weight:900}.fault-restart-note{font-size:12px;color:#fed7aa;align-self:center}.confirm-stop-row{margin-top:6px}.confirm-stop-row button{width:100%;min-height:52px;font-size:17px}.manual-help{font-size:13px;line-height:1.5}.stage{display:flex;gap:8px}.stage button{flex:1}.selected{outline:3px solid #66b1ff}table{width:100%;border-collapse:collapse;font-size:14px}td,th{padding:10px 5px;border-bottom:1px solid #35445c;text-align:left}th{color:#b3c4db}.scroll{overflow:auto}.pill{border-radius:99px;background:#273a55;padding:5px 10px;font-size:12px}.error{color:#ff9f9f}.ok{color:#85e7ae}.hidden{display:none!important}details{margin:12px 0}summary{cursor:pointer;font-weight:700}.buttons button{min-height:65px;font-size:22px}.dns-row{display:flex;justify-content:flex-end;margin:-3px 0 6px}.dns-tab{flex:0 0 auto;min-width:64px;min-height:30px;padding:4px 13px;font-size:11px;font-weight:850;letter-spacing:.06em;border-radius:7px;background:#263b56;border:1px solid #6b86a8;color:#e4efff}.dns-tab:not(:disabled):hover{background:#345273}textarea{width:100%;min-height:100px}a{color:#8cc8ff}.brand{display:flex;align-items:center;gap:12px}.brand-logo{width:66px;height:66px;object-fit:contain;border-radius:9px}footer{text-align:center;color:#aab9ce;font-size:12px;padding:25px 0 15px;letter-spacing:.08em}.wake-state{font-size:13px;color:#b9d7ff;margin-top:8px}.row .alarm-icon{flex:0 0 44px;min-width:44px;width:44px;padding:7px 4px;font-size:19px;line-height:1}.alarm-row{align-items:center}.alarm-row #alarmStatus{flex:1;min-width:0}.timer-selectors>div{flex:1;min-width:130px}
@@ -1317,7 +1317,7 @@ body.marshal-view #marshalConnectionFields #publicResultsLink {display:none!impo
 <section class="card"><details><summary>FIREBASE PROJECT INFORMATION</summary><p class="muted">RC CRAWLER v28 Firebase project fields are supplied by firebase-config.js. The organiser must first publish the correct Realtime Database URL in that file. Marshal links connect anonymously when Main Control opens marshal access; no organiser password is needed on the marshal phone. The Event ID must match on all devices. To change it while connected, disconnect first, edit the ID, then reconnect. Only enter your authorized organizer email and password when connecting; the app does not save those credentials. The public results link below includes the selected Event ID. Host this site on HTTPS (e.g. GitHub Pages) and use the SAME Firebase Realtime Database on every device. Local mode does NOT synchronize devices.</p><div class="row"><div><label>Firebase API key</label><input id="apiKey" placeholder="Firebase apiKey" readonly></div><div><label>Firebase auth domain</label><input id="authDomain" placeholder="project.firebaseapp.com" readonly></div></div><div class="row"><div><label>Firebase database URL</label><input id="databaseURL" placeholder="https://project-default-rtdb.firebaseio.com" readonly></div><div><label>Firebase project ID</label><input id="projectId" placeholder="project-id" readonly></div></div><div class="row"><div><label>Event ID (same on all devices)</label><input id="eventId" value="bs28-test" maxlength="80" placeholder="e.g. bs28-test" autocapitalize="off" spellcheck="false"><div class="muted">Editable and saved on this device. Letters, numbers and hyphens only. Disconnect before changing while online.</div></div><div><label>Firebase email</label><input id="email" type="email" placeholder="organizer@example.com" autocomplete="off"></div><div><label>Firebase password</label><input id="password" type="password" placeholder="Password" autocomplete="off"></div></div><div class="row"><button id="connect" class="primary">Connect / sign in</button><button id="disconnect">Disconnect</button></div><div class="muted" style="margin-top:8px">Public results for this Event ID: <a id="publicResultsLink" href="results.html?event=bs28-test" target="_blank" rel="noopener">Open public results</a>. Share the generated link with spectators.</div><div class="muted marshal-share-link" style="margin-top:8px">Marshal Race Control for this Event ID: <a id="marshalLink" href="marshal.html?event=bs28-test" target="_blank" rel="noopener">Open marshal control</a> <button type="button" id="copyMarshalLink" class="copy-link-button">Copy marshal link</button><small class="marshal-share-help">Share this link with the marshal. It opens Section 1 only and preselects this Event ID.</small></div><div id="syncMsg" class="muted"></div></details><details><summary>BACKUPS, RESULT RECOVERY &amp; CORRECTIONS</summary><div class="row"><button id="export">Export JSON backup</button><button id="snapshotDownload">Download latest safety backup</button><button id="historyDownload">Export correction history</button><span id="safetyStatus" class="muted" role="status"></span><button id="csv">Export CSV leaderboard</button><label>Import JSON backup<input type="file" id="import" accept=".json,application/json"></label></div><p class="muted">Choose a driver and SS to compare the saved record with your proposed correction. Result status, time/gate progress and penalty counts are saved together. Leave a penalty count blank to keep its recorded value; enter 0 to remove that penalty type.</p><div class="row"><div><label for="correctionDriver">Driver to correct</label><select id="correctionDriver"></select></div><div><label for="correctionStage">Special Stage</label><select id="correctionStage"></select></div></div><div class="correction-compare-grid"><div class="correction-snapshot"><div class="correction-snapshot-title">Recorded before correction</div><div id="correctionBefore" class="correction-snapshot-body" aria-live="polite">Select a driver and SS.</div></div><div class="correction-snapshot after"><div class="correction-snapshot-title" id="correctionAfterTitle">After correction preview</div><div id="correctionAfter" class="correction-snapshot-body" aria-live="polite">Select a driver and SS.</div></div></div><div class="row"><div><label for="editStatus">New status (blank = keep current)</label><select id="editStatus" aria-label="Correction status"><option value="" selected>Keep current status</option><option value="finish">Finish</option><option value="dnf">DNF</option><option value="dns">DNS</option><option value="clear">Clear result</option></select></div><div><label for="editTime">Finish time (blank = keep current)</label><input id="editTime" placeholder="mm:ss.cc (finish only)" inputmode="numeric" autocomplete="off"></div><div id="correctionGateCountField"><label for="editGatesCleared">Gates cleared (DNF)</label><input id="editGatesCleared" type="number" min="0" step="1" inputmode="numeric" placeholder="Blank = keep current" disabled></div></div><div class="penalty-quick-wrap correction-penalty-section"><div class="flex"><strong>Penalty counts to save with correction</strong><span class="pill" id="correctionPenaltyTapTotal">0 taps</span></div><div id="correctionPenaltyDriverLabel" class="muted penalty-note">Select a driver and SS above.</div><p class="muted">The input shows the currently recorded tap count. Use <b>−</b> and <b>+</b>, or type a number, to prepare a correction. Changes are preview-only and do not overwrite saved data until you press <b>Save Correction</b>. Enter <b>0</b> to remove all taps of that type.</p><div id="correctionPenaltyCounters" class="correction-penalty-list"><div class="muted">Select a driver and SS.</div></div><div id="correctionPenaltySummary" class="ok correction-penalty-summary">Total taps: 0 • Deduction: 0 pts</div></div><div id="correctionInfo" class="muted" aria-live="polite" style="margin-top:8px"></div><div class="correction-save-row"><button id="correct" class="primary">Save result + penalties together</button></div></details></section>
 <section class="card clear-race-panel" id="clearRaceDataPanel"><details><summary>RESET EVENT — CLEAR ALL RACE DATA</summary><p class="clear-race-warning"><b>Destructive action:</b> clears registered drivers, results, penalty records, late-entry records, SS draw orders and draw locks for the currently selected Firebase Event ID on all connected devices. It keeps SS cutoff times, gate totals, shared penalty rules, Firebase configuration and Event ID. This action requires a live Firebase connection and zero pending uploads. Local safety snapshots are kept for recovery.</p><div class="clear-race-controls"><div><label for="clearRacePassword">Reset password</label><input id="clearRacePassword" type="password" inputmode="numeric" maxlength="6" placeholder="6-digit reset password" autocomplete="new-password"></div><button id="clearAllRaceData" type="button">🗑 Clear all race data</button></div><div id="clearRaceDataStatus" class="clear-race-status muted" role="status" aria-live="polite">Connect to Firebase and sync all pending changes before starting a new race.</div></details></section>
 
-<footer>© TEC-ARTS CRAWLER • RC CRAWLER · POINT &amp; TIME ATTACK SYSTEM · ALL RIGHTS RESERVED · v28.7.7</footer><script>
+<footer>© TEC-ARTS CRAWLER • RC CRAWLER · POINT &amp; TIME ATTACK SYSTEM · ALL RIGHTS RESERVED · v28.8.1</footer><script>
 (function(){
   const host=document.getElementById('marshalConnectionFields');
   if(!host)return;
@@ -1332,7 +1332,7 @@ body.marshal-view #marshalConnectionFields #publicResultsLink {display:none!impo
   if(syncMsg)host.appendChild(syncMsg);
 })();
 </script>
-<script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-app-compat.js"></script><script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-auth-compat.js"></script><script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-database-compat.js"></script><script src="firebase-config.js"></script><script src="bs28-core.js?v=28.7.6"></script><script>
+<script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-app-compat.js"></script><script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-auth-compat.js"></script><script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-database-compat.js"></script><script src="firebase-config.js"></script><script src="bs28-core.js?v=28.7.6"></script><script src="bs28-coordinator.js?v=28.8.1"></script><script>
 /* Shared RC CRAWLER scoring engine. Keep this identical on Main Control, Marshal and Public Results. */
 (function (root) {
   'use strict';
@@ -1658,7 +1658,7 @@ function showStageLockConflictModal(stageName,lock,driverId,driver){
       if(lockedDriverId&&Number.isInteger(stageIndex)&&stageIndex>=0){
         try{
           const saved=(await app.database().ref('events/'+eventId+'/results/'+lockedDriverId+'/'+stageIndex).once('value')).val();
-          resultConfirmed=!!(saved&&['finish','dnf','dns'].includes(String(saved.status||'').toLowerCase()));
+          resultConfirmed=!!(saved&&saved.runId&&saved.runId===exactLock.runId&&['finish','dnf','dns'].includes(String(saved.status||'').toLowerCase()));
         }catch(e){throw Error(describeError('SAVED RESULT CHECK',e))}
       }
       const runIsActive=String(exactLock.status||'').toLowerCase()==='running';
@@ -1713,7 +1713,7 @@ function showStageLockConflictModal(stageName,lock,driverId,driver){
           // matching lock exists on the server. Rules v7 provides an atomic,
           // run-ID-bound delete guard, so remove() is both safer and reliable.
           show('4/5 Force unlocking the approved run in Firebase');
-          try{await lockRef.remove()}
+          try{if(bs28Plan()?.sparkProtocol===1){await app.database().ref().update({['stageLocks/'+eventId+'/'+stageName]:null,['driverRunLocks/'+eventId+'/'+currentLock.driverId]:null});}else await lockRef.remove()}
           catch(e){throw Error(describeError('SERVER-PROTECTED STAGE LOCK REMOVE',e))}
         }else{
           // Older locks without a run ID have no unique server-side identity.
@@ -1766,7 +1766,7 @@ function showStageLockConflictModal(stageName,lock,driverId,driver){
   retry.focus();
  });
 }
-async function releaseStageLockIfResultAlreadySaved(lock,eventId,stageIndex){if(!lock||lock.status!=='running'||!lock.runId||!lock.driverId||!app||!online||!connectedToServer)return false;const rawDriverId=String(lock.driverId),stageName='SS'+(Number(stageIndex)+1),startedAt=Number(lock.startedAt)||0;try{const eventRef=app.database().ref('events/'+eventId),driverSnap=await eventRef.child('drivers').once('value'),drivers=driverSnap.val()||{},candidateIds=new Set([rawDriverId]);for(const [key,d] of Object.entries(drivers)){const sameRaw=key===rawDriverId||String(d?.id||'')===rawDriverId||String(d?.driverId||'')===rawDriverId;const sameNumber=!!lock.driverNum&&String(d?.num||'').trim()===String(lock.driverNum).trim();const sameName=!!lock.driverName&&String(d?.name||'').trim().toLowerCase()===String(lock.driverName).trim().toLowerCase();if(sameRaw||(sameNumber&&(!lock.driverName||sameName)))candidateIds.add(String(key))}let confirmedResult=null;for(const candidateId of candidateIds){const snap=await eventRef.child('results/'+candidateId+'/'+Number(stageIndex)).once('value'),saved=snap.val();if(!saved||!['finish','dnf','dns'].includes(String(saved.status||'').toLowerCase()))continue;const savedAt=Number(saved.at)||0;const runMatches=String(saved.runId||'')===String(lock.runId);const legacyTimestampMatches=!saved.runId&&startedAt>0&&savedAt>=startedAt;if(runMatches||(legacyTimestampMatches&&savedAt>0)){confirmedResult={candidateId,saved};break}}if(!confirmedResult)return false;const ref=app.database().ref('stageLocks/'+eventId+'/'+stageName);const tx=await ref.transaction(current=>{if(current&&current.status==='running'&&String(current.runId)===String(lock.runId)&&String(current.driverId)===rawDriverId)return null;return;},undefined,false);if(tx.committed&&!tx.snapshot.val()){setMsg('Firebase confirms the previous '+stageName+' result is saved. The completed run lock has been released for all devices.');return true}return false}catch(e){setMsg('Could not verify whether the previous '+stageName+' run is saved. The stage remains locked: '+e.message,true);return false}}
+async function releaseStageLockIfResultAlreadySaved(lock,eventId,stageIndex){if(bs28IsActive()&&lock?.runId){try{await BS28_COORDINATOR.call(app,eventId,'releaseSavedRun',{driverId:String(lock.driverId),stage:bs28Core.ss(stageIndex),runId:lock.runId});return true;}catch(e){setMsg('Exact saved run could not be released: '+e.message,true);return false;}}if(!lock||lock.status!=='running'||!lock.runId||!lock.driverId||!app||!online||!connectedToServer)return false;const rawDriverId=String(lock.driverId),stageName='SS'+(Number(stageIndex)+1);try{const saved=(await app.database().ref('events/'+eventId+'/results/'+rawDriverId+'/'+Number(stageIndex)).get()).val();if(!bs28Core.statusFor(saved)||!saved.runId||String(saved.runId)!==String(lock.runId))return false;const ref=app.database().ref('stageLocks/'+eventId+'/'+stageName);const tx=await ref.transaction(current=>{if(current&&current.status==='running'&&String(current.runId)===String(lock.runId)&&String(current.driverId)===rawDriverId&&String(current.authUid||'')===String(lock.authUid||'')&&String(current.marshalSessionId||'')===String(lock.marshalSessionId||''))return null;return;},undefined,false);if(tx.committed&&!tx.snapshot.val()){setMsg('Firebase confirms the previous '+stageName+' result is saved. The completed run lock has been released for all devices.');return true}return false}catch(e){setMsg('Could not verify whether the previous '+stageName+' run is saved. The stage remains locked: '+e.message,true);return false}}
 // v27.7.6: Unlocking a stage must never carry the original START click through to timer creation.
 // The newly assigned marshal must explicitly press START after the lock has been cleared.
 function markStageReadyAfterUnlock(stageName,detail){
@@ -1776,7 +1776,7 @@ function markStageReadyAfterUnlock(stageName,detail){
   render();
   setMsg(detail+' '+stageName+' is READY at 00:00.00. Select the driver and press START to begin a NEW timed run.',false);
 }
-async function acquireStageLock(driverId,stageIndex){if(!marshalLinkMode)return true;if(!online||!connectedToServer||!app||!navigator.onLine){alert('Cannot claim a new stage while Firebase is offline. An already-locked run can continue locally and queue its result.');return false}if(!marshalSessionVerified||!marshalGateRef){if(!await verifyMarshalSessionOnline()){alert('Marshal access could not be verified. Ask the organiser to reopen the event link.');return false}}const eventId=activeEventId(),stageName='SS'+(Number(stageIndex)+1),runId='run-'+Date.now()+'-'+Math.random().toString(36).slice(2,10),ref=app.database().ref('stageLocks/'+eventId+'/'+stageName),savedName=String(marshalName||localStorage.getItem(marshalNameKey)||'').trim(),authUid=String(auth?.currentUser?.uid||'');if(!savedName){alert('Enter your marshal name before starting the timer or recording penalties.');return false}if(!authUid){alert('Anonymous marshal session is not ready. Reopen the marshal link.');return false}try{const tx=await ref.transaction(current=>{if(current&&current.status==='running'){if(current.marshalSessionId===marshalSessionId&&current.driverId===String(driverId)){if(current.restartReady)return {...current,authUid,runId,startedAt:Date.now(),restartReady:false,restartedAt:Date.now()};return {...current,authUid}}return}const selectedDriver=data.drivers?.[String(driverId)]||{};return {status:'running',eventId,stage:stageName,marshalSessionId,authUid,marshalName:savedName,driverId:String(driverId),driverName:String(selectedDriver.name||''),driverNum:String(selectedDriver.num||''),runId,startedAt:Date.now()};},undefined,false);if(!tx.committed||!tx.snapshot.val()||tx.snapshot.val().marshalSessionId!==marshalSessionId||tx.snapshot.val().driverId!==String(driverId)||tx.snapshot.val().authUid!==authUid){const lock=tx.snapshot?.val();if(lock&&lock.status==='running'&&await releaseStageLockIfResultAlreadySaved(lock,eventId,stageIndex)){
+async function acquireStageLock(driverId,stageIndex){if(!marshalLinkMode)return true;if(bs28IsActive())return bs28AcquireCoordinatorRun(driverId,stageIndex);if(!online||!connectedToServer||!app||!navigator.onLine){alert('Cannot claim a new stage while Firebase is offline. An already-locked run can continue locally and queue its result.');return false}if(!marshalSessionVerified||!marshalGateRef){if(!await verifyMarshalSessionOnline()){alert('Marshal access could not be verified. Ask the organiser to reopen the event link.');return false}}const eventId=activeEventId(),stageName='SS'+(Number(stageIndex)+1),runId='run-'+Date.now()+'-'+Math.random().toString(36).slice(2,10),ref=app.database().ref('stageLocks/'+eventId+'/'+stageName),savedName=String(marshalName||localStorage.getItem(marshalNameKey)||'').trim(),authUid=String(auth?.currentUser?.uid||'');if(!savedName){alert('Enter your marshal name before starting the timer or recording penalties.');return false}if(!authUid){alert('Anonymous marshal session is not ready. Reopen the marshal link.');return false}try{const tx=await ref.transaction(current=>{if(current&&current.status==='running'){if(current.marshalSessionId===marshalSessionId&&current.driverId===String(driverId)){if(current.restartReady)return {...current,authUid,runId,startedAt:Date.now(),restartReady:false,restartedAt:Date.now()};return {...current,authUid}}return}const selectedDriver=data.drivers?.[String(driverId)]||{};return {status:'running',eventId,stage:stageName,marshalSessionId,authUid,marshalName:savedName,driverId:String(driverId),driverName:String(selectedDriver.name||''),driverNum:String(selectedDriver.num||''),runId,startedAt:Date.now()};},undefined,false);if(!tx.committed||!tx.snapshot.val()||tx.snapshot.val().marshalSessionId!==marshalSessionId||tx.snapshot.val().driverId!==String(driverId)||tx.snapshot.val().authUid!==authUid){const lock=tx.snapshot?.val();if(lock&&lock.status==='running'&&await releaseStageLockIfResultAlreadySaved(lock,eventId,stageIndex)){
   markStageReadyAfterUnlock(stageName,'Previous result was already saved and its lock was released.');
   return false;
 }
@@ -1799,8 +1799,13 @@ if(action==='check'){
   }
   return false;
 }
-return false}const confirmedLock=tx.snapshot.val();localStageLock={eventId,stage:stageName,driverId:String(driverId),runId:confirmedLock.runId,marshalSessionId,authUid};try{const activeLock={driverId:String(driverId),stageKey:String(stageIndex),stageName,runId:confirmedLock.runId,marshalSessionId,authUid,updatedAt:Date.now()};await marshalGateRef.child('activeLock').set(activeLock);const verifiedActive=(await marshalGateRef.child('activeLock').once('value')).val();if(!verifiedActive||verifiedActive.runId!==confirmedLock.runId||verifiedActive.driverId!==String(driverId)||verifiedActive.stageKey!==String(stageIndex))throw new Error('Firebase did not confirm the active marshal stage lock.');try{localStorage.setItem(stageLockLocalKey(eventId),JSON.stringify(localStageLock))}catch(e){}return true}catch(e){try{await ref.transaction(current=>current&&current.runId===confirmedLock.runId&&current.authUid===authUid?null:current,undefined,false)}catch(cleanupError){}localStageLock=null;try{localStorage.removeItem(stageLockLocalKey(eventId))}catch(cleanupError){}alert('Could not register the active marshal stage lock. Timer was not started: '+e.message);return false}}catch(e){alert('Could not acquire the Firebase stage lock. Timer was not started: '+e.message);return false}}
-async function releaseStageLockAfterConfirmedSave(driverId,stageIndex){if(!marshalLinkMode||!app||!online||!connectedToServer)return false;const eventId=activeEventId(),stageName='SS'+(Number(stageIndex)+1),ref=app.database().ref('stageLocks/'+eventId+'/'+stageName);let owned=localStageLock;try{if(!owned||owned.eventId!==eventId||owned.stage!==stageName||owned.driverId!==String(driverId)){const local=JSON.parse(localStorage.getItem(stageLockLocalKey(eventId))||'null');if(local&&local.eventId===eventId&&local.stage===stageName&&local.driverId===String(driverId))owned=local}if(!owned||!owned.runId)return false;const tx=await ref.transaction(current=>{if(!current||current.status!=='running'||current.runId!==owned.runId||current.marshalSessionId!==owned.marshalSessionId||current.authUid!==String(auth?.currentUser?.uid||''))return;return null},undefined,false);if(!tx.committed)return false;try{if(marshalGateRef){const activeRef=marshalGateRef.child('activeLock');await activeRef.transaction(current=>current&&current.runId===owned.runId?null:current,undefined,false)}}catch(e){setMsg('Result is saved and the stage lock is released, but the session lock needs cleanup: '+e.message,true)}localStageLock=null;try{localStorage.removeItem(stageLockLocalKey(eventId))}catch(e){}setMsg('Firebase confirmed the result. '+stageName+' lock released for the next run.');return true}catch(e){setMsg('Result is saved, but stage-lock release needs organiser review: '+e.message,true);return false}}
+return false}const confirmedLock=tx.snapshot.val();
+if(bs28IsActive()&&!await bs28ValidateStart(driverId,stageIndex)){
+ if(confirmedLock.runId===runId)try{await ref.transaction(current=>current?.runId===runId&&current?.authUid===authUid?null:undefined,undefined,false)}catch(e){setMsg('START blocked; unstarted lock cleanup failed: '+e.message,true)}
+ return false;
+}
+localStageLock={eventId,stage:stageName,driverId:String(driverId),runId:confirmedLock.runId,marshalSessionId,authUid};try{const activeLock={driverId:String(driverId),stageKey:String(stageIndex),stageName,runId:confirmedLock.runId,marshalSessionId,authUid,updatedAt:Date.now()};await marshalGateRef.child('activeLock').set(activeLock);const verifiedActive=(await marshalGateRef.child('activeLock').once('value')).val();if(!verifiedActive||verifiedActive.runId!==confirmedLock.runId||verifiedActive.driverId!==String(driverId)||verifiedActive.stageKey!==String(stageIndex))throw new Error('Firebase did not confirm the active marshal stage lock.');try{localStorage.setItem(stageLockLocalKey(eventId),JSON.stringify(localStageLock))}catch(e){}return true}catch(e){try{await ref.transaction(current=>current&&current.runId===confirmedLock.runId&&current.authUid===authUid?null:current,undefined,false)}catch(cleanupError){}localStageLock=null;try{localStorage.removeItem(stageLockLocalKey(eventId))}catch(cleanupError){}alert('Could not register the active marshal stage lock. Timer was not started: '+e.message);return false}}catch(e){alert('Could not acquire the Firebase stage lock. Timer was not started: '+e.message);return false}}
+async function releaseStageLockAfterConfirmedSave(driverId,stageIndex){if(bs28IsActive())return bs28ReleaseCoordinatorSavedRun(driverId,stageIndex);if(!marshalLinkMode||!app||!online||!connectedToServer)return false;const eventId=activeEventId(),stageName='SS'+(Number(stageIndex)+1),ref=app.database().ref('stageLocks/'+eventId+'/'+stageName);let owned=localStageLock;try{if(!owned||owned.eventId!==eventId||owned.stage!==stageName||owned.driverId!==String(driverId)){const local=JSON.parse(localStorage.getItem(stageLockLocalKey(eventId))||'null');if(local&&local.eventId===eventId&&local.stage===stageName&&local.driverId===String(driverId))owned=local}if(!owned||!owned.runId)return false;const tx=await ref.transaction(current=>{if(!current||current.status!=='running'||current.runId!==owned.runId||current.marshalSessionId!==owned.marshalSessionId||current.authUid!==String(auth?.currentUser?.uid||''))return;return null},undefined,false);if(!tx.committed)return false;try{if(marshalGateRef){const activeRef=marshalGateRef.child('activeLock');await activeRef.transaction(current=>current&&current.runId===owned.runId?null:current,undefined,false)}}catch(e){setMsg('Result is saved and the stage lock is released, but the session lock needs cleanup: '+e.message,true)}localStageLock=null;try{localStorage.removeItem(stageLockLocalKey(eventId))}catch(e){}setMsg('Firebase confirmed the result. '+stageName+' lock released for the next run.');return true}catch(e){setMsg('Result is saved, but stage-lock release needs organiser review: '+e.message,true);return false}}
 
 function queueEventId(item){return String(item?.eventId||localStorage.getItem('bs28-test-event-id')||window.RC_EVENT_ID||'bs28-test')}
 function stableStringify(value){if(value===undefined)return 'null';if(value===null||typeof value!=='object')return JSON.stringify(value);if(Array.isArray(value))return '['+value.map(stableStringify).join(',')+']';return '{'+Object.keys(value).sort().map(k=>JSON.stringify(k)+':'+stableStringify(value[k])).join(',')+'}'}
@@ -1830,7 +1835,7 @@ function updateSyncHealth(){const el=$('syncHealth');if(!el)return;const eid=act
 function safetySnapshot(label){try{snapshots.push({at:new Date().toISOString(),label,data:clone(data)});if(snapshots.length>12)snapshots=snapshots.slice(-12);let saved=false;while(snapshots.length&&!saved){try{localStorage.setItem(safetyKey,JSON.stringify(snapshots));saved=true}catch(e){snapshots.shift()}}if(!saved){console.warn('Safety snapshots could not be stored; browser storage may be full.');const status=$('syncMsg');if(status)setMsg('WARNING: Browser storage is nearly full; export a JSON backup now.',true)}updateSafetyStatus()}catch(e){console.warn('Snapshot failed',e)}}
 function recordHistory(action,id,s,before,after){history.push({at:new Date().toISOString(),action,driver:id,stage:s+1,before:clone(before),after:clone(after)});if(history.length>500)history=history.slice(-500);try{localStorage.setItem(historyKey,JSON.stringify(history))}catch(e){console.warn('Correction history storage failed',e);if($('syncMsg'))setMsg('Correction history could not be stored. Export a JSON backup.',true)}}
 function updateSafetyStatus(){const el=$('safetyStatus');if(el)el.textContent=snapshots.length+' safety snapshots saved locally · '+pending.length+' queued changes across events';updateSyncHealth()}
-function enqueue(path,value,eventId=activeEventId()){value=normalizeSyncPathValue(path,value);const existing=pending.find(x=>x.path===path&&queueEventId(x)===eventId);if(existing){existing.value=clone(value);existing.updatedAt=new Date().toISOString();existing.eventId=eventId}else{pending.push({path,value:clone(value),eventId,queuedAt:new Date().toISOString(),updatedAt:new Date().toISOString()})}const saved=savePendingQueue();updateSafetyStatus();return saved}
+function enqueue(path,value,eventId=activeEventId()){value=normalizeSyncPathValue(path,value);const existing=pending.find(x=>x.path===path&&queueEventId(x)===eventId);if(existing){existing.value=clone(value);existing.updatedAt=new Date().toISOString();existing.eventId=eventId}else{pending.push({path,value:clone(value),eventId,queuedAt:new Date().toISOString(),updatedAt:new Date().toISOString()})}if(bs28Plan()?.sparkProtocol===1&&localStageLock?.runId){const queued=pending.find(x=>x.path===path&&queueEventId(x)===eventId);if(queued)queued.runId=localStageLock.runId;}const saved=savePendingQueue();updateSafetyStatus();return saved}
 function removePendingIfMatches(path,value,eventId=activeEventId()){const before=pending.length;const normalizedValue=normalizeSyncPathValue(path,value);pending=pending.filter(item=>!(item.path===path&&queueEventId(item)===eventId&&stableStringify(normalizeSyncPathValue(path,item.value))===stableStringify(normalizedValue)));const changed=pending.length!==before;if(changed)savePendingQueue();updateSafetyStatus();return changed}
 function queueLocalStateForSync(snapshot,eventId=activeEventId()){let ok=true;const add=(path,value)=>{if(!enqueue(path,value,eventId))ok=false};add('cutoffs',snapshot.cutoffs||[]);add('gateTotals',snapshot.gateTotals||[]);if(Number.isInteger(Number(snapshot.dnfRosterCount))&&Number(snapshot.dnfRosterCount)>0)add('dnfRosterCount',Number(snapshot.dnfRosterCount));add('penaltyRules',snapshot.penaltyRules||[]);if(snapshot.drawFairness&&Object.keys(snapshot.drawFairness.firstStartByStage||{}).length)add('drawFairness',snapshot.drawFairness);for(const [si,order] of Object.entries(snapshot.drawOrders||{}))add('drawOrders/'+si,order);for(const [si,locked] of Object.entries(snapshot.drawLocks||{}))add('drawLocks/'+si,locked);for(const [id,entry] of Object.entries(snapshot.lateEntries||{}))add('lateEntries/'+id,entry);for(const [id,driver] of Object.entries(snapshot.drivers||{}))add('drivers/'+id,driver);for(const [id,byStage] of Object.entries(snapshot.results||{}))for(const [stageKey,r] of Object.entries(byStage||{}))add('results/'+id+'/'+stageKey,r);for(const [id,byStage] of Object.entries(snapshot.penalties||{}))for(const [stageKey,items] of Object.entries(byStage||{}))add('penalties/'+id+'/'+stageKey,items);return ok}
 async function refreshFromServerIfSafe(eventId=activeEventId()){if(!online||!dbRef||!connectedToServer||eventId!==activeEventId()||hasPendingForEvent(eventId)||running||pendingRun)return;try{const snap=await dbRef.once('value');if(snap.exists()&&!hasPendingForEvent(eventId)&&!running&&!pendingRun){data=normalizeData(snap.val());try{localStorage.setItem(key,JSON.stringify(data))}catch(e){setMsg('Firebase is current, but local cache storage failed. Export a JSON backup.',true)}render()}}catch(e){setMsg('Firebase write was acknowledged, but refresh verification failed: '+e.message,true)}}
@@ -1859,11 +1864,12 @@ function showMarshalAccessBlocked(message){
 }
 async function verifyMarshalSessionOnline(){if(!marshalLinkMode)return true;if(marshalAccessRevoked||!online||!connectedToServer||!navigator.onLine||!marshalGateRef)return false;const session=(await marshalGateRef.once('value')).val();if(!session||session.enabled!==true||session.token!==marshalLinkToken){showMarshalAccessBlocked('The organiser closed marshal access for Event ID '+activeEventId()+'.');return false}marshalSessionVerified=true;try{localStorage.setItem(marshalSessionVerifiedKey(activeEventId()),JSON.stringify({token:marshalLinkToken,verifiedAt:Date.now()}))}catch(e){}return true}
 async function sendOrQueue(path,value){try{if(!await checkRaceRestartBeforeSync())return {online:false,queued:false,persisted:false,error:'Race restarted; old change discarded.'}}catch(e){const stored=enqueue(path,normalizeSyncPathValue(path,value),activeEventId());setMsg('Saved locally; sync paused until race reset status can be verified: '+e.message,true);return {online:false,queued:stored,persisted:stored,error:e.message}}const eventId=activeEventId();if(marshalLinkMode){if(marshalAccessRevoked)return {online:false,queued:false,persisted:false,error:'Marshal access is closed.'};const pathMatch=/^(results|penalties)\/([^/]+)\/(\d+)$/.exec(String(path||'')),rosterFreeze=String(path||'')==='dnfRosterCount';if(!pathMatch&&!rosterFreeze)return {online:false,queued:false,persisted:false,error:'Marshal links can only submit result, penalty and one-time DNF roster records.'};const expectedStage=pathMatch?'SS'+(Number(pathMatch[3])+1):String(localStageLock?.stage||''),ownsLock=!!(localStageLock&&localStageLock.eventId===eventId&&(!pathMatch||(localStageLock.stage===expectedStage&&localStageLock.driverId===String(pathMatch[2]))));if(rosterFreeze&&(!ownsLock||Number(value)!==Object.keys(data.drivers||{}).length||Number(data.dnfRosterCount)!==Number(value)))return {online:false,queued:false,persisted:false,error:'The DNF roster count can only be frozen once by the marshal holding the active stage lock.'};if(online&&connectedToServer&&navigator.onLine){try{if(!await verifyMarshalSessionOnline())return {online:false,queued:false,persisted:false,error:'Marshal access is closed or cannot be verified.'}}catch(e){return {online:false,queued:false,persisted:false,error:'Cannot verify marshal session with Firebase: '+e.message}}}else if(!marshalSessionVerified||!ownsLock){return {online:false,queued:false,persisted:false,error:'Offline save requires a previously verified marshal session and an active stage lock.'}}}value=normalizeSyncPathValue(path,value);const queueStored=enqueue(path,value,eventId);if(!online||!dbRef||!navigator.onLine||!connectedToServer){setMsg(queueStored?'Saved locally; waiting to sync when Firebase reconnects.':'CRITICAL: the change is in memory, but the sync queue could not be saved to browser storage. Export a JSON backup immediately.',!queueStored);return {online:false,queued:queueStored,persisted:queueStored}}
-try{setMsg('Saving to Firebase and verifying...');const ref=dbRef.child(path);await ref.set(clone(value));const verify=normalizeSyncPathValue(path,(await ref.once('value')).val());if(stableStringify(verify)!==stableStringify(value))throw new Error('Firebase verification did not match the saved value');removePendingIfMatches(path,value,eventId);setMsg('Firebase confirmed the write.');updateSyncHealth();await refreshFromServerIfSafe(eventId);return {online:true,queued:false,persisted:true}}
+try{setMsg('Saving to Firebase and verifying...');const ref=dbRef.child(path);await BS28_COORDINATOR.writeQueued(app,eventId,path,clone(value),bs28Plan()?.sparkProtocol===1?localStageLock?.runId:null);const verify=normalizeSyncPathValue(path,(await ref.once('value')).val());if(stableStringify(verify)!==stableStringify(value))throw new Error('Firebase verification did not match the saved value');removePendingIfMatches(path,value,eventId);if(value?.sparkFinal){const pm=/^results\/([^/]+)\/(\d+)$/.exec(path);if(pm)removePendingIfMatches('penalties/'+pm[1]+'/'+pm[2],JSON.parse(value.penaltySnapshotJson||'[]'),eventId);}setMsg('Firebase confirmed the write.');updateSyncHealth();await refreshFromServerIfSafe(eventId);return {online:true,queued:false,persisted:true}}
 catch(e){const stored=enqueue(path,value,eventId);setMsg(stored?'Local copy retained; upload is waiting: '+e.message:'CRITICAL: Firebase write failed and the queue could not be persisted. Export a JSON backup immediately. '+e.message,true);return {online:false,queued:stored,persisted:stored,error:e.message}}}
 async function flushPending(){try{if(!await checkRaceRestartBeforeSync())return}catch(e){setMsg('Sync paused: cannot verify race reset status. '+e.message,true);return}if(flushing||lateEntrySaving||!online||!connectedToServer||!navigator.onLine)return;if(marshalLinkMode){try{if(!await verifyMarshalSessionOnline())return}catch(e){setMsg('Marshal session could not be verified; queued results remain on this device: '+e.message,true);return}}const eventId=activeEventId();const batch=pending.filter(item=>queueEventId(item)===eventId&&(!marshalLinkMode||/^(results|penalties)\/[^/]+\/\d+$/.test(String(item.path||''))||String(item.path||'')==='dnfRosterCount')).map(item=>clone(item));if(!batch.length){updateSyncHealth();return}flushing=true;let failedPath="";updateSyncHealth();try{for(const item of batch){failedPath=String(item.path||"");const latest=pending.find(p=>p.path===item.path&&queueEventId(p)===eventId);if(!latest)continue;const rawLocalValue=clone(latest.value);let localValue=normalizeSyncPathValue(item.path,rawLocalValue);if(stableStringify(localValue)!==stableStringify(rawLocalValue)){latest.value=clone(localValue);latest.updatedAt=new Date().toISOString();if(!savePendingQueue())throw new Error('Could not persist the normalized sync queue. Export a JSON backup before continuing.')}const ref=dbRef.child(item.path);const remote=normalizeSyncPathValue(item.path,(await ref.once('value')).val());
 if(stableStringify(remote)===stableStringify(localValue)){removePendingIfMatches(item.path,localValue,eventId);if(marshalLinkMode){const match=/^results\/([^/]+)\/(\d+)$/.exec(String(item.path));if(match)await releaseStageLockAfterConfirmedSave(match[1],Number(match[2]));}continue;}
-if(marshalLinkMode&&remote!==null&&/^(results|penalties)\/[^/]+\/\d+$/.test(String(item.path))){throw new Error('RESULT CONFLICT: an online record already differs from the queued '+item.path+'. The online result was not overwritten. Use SEND QUEUED RESULT FOR ORGANISER REVIEW and ask Main Control to review it.');}
+if(bs28Plan()?.sparkProtocol===1&&String(item.path).startsWith('penalties/')){const rp=String(item.path).replace('penalties/','results/'),final=(await dbRef.child(rp).get()).val();if(final?.sparkFinal&&BS28_COORDINATOR.penaltySignature(localValue)===BS28_COORDINATOR.penaltySignature(JSON.parse(final.penaltySnapshotJson||'[]'))){removePendingIfMatches(item.path,localValue,eventId);continue;}}
+if(marshalLinkMode&&remote!==null&&/^(results|penalties)\/[^/]+\/\d+$/.test(String(item.path))&&!(bs28Plan()?.sparkProtocol===1&&String(item.path).startsWith('penalties/')&&latest.runId&&latest.runId===localStageLock?.runId)){throw new Error('RESULT CONFLICT: an online record already differs from the queued '+item.path+'. The online result was not overwritten. Use SEND QUEUED RESULT FOR ORGANISER REVIEW and ask Main Control to review it.');}
 if(item.path==='dnfRosterCount'&&remote!==null){
  if(stableStringify(remote)===stableStringify(localValue)){
   removePendingIfMatches(item.path,localValue,eventId);
@@ -1871,7 +1877,7 @@ if(item.path==='dnfRosterCount'&&remote!==null){
  }
  throw new Error('DNF roster count already frozen online at '+remote+' while this device has '+localValue+'. Nothing was overwritten. Organiser must reconcile the pending backup.');
 }
-if(stableStringify(remote)!==stableStringify(localValue)&&remote!==null){let mergedSameLateEntry=false;if(String(item.path).startsWith('lateEntries/')){const lateDriverId=String(item.path).slice('lateEntries/'.length);const localDriver=data.drivers?.[lateDriverId];let remoteDriver=null;try{remoteDriver=(await dbRef.child('drivers/'+lateDriverId).once('value')).val()}catch(e){}const sameDriver=!!(localDriver&&remoteDriver&&String(localDriver.num||'').trim()===String(remoteDriver.num||'').trim()&&String(localDriver.name||'').trim()===String(remoteDriver.name||'').trim());const sameStage=Number(remote?.targetStage)===Number(localValue?.targetStage);if(sameDriver&&sameStage&&remote&&localValue&&typeof remote==='object'&&typeof localValue==='object'){localValue=normalizeLateEntryRecord({...remote,...localValue,targetStage:remote.targetStage,addedAt:remote.addedAt||localValue.addedAt,positions:{...(remote.positions||{}),...(localValue.positions||{})}});latest.value=clone(localValue);latest.updatedAt=new Date().toISOString();if(!savePendingQueue())throw new Error('Could not persist the merged late-entry sync queue. Export a JSON backup before continuing.');mergedSameLateEntry=true;}}if(!mergedSameLateEntry&&!confirm('SYNC CONFLICT for '+item.path+' in Event ID '+eventId+'. OK = replace the online value with this device\'s queued value. Cancel = keep this change pending for organiser review.'))break}await ref.set(localValue);const verify=normalizeSyncPathValue(item.path,(await ref.once('value')).val());if(stableStringify(verify)!==stableStringify(localValue))throw new Error('Firebase verification failed for '+item.path);removePendingIfMatches(item.path,localValue,eventId);if(marshalLinkMode){const resultPath=/^results\/([^/]+)\/(\d+)$/.exec(item.path);if(resultPath)await releaseStageLockAfterConfirmedSave(resultPath[1],Number(resultPath[2]))}}if(!hasPendingForEvent(eventId)){setMsg('All queued changes for Event ID '+eventId+' have been synchronized and verified.');await refreshFromServerIfSafe(eventId)}else{setMsg(eventPendingCount(eventId)+' change(s) still waiting to sync for Event ID '+eventId+'. Review any conflicts before continuing.',true)}}catch(e){setMsg('UPLOAD FAILED at '+(failedPath||'unknown path')+' for Event ID '+eventId+': '+e.message+'. The queued change has NOT been deleted. If this is an old result from before a stage takeover, export a backup, then use SEND QUEUED RESULT FOR ORGANISER REVIEW (requires Firebase Rules v8). Main Control must approve the recovery; no result is overwritten automatically.',true)}finally{flushing=false;updateSafetyStatus()}}
+if(stableStringify(remote)!==stableStringify(localValue)&&remote!==null&&!(marshalLinkMode&&bs28Plan()?.sparkProtocol===1&&String(item.path).startsWith('penalties/')&&latest.runId&&latest.runId===localStageLock?.runId)){let mergedSameLateEntry=false;if(String(item.path).startsWith('lateEntries/')){const lateDriverId=String(item.path).slice('lateEntries/'.length);const localDriver=data.drivers?.[lateDriverId];let remoteDriver=null;try{remoteDriver=(await dbRef.child('drivers/'+lateDriverId).once('value')).val()}catch(e){}const sameDriver=!!(localDriver&&remoteDriver&&String(localDriver.num||'').trim()===String(remoteDriver.num||'').trim()&&String(localDriver.name||'').trim()===String(remoteDriver.name||'').trim());const sameStage=Number(remote?.targetStage)===Number(localValue?.targetStage);if(sameDriver&&sameStage&&remote&&localValue&&typeof remote==='object'&&typeof localValue==='object'){localValue=normalizeLateEntryRecord({...remote,...localValue,targetStage:remote.targetStage,addedAt:remote.addedAt||localValue.addedAt,positions:{...(remote.positions||{}),...(localValue.positions||{})}});latest.value=clone(localValue);latest.updatedAt=new Date().toISOString();if(!savePendingQueue())throw new Error('Could not persist the merged late-entry sync queue. Export a JSON backup before continuing.');mergedSameLateEntry=true;}}if(!mergedSameLateEntry&&!confirm('SYNC CONFLICT for '+item.path+' in Event ID '+eventId+'. OK = replace the online value with this device\'s queued value. Cancel = keep this change pending for organiser review.'))break}await BS28_COORDINATOR.writeQueued(app,eventId,item.path,localValue,latest.runId);const verify=normalizeSyncPathValue(item.path,(await ref.once('value')).val());if(stableStringify(verify)!==stableStringify(localValue))throw new Error('Firebase verification failed for '+item.path);removePendingIfMatches(item.path,localValue,eventId);if(marshalLinkMode){const resultPath=/^results\/([^/]+)\/(\d+)$/.exec(item.path);if(resultPath)await releaseStageLockAfterConfirmedSave(resultPath[1],Number(resultPath[2]))}}if(!hasPendingForEvent(eventId)){setMsg('All queued changes for Event ID '+eventId+' have been synchronized and verified.');await refreshFromServerIfSafe(eventId)}else{setMsg(eventPendingCount(eventId)+' change(s) still waiting to sync for Event ID '+eventId+'. Review any conflicts before continuing.',true)}}catch(e){setMsg('UPLOAD FAILED at '+(failedPath||'unknown path')+' for Event ID '+eventId+': '+e.message+'. The queued change has NOT been deleted. If this is an old result from before a stage takeover, export a backup, then use SEND QUEUED RESULT FOR ORGANISER REVIEW (requires Firebase Rules v8). Main Control must approve the recovery; no result is overwritten automatically.',true)}finally{flushing=false;updateSafetyStatus()}}
 // v27.7.8 — Safe result recovery. A recovery ticket is NOT an official result.
 async function submitQueuedResultsForReview(){
  const btn=$('sendRecovery'), eventId=activeEventId();
@@ -1906,7 +1912,7 @@ async function submitQueuedResultsForReview(){
     const penalties=normalizeSyncPathValue(penaltyPath,clone(queuedPenalty?queuedPenalty.value:(data.penalties?.[driverId]?.[stageIndex]||null)));
     const record={status:'pending',eventId,marshalUid:uid,marshalName:String(marshalName||localStorage.getItem(marshalNameKey)||''),driverId,driverName:String(data.drivers?.[driverId]?.name||''),driverNum:String(data.drivers?.[driverId]?.num||''),stageIndex,stageName:'SS'+(stageIndex+1),originalPath:item.path,queuedAt:String(item.queuedAt||''),result:resultValue,submittedAt:firebase.database.ServerValue.TIMESTAMP};
     if(penalties!==null)record.penalties=penalties;
-    await ticketRef.set(record);
+    if(bs28Plan()?.sparkProtocol===1){await app.database().ref().update({['marshalRecoveryInbox/'+eventId+'/'+uid+'/'+ticketId]:record,['recoveryPendingByStage/'+eventId+'/'+record.stageName+'/'+uid+'_'+ticketId]:{uid,ticket:ticketId}});}else await ticketRef.set(record);
     const verified=(await ticketRef.once('value')).val();
     if(!verified||stableStringify(verified.result)!==stableStringify(resultValue))throw new Error('Recovery ticket could not be verified.');
     submitted++;
@@ -2181,7 +2187,7 @@ function showRaceModal(kind,payload={}){return new Promise(resolve=>{const old=d
 async function reviewPendingRun(){if(!pendingRun||savingResult)return;applySorrcaPointOutIfNeeded(pendingRun.id,pendingRun.s);if(!BS28_SCORING.normalizeFormat(data.scoringFormat))return alert('Select a scoring format in Main Control before reviewing or saving a result.');if((pendingRun.requiresStopConfirmation||pendingRun.source==='timer')&&!pendingRun.confirmed)return alert('Press CONFIRM STOP after reviewing the time and penalties with the driver.');if(pendingRun.status==='dnf'&&!validDnfGateCount(pendingRun))return alert('Before saving DNF, enter the number of gates cleared (0 to '+gateTotalForStage(pendingRun.s)+').');const item=clone(pendingRun),driver=data.drivers[item.id]||{},isTime=BS28_SCORING.isPureTimeAttack(data.scoringFormat),isSorrca=BS28_SCORING.isSorrca(data.scoringFormat),ignored=item.status==='dnf'&&!isTime||item.status==='dns',grouped=new Map();for(const p of appliedPenalties(item.id,item.s)){const name=String(p.name||'Penalty').trim()||'Penalty',key=name.toLowerCase(),count=Math.max(1,Math.floor(Number(p.count)||1)),points=(usesSorrca2024Preset()?penaltyItemPoints(p):Math.max(0,penaltyItemPoints(p)))*count;let row=grouped.get(key);if(!row){row={name,count:0,points:0,isBonus:BS28_SCORING.isBonusGateItem(p),isProgress:String(p.ruleId||'')==='sorrcca-progress'};grouped.set(key,row)}row.count+=count;row.points+=points}const penalties=[...grouped.values()].map(p=>({...p,display:(item.status==='dns'||(item.status==='dnf'&&!isTime&&!(usesSorrca2024Preset()&&p.isProgress)))?'Not applied for '+item.status.toUpperCase():p.isBonus?(usesSorrca2024Preset()?signedSorrcaPoints(p.points)+' bonus pts':'-'+(10*p.count)+' bonus pts'):isTime?'+'+p.points+' sec':isSorrca?signedSorrcaPoints(p.points)+' pts':'-'+p.points+' pts'}));const rawTime=item.status==='dns'?'DNS':item.status==='dnf'?(usesSorrca2024Preset()?(item.pointOut?'DNF — SORRCA point-out (60 points against) · '+Math.round(Math.abs(sorrCaProgressPoints(appliedPenalties(item.id,item.s)))/2)+' progress':'DNF · '+Math.round(Math.abs(sorrCaProgressPoints(appliedPenalties(item.id,item.s)))/2)+' progress'):(item.pointOut?'DNF — SORRCA point-out (60 penalty points) · '+(item.gatesCleared===undefined?'gate count not entered':item.gatesCleared+'/'+gateTotalForStage(item.s)+' gates cleared'):'DNF — '+(item.gatesCleared===undefined?'gate count not entered':item.gatesCleared+'/'+gateTotalForStage(item.s)+' gates cleared'))):fmt(item.ms||0),totalDeduction=penaltyPointDeductions(item.id,item.s),authorized=await showRaceModal('review',{num:driver.num||'?',name:driver.name||'Unknown driver',stage:Number(item.s)+1,status:item.status,result:rawTime,penalties,totalTaps:totalPenaltyTaps(item.id,item.s),totalDeduction,totalLabel:isTime?'TOTAL TIME PENALTIES':isSorrca?'POINTS AGAINST':'TOTAL DEDUCTION',totalValue:item.status==='dns'?'Not applied':isTime?'+'+totalDeduction+' sec':isSorrca?'+'+totalDeduction+' pts':'-'+totalDeduction+' pts',penaltyHeading:isSorrca?'PENALTY / BONUS':isTime?'TIME ADJUSTMENT':'DEDUCTION'});if(authorized)await commitPendingRun()}
 
 async function notifyNextDriver(savedId,s){const nextId=pendingStageDriverIds(s,savedId)[0];if(nextId){localStorage.setItem('bs28-test-selected-driver',nextId);$('driver').value=nextId;render();await showRaceModal('next',{stage:s+1,next:true,num:data.drivers[nextId]?.num||'?',name:data.drivers[nextId]?.name||'Unknown driver'})}else{render();await showRaceModal('next',{stage:s+1,next:false})}}
-async function commitPendingRun(){if(!pendingRun||savingResult)return;if(!BS28_SCORING.normalizeFormat(data.scoringFormat))return alert('Select a scoring format in Main Control before saving a result.');if(marshalLinkMode){if(marshalAccessRevoked)return alert('Marshal access is closed for this event. No result was saved.');const expectedStage='SS'+(Number(pendingRun.s)+1),ownsLock=!!(localStageLock&&localStageLock.eventId===activeEventId()&&localStageLock.stage===expectedStage&&localStageLock.driverId===String(pendingRun.id));if(online&&connectedToServer&&navigator.onLine){try{if(!await verifyMarshalSessionOnline())return alert('Marshal access is closed for this event. No result was saved.')}catch(e){return alert('Cannot verify marshal session with Firebase. No result was saved. '+e.message)}}else if(!marshalSessionVerified||!ownsLock)return alert('Cannot save offline without a previously verified marshal session and an active stage lock. Reconnect or contact the organiser.')}const savedMarshalName=String(marshalName||localStorage.getItem(marshalNameKey)||'').trim();if(!savedMarshalName)return alert('Enter your marshal name at the top of this page before saving a result.');if((pendingRun.requiresStopConfirmation||pendingRun.source==='timer')&&!pendingRun.confirmed)return alert('Press CONFIRM STOP after reviewing the time and penalties with the driver.');applySorrcaPointOutIfNeeded(pendingRun.id,pendingRun.s);const item=applySingleGateDnf(clone(pendingRun)),{id,s,status,overwriteAuthorized,source}=item;if(marshalLinkMode&&(!localStageLock||localStageLock.eventId!==activeEventId()||localStageLock.stage!=='SS'+(Number(s)+1)||localStageLock.driverId!==String(id))){if(!await acquireStageLock(id,s))return}if(!data.drivers[id])return alert('The selected driver no longer exists.');if(status==='dnf'&&!validDnfGateCount(item))return alert('Before saving DNF, enter the number of gates cleared (0 to '+gateTotalForStage(s)+').');const existing=result(id,s);if(existing&&!overwriteAuthorized){if(!requireAdmin())return;if(!confirm('A result already exists for this driver and stage. Overwrite it?'))return;if(!requireAdmin())return}const before=clone(existing);const manualSource=source==='manual'||source==='manual-override';const r={status,ms:status==='dnf'?data.cutoffs[s]:status==='dns'?0:item.ms,at:Date.now(),source:status==='dns'?'dns':source==='point-out'?'point-out':manualSource?'manual':'timer',marshalName:savedMarshalName,...(localStageLock&&localStageLock.eventId===activeEventId()&&localStageLock.stage==='SS'+(Number(s)+1)&&localStageLock.driverId===String(id)?{runId:localStageLock.runId}:{}),...(status==='dnf'&&!usesSorrca2024Preset()?{gatesCleared:Number(item.gatesCleared),totalGates:gateTotalForStage(s)}:{}),...(item.pointOut?{pointOut:true,pointOutPenaltyPoints:Number(item.pointOutPenaltyPoints)||60}:{})};data.results[id]??={};data.results[id][s]=r;try{persist()}catch(e){if(before===null){delete data.results[id][s];if(!Object.keys(data.results[id]).length)delete data.results[id]}else data.results[id][s]=before;render();alert('The result could not be safely saved to this device storage. The pending run is still available. Export/clear browser storage before trying again.');return}const action=status==='dns'?'driver recorded as DNS':source==='point-out'?'SORRCA 60-point point-out recorded as DNF':source==='manual-override'?'timer result manually adjusted before save':source==='manual'?'manual stopwatch result saved':'timer result saved';recordHistory(action,id,s,before,r);savingResult=true;try{pendingRun=null;try{localStorage.removeItem(pendingRunKey);localStorage.removeItem(activeRunKey)}catch(e){}if(running){clearInterval(tick);tick=null;running=null;releaseWake()}try{localStorage.setItem(lastClockKey,'0')}catch(e){}$('clock').textContent='00:00.00';$('manualTime').value='';$('manualTime').disabled=false;$('prepareManual').title='Prepare manual finish time for review';$('prepareManual').setAttribute('aria-label','Prepare manual finish time for review');render();const outcome=await sendOrQueue('results/'+id+'/'+s,r);if(outcome.online){await releaseStageLockAfterConfirmedSave(id,s);$('quickPenaltyStatus').textContent='SAVED ONLINE';$('pendingStatus').textContent='';$('manualStatusMessage').textContent='SAVED ONLINE';showSaveResultFeedback('online','RESULT SAVED ONLINE')}else if(outcome.queued){$('quickPenaltyStatus').textContent='SAVED LOCALLY · SYNC PENDING';$('pendingStatus').textContent='';$('manualStatusMessage').textContent='SYNC PENDING';showSaveResultFeedback('local','RESULT SAVED · SYNC PENDING')}else{$('quickPenaltyStatus').textContent='SYNC QUEUE ERROR · EXPORT BACKUP';$('pendingStatus').textContent='';$('manualStatusMessage').textContent='SYNC QUEUE ERROR';showSaveResultFeedback('error','SAVE WARNING · EXPORT BACKUP');alert('WARNING: the result is in the current page data, but its upload queue could not be saved. Export a JSON backup immediately and do not refresh.')}await notifyNextDriver(id,s);updateSafetyStatus()}catch(e){setMsg('Result saved locally, but sync needs attention: '+e.message,true);$('quickPenaltyStatus').textContent='Saved locally; sync needs attention. Check the warning above.';showSaveResultFeedback('error','⚠ Save/sync needs attention — check the warning and export a backup if needed.')}finally{savingResult=false;$('saveResult').disabled=!pendingRun}}
+async function commitPendingRun(){if(!pendingRun||savingResult)return;if(!BS28_SCORING.normalizeFormat(data.scoringFormat))return alert('Select a scoring format in Main Control before saving a result.');if(marshalLinkMode){if(marshalAccessRevoked)return alert('Marshal access is closed for this event. No result was saved.');const expectedStage='SS'+(Number(pendingRun.s)+1),ownsLock=!!(localStageLock&&localStageLock.eventId===activeEventId()&&localStageLock.stage===expectedStage&&localStageLock.driverId===String(pendingRun.id));if(online&&connectedToServer&&navigator.onLine){try{if(!await verifyMarshalSessionOnline())return alert('Marshal access is closed for this event. No result was saved.')}catch(e){return alert('Cannot verify marshal session with Firebase. No result was saved. '+e.message)}}else if(!marshalSessionVerified||!ownsLock)return alert('Cannot save offline without a previously verified marshal session and an active stage lock. Reconnect or contact the organiser.')}const savedMarshalName=String(marshalName||localStorage.getItem(marshalNameKey)||'').trim();if(!savedMarshalName)return alert('Enter your marshal name at the top of this page before saving a result.');if((pendingRun.requiresStopConfirmation||pendingRun.source==='timer')&&!pendingRun.confirmed)return alert('Press CONFIRM STOP after reviewing the time and penalties with the driver.');applySorrcaPointOutIfNeeded(pendingRun.id,pendingRun.s);const item=applySingleGateDnf(clone(pendingRun)),{id,s,status,overwriteAuthorized,source}=item;if(marshalLinkMode&&(!localStageLock||localStageLock.eventId!==activeEventId()||localStageLock.stage!=='SS'+(Number(s)+1)||localStageLock.driverId!==String(id))){if(!await acquireStageLock(id,s))return}if(!data.drivers[id])return alert('The selected driver no longer exists.');if(status==='dnf'&&!validDnfGateCount(item))return alert('Before saving DNF, enter the number of gates cleared (0 to '+gateTotalForStage(s)+').');const existing=result(id,s);if(existing&&!overwriteAuthorized){if(!requireAdmin())return;if(!confirm('A result already exists for this driver and stage. Overwrite it?'))return;if(!requireAdmin())return}const before=clone(existing);const manualSource=source==='manual'||source==='manual-override';const r={...(bs28IsActive()?{sparkFinal:true,penaltySnapshotJson:JSON.stringify(data.penalties?.[id]?.[s]||[]),penaltySignature:BS28_COORDINATOR.penaltySignature(data.penalties?.[id]?.[s])}:{}),status,ms:status==='dnf'?data.cutoffs[s]:status==='dns'?0:item.ms,at:Date.now(),source:status==='dns'?'dns':source==='point-out'?'point-out':manualSource?'manual':'timer',marshalName:savedMarshalName,...(localStageLock&&localStageLock.eventId===activeEventId()&&localStageLock.stage==='SS'+(Number(s)+1)&&localStageLock.driverId===String(id)?{runId:localStageLock.runId}:{}),...(status==='dnf'&&!usesSorrca2024Preset()?{gatesCleared:Number(item.gatesCleared),totalGates:gateTotalForStage(s)}:{}),...(item.pointOut?{pointOut:true,pointOutPenaltyPoints:Number(item.pointOutPenaltyPoints)||60}:{})};data.results[id]??={};data.results[id][s]=r;try{persist()}catch(e){if(before===null){delete data.results[id][s];if(!Object.keys(data.results[id]).length)delete data.results[id]}else data.results[id][s]=before;render();alert('The result could not be safely saved to this device storage. The pending run is still available. Export/clear browser storage before trying again.');return}const action=status==='dns'?'driver recorded as DNS':source==='point-out'?'SORRCA 60-point point-out recorded as DNF':source==='manual-override'?'timer result manually adjusted before save':source==='manual'?'manual stopwatch result saved':'timer result saved';recordHistory(action,id,s,before,r);savingResult=true;try{pendingRun=null;try{localStorage.removeItem(pendingRunKey);localStorage.removeItem(activeRunKey)}catch(e){}if(running){clearInterval(tick);tick=null;running=null;releaseWake()}try{localStorage.setItem(lastClockKey,'0')}catch(e){}$('clock').textContent='00:00.00';$('manualTime').value='';$('manualTime').disabled=false;$('prepareManual').title='Prepare manual finish time for review';$('prepareManual').setAttribute('aria-label','Prepare manual finish time for review');render();const outcome=await sendOrQueue('results/'+id+'/'+s,r);if(outcome.online){await releaseStageLockAfterConfirmedSave(id,s);$('quickPenaltyStatus').textContent='SAVED ONLINE';$('pendingStatus').textContent='';$('manualStatusMessage').textContent='SAVED ONLINE';showSaveResultFeedback('online','RESULT SAVED ONLINE')}else if(outcome.queued){$('quickPenaltyStatus').textContent='SAVED LOCALLY · SYNC PENDING';$('pendingStatus').textContent='';$('manualStatusMessage').textContent='SYNC PENDING';showSaveResultFeedback('local','RESULT SAVED · SYNC PENDING')}else{$('quickPenaltyStatus').textContent='SYNC QUEUE ERROR · EXPORT BACKUP';$('pendingStatus').textContent='';$('manualStatusMessage').textContent='SYNC QUEUE ERROR';showSaveResultFeedback('error','SAVE WARNING · EXPORT BACKUP');alert('WARNING: the result is in the current page data, but its upload queue could not be saved. Export a JSON backup immediately and do not refresh.')}await notifyNextDriver(id,s);updateSafetyStatus()}catch(e){setMsg('Result saved locally, but sync needs attention: '+e.message,true);$('quickPenaltyStatus').textContent='Saved locally; sync needs attention. Check the warning above.';showSaveResultFeedback('error','⚠ Save/sync needs attention — check the warning and export a backup if needed.')}finally{savingResult=false;$('saveResult').disabled=!pendingRun}}
 async function prepareManualResult(){if(!BS28_SCORING.normalizeFormat(data.scoringFormat))return alert('Select a scoring format in Main Control before preparing a result.');if(running)return alert('Stop the timer first, then you can use manual input to override its pending time before saving.');const status='finish';const targetId=pendingRun?pendingRun.id:selected(),targetStage=pendingRun?pendingRun.s:stage;if(!targetId)return alert('Select a driver first.');const ms=parse($('manualTime').value);if(ms===null)return alert('Enter manual time as mm:ss.cc, for example 02:14.35, or use digits only on a phone.');if(ms>=data.cutoffs[targetStage])return alert('A finish time must be below the SS cutoff. Use the DNF button if the driver did not finish before cutoff.');if(pendingRun){if(marshalLinkMode&&(!localStageLock||localStageLock.eventId!==activeEventId()||localStageLock.stage!=='SS'+(targetStage+1)||localStageLock.driverId!==String(targetId))){if(!await acquireStageLock(targetId,targetStage))return}const before=clone(pendingRun);const updated={...pendingRun,status,ms,source:pendingRun.source==='timer'||pendingRun.source==='manual-override'?'manual-override':'manual',manuallyAdjusted:true,adjustedAt:Date.now(),...(pendingRun.requiresStopConfirmation?{confirmed:false,confirmedAt:null}: {})};if(status==='dnf'){updated.totalGates=gateTotalForStage(targetStage);if(before.status!=='dnf')delete updated.gatesCleared}else{delete updated.gatesCleared;delete updated.totalGates}pendingRun=updated;localStorage.setItem(pendingRunKey,JSON.stringify(pendingRun));localStorage.setItem(lastClockKey,String(pendingRun.ms||0));recordHistory('pending result time/status updated before save',pendingRun.id,pendingRun.s,before,pendingRun);$('clock').textContent=fmt(pendingRun.ms||0);render();syncManualOverrideInputs();$('manualStatusMessage').textContent='TIME UPDATED';$('quickPenaltyStatus').textContent='PENDING RESULT UPDATED';return}const id=targetId,s=targetStage;let overwriteAuthorized=false;if(result(id,s)){if(!requireAdmin())return;if(!confirm('A result already exists for this driver and stage. Prepare a replacement result?'))return;if(!requireAdmin())return;overwriteAuthorized=true;clearPreviousPenaltiesForNewAttempt(id,s)}if(marshalLinkMode&&(!localStageLock||localStageLock.eventId!==activeEventId()||localStageLock.stage!=='SS'+(s+1)||localStageLock.driverId!==String(id))){if(!await acquireStageLock(id,s))return}localStorage.setItem(selectedDriverKey,id);setPendingRun({id,s,status,ms,source:'manual',overwriteAuthorized,...(status==='dnf'?{totalGates:gateTotalForStage(s)}:{})})}
 function updateClock(){if(!running)return;if(pendingRun&&pendingRun.requiresStopConfirmation&&!pendingRun.confirmed)return;const elapsed=Date.now()-running.startAt;$('clock').textContent=fmt(Math.min(elapsed,data.cutoffs[running.s]));if(elapsed>=data.cutoffs[running.s])prepareRunResult('dnf',data.cutoffs[running.s])}$('addStage').onclick=()=>{if(!requireAdmin())return;if(running||pendingRun)return alert('Finish reviewing and save the current result first');if(data.cutoffs.length>=20)return alert('Maximum 20 stages');data.cutoffs.push(600000);data.gateTotals.push(10);sync('cutoffs',data.cutoffs);sync('gateTotals',data.gateTotals)};$('removeStage').onclick=()=>{if(!requireAdmin())return;if(running||pendingRun)return alert('Finish reviewing and save the current result first');if(data.cutoffs.length<=1)return alert('Keep at least one stage');const s=data.cutoffs.length-1;if(!confirm('Remove SS'+(s+1)+' and permanently delete all its recorded results?'))return;if(!requireAdmin())return;data.cutoffs.pop();data.gateTotals.pop();data.drawOrders??={};data.drawLocks??={};delete data.drawOrders[s];delete data.drawLocks[s];const changes={cutoffs:data.cutoffs,gateTotals:data.gateTotals,['drawOrders/'+s]:null,['drawLocks/'+s]:null};for(const id of Object.keys(data.results)){if(data.results[id]?.[s]!==undefined){delete data.results[id][s];changes['results/'+id+'/'+s]=null}}for(const id of Object.keys(data.penalties||{})){if(data.penalties[id]?.[s]!==undefined){delete data.penalties[id][s];changes['penalties/'+id+'/'+s]=null}}stage=Math.min(stage,data.cutoffs.length-1);localStorage.setItem('bs28-stage',stage);persist();render();Object.entries(changes).forEach(([p,v])=>sendOrQueue(p,v))};$('stageSelect').onchange=()=>{if(running||pendingRun){$('stageSelect').value=String(running?.s??pendingRun?.s??stage);return alert('Finish reviewing and save the current result first')}stage=Number($('stageSelect').value)||0;localStorage.setItem('bs28-stage',stage);localStorage.removeItem(selectedDriverKey);$('driver').value='';$('manualTime').value='';render()};$('driver').onchange=()=>{if(running||pendingRun){$('driver').value=running?.id||pendingRun?.id||'';return}const id=selected();if(id)localStorage.setItem(selectedDriverKey,id);else localStorage.removeItem(selectedDriverKey);localStorage.setItem(lastClockKey,'0');$('clock').textContent='00:00.00';$('manualTime').value='';$('quickPenaltyStatus').textContent='';render()};$('dnfGatesCleared').addEventListener('input',()=>{if(!pendingRun||pendingRun.status!=='dnf')return;const raw=$('dnfGatesCleared').value;if(raw==='')delete pendingRun.gatesCleared;else pendingRun.gatesCleared=Number(raw);pendingRun.totalGates=gateTotalForStage(pendingRun.s);localStorage.setItem(pendingRunKey,JSON.stringify(pendingRun));updateDnfProgressUI()});function captureMainTimerView(){return {wasRunning:!!running,clockText:$('clock').textContent,driverId:selected(),stage};}
 function restoreMainTimerView(view){if(!view||view.wasRunning||running||pendingRun)return;const sameMainSelection=stage===view.stage&&selected()===view.driverId;if(sameMainSelection){$('clock').textContent=view.clockText;return}localStorage.setItem(lastClockKey,'0');$('clock').textContent='00:00.00';}
@@ -2360,66 +2366,38 @@ function bs28GroupDestinations(plan,groupId,event){
 // offline, an authorised marshal performs the same verified, idempotent cleanup.
 // A stage is released only after every member has an official Firebase result and
 // any remaining timer lock is proven to belong to that exact saved run.
-let bs28MarshalReconcileBusy=false,bs28MarshalReconcileLast=0;
+let bs28MarshalReconcileBusy=false,bs28MarshalReconcileLast=0,bs28ReconcileWarning="";
 async function bs28ReconcileCompletedGroups(){
- if(bs28MarshalReconcileBusy||!marshalLinkMode||!bs28IsActive()||!online||!connectedToServer||!navigator.onLine||!app||!dbRef||!marshalSessionVerified||savingResult)return;
- if(Date.now()-bs28MarshalReconcileLast<1200)return;
+ if(bs28MarshalReconcileBusy||!marshalLinkMode||!bs28IsActive()||!online||!connectedToServer||navigator.onLine===false||!app||!dbRef||!marshalSessionVerified||savingResult)return;
+ if(Date.now()-bs28MarshalReconcileLast<10000)return;
+ if(!Object.values(bs28Plan().groups||{}).some(g=>g.currentStage&&bs28Core.allResultsConfirmed(g,data,g.currentStage)))return;
  bs28MarshalReconcileLast=Date.now();bs28MarshalReconcileBusy=true;
+ try{await BS28_COORDINATOR.call(app,activeEventId(),'reconcile');bs28ReconcileWarning='';}
+ catch(e){bs28ReconcileWarning='Stage release not confirmed: '+e.message;bs28ShowAssignmentNotice(bs28ReconcileWarning);}
+ finally{bs28MarshalReconcileBusy=false;}
+}
+async function bs28ReleaseCoordinatorSavedRun(driverId,si){
+ const eid=activeEventId();let owned=localStageLock;
  try{
-  const eid=activeEventId(),root=app.database().ref('events/'+eid),snapshot=await root.once('value'),event=snapshot.val();
-  const plan=event?.groupRotationV28;if(!plan?.enabled)return;
-  let changed=false;
-  for(const [groupId,group] of Object.entries(plan.groups||{})){
-   const ss=group?.currentStage;if(!ss||!bs28Core.allResultsConfirmed(group,event,ss))continue;
-   const si=bs28Core.stageIndex(ss);if(si<0)continue;
-   const lockRef=app.database().ref('stageLocks/'+eid+'/'+ss);
-   let lock=(await lockRef.once('value')).val();
-   if(lock){
-    // Only the marshal session that owns this lock may release it. Never clear
-    // another marshal's live/unknown run just because an older result exists.
-    if(String(lock.authUid||'')!==String(auth?.currentUser?.uid||''))continue;
-    const released=await releaseStageLockIfResultAlreadySaved(lock,eid,si);
-    if(!released)lock=(await lockRef.once('value')).val();else lock=null;
-    if(lock)continue;
-   }
-   const completedAt=Date.now();
-   const tx=await root.child('groupRotationV28').transaction(old=>{
-    const live=old?.groups?.[groupId];
-    if(!old?.enabled||!live||live.currentStage!==ss||old.stageOwners?.[ss]!==groupId)return;
-    if(!bs28Core.allResultsConfirmed(live,event,ss))return;
-    const next=JSON.parse(JSON.stringify(old)),g=next.groups[groupId];
-    g.currentStage=null;g.lastStage=ss;g.completedStages=g.completedStages||{};g.completedStages[ss]=true;
-    g.visitIndex=(g.visitIndex||0)+1;delete next.stageOwners[ss];
-    if(g.type==='CATCHUP'){
-     g.status='FINISHED';
-     const who=bs28Core.memberIds(g.members)[0];
-     if(who&&next.lateCatchup?.[who]?.[ss])next.lateCatchup[who][ss].status='DONE';
-    }else{
-     const required=bs28Core.includedStages(next);
-     const missing=required.some(st=>!g.completedStages?.[st]);
-     const due=Object.values(next.lateCatchup||{}).some(byStage=>Object.entries(byStage||{}).some(([st,t])=>t?.groupId===groupId&&t.status!=='DONE'&&required.includes(st)));
-     g.status=missing||due?'CHOOSING':'FINISHED';
-    }
-    for(const [gid,base] of Object.entries(next.groups||{})){
-     if(base.type==='CATCHUP'||base.currentStage||base.status!=='CHOOSING')continue;
-     const required=bs28Core.includedStages(next);
-     const missing=required.some(st=>!base.completedStages?.[st]);
-     const due=Object.values(next.lateCatchup||{}).some(byStage=>Object.entries(byStage||{}).some(([st,t])=>t?.groupId===gid&&t.status!=='DONE'&&required.includes(st)));
-     if(!missing&&!due)base.status='FINISHED';
-    }
-    next.revision=(next.revision||0)+1;next.audit=next.audit||{};
-    next.audit['complete-'+groupId+'-'+ss]={action:'COMPLETE_SS',groupId,stage:ss,at:completedAt,source:'MARSHAL_OFFLINE_RECOVERY'};
-    return next;
-   },undefined,false);
-   if(tx.committed&&tx.snapshot?.val){
-    event.groupRotationV28=tx.snapshot.val();data=normalizeData(event);
-    try{localStorage.setItem(key,JSON.stringify(data))}catch(e){console.warn('BS28: local cache update after group completion failed',e)}
-    changed=true;
-   }
-  }
-  if(changed){render();bs28RenderMarshal();}
- }catch(e){console.warn('BS28 marshal-side completed-group reconciliation failed',e)}
- finally{bs28MarshalReconcileBusy=false}
+  if(!owned||owned.eventId!==eid||owned.driverId!==String(driverId)||owned.stage!==bs28Core.ss(si))owned=JSON.parse(localStorage.getItem(stageLockLocalKey(eid))||'null');
+  if(!owned?.runId||owned.eventId!==eid||owned.driverId!==String(driverId)||owned.stage!==bs28Core.ss(si))return false;
+  await BS28_COORDINATOR.call(app,eid,'releaseSavedRun',{driverId:String(driverId),stage:bs28Core.ss(si),runId:owned.runId});
+  if(localStageLock?.runId===owned.runId)localStageLock=null;localStorage.removeItem(stageLockLocalKey(eid));return true;
+ }catch(e){setMsg('Result is saved locally/online, but the run lock is held until result and penalties are verified: '+e.message,true);return false;}
+}
+async function bs28AcquireCoordinatorRun(driverId,si){
+ if(!online||!connectedToServer||navigator.onLine===false)return alert('Cannot START while Firebase is offline.'),false;
+ if(!await verifyMarshalSessionOnline())return alert('Marshal session is not authorised.'),false;
+ const eid=activeEventId(),ss=bs28Core.ss(si),name=String(marshalName||localStorage.getItem(marshalNameKey)||'').trim();
+ if(!name)return alert('Enter your marshal name.'),false;
+ try{
+  const reply=await BS28_COORDINATOR.call(app,eid,'acquireRun',{driverId:String(driverId),stage:ss,marshalSessionId,marshalName:name,runId:'run-'+Date.now()+'-'+crypto.randomUUID().replaceAll('-','')});
+  const lock=reply.lock;
+  if(!lock||lock.authUid!==auth?.currentUser?.uid||lock.driverId!==String(driverId)||lock.stage!==ss||lock.marshalSessionId!==marshalSessionId)throw Error('Firebase returned a different run lock.');
+  if(activeEventId()!==eid)throw Error('Event changed while reserving the run. Reopen the original event to resolve its lock.');
+  localStageLock={eventId:eid,stage:ss,driverId:String(driverId),runId:lock.runId,marshalSessionId,authUid:lock.authUid};
+  localStorage.setItem(stageLockLocalKey(eid),JSON.stringify(localStageLock));return true;
+ }catch(e){alert('Timer was not started: '+e.message);return false;}
 }
 const bs28SavedGroupKey=()=>'bs-style-v28-marshal-group:'+activeEventId();
 const bs28RequestKey=()=>'bs-style-v28-marshal-request:'+activeEventId();
@@ -2720,100 +2698,28 @@ function bs28ConfirmedFirstStarter(group,stageName){
 }
 async function bs28RecordFirstStart(id,si){
  bs28FirstStartError='';
- const eid=activeEventId(),st=bs28Core.ss(si),driverId=String(id),now=Date.now();
- const owned=localStageLock?{...localStageLock}:null;
- const path='events/'+eid+'/groupRotationV28';
- let expectedGroup='',expectedDraw='';
- const checkSession=()=>{
-  if(!marshalLinkMode||marshalAccessRevoked||!online||!connectedToServer||!app||navigator.onLine===false||activeEventId()!==eid){
-   throw Error('Marshal access or Firebase connection changed. Reconnect to this event before START.');
-  }
-  if(!owned||owned.eventId!==eid||owned.stage!==st||owned.driverId!==driverId||!owned.runId||localStageLock?.runId!==owned.runId){
-   throw Error('The selected driver no longer owns the stage lock. Select the driver and press START again.');
-  }
- };
- const checkPlan=plan=>{
-  if(!plan?.enabled||plan.phase!=='RACING')throw Error('Group Rotation is not active.');
-  const groupId=plan.stageOwners?.[st],group=plan.groups?.[groupId],draw=plan.orders?.[groupId]?.[st];
-  const order=Array.isArray(draw?.order)?draw.order.map(String):Object.values(draw?.order||{}).map(String);
-  if(!plan.stages?.[st]?.included||!plan.stages[st].open||plan.stages[st].cancelled)throw Error(st+' is closed or cancelled.');
-  if(!group||group.currentStage!==st||!['READY','RACING'].includes(group.status)||!bs28Core.memberIds(group.members).includes(driverId)||!order.includes(driverId)){
-   throw Error('The selected driver is no longer assigned to this group and SS with a saved draw.');
-  }
-  if(expectedGroup&&groupId!==expectedGroup)throw Error('The stage group changed while checking first-start history.');
-  if(expectedDraw&&String(draw.drawId||'')!==expectedDraw)throw Error('The official draw changed while checking first-start history.');
-  return {groupId,group,draw,order,firstId:bs28ConfirmedFirstStarter(group,st)};
- };
- const accept=plan=>{
-  checkSession();
-  if(!checkPlan(plan).firstId)throw Error('Firebase did not confirm a first-start record.');
-  data.groupRotationV28=plan;
-  try{persist()}catch(e){console.warn('First-start history verified online; local cache failed:',e?.message||e)}
-  return true;
- };
+ const owned=localStageLock;
+ if(!owned?.runId){bs28FirstStartError='No confirmed run lock.';return false;}
  try{
-  checkSession();
-  const ref=app.database().ref(path);
-  // Read from the server before deciding whether a transaction is necessary.
-  let plan=(await ref.get()).val();
-  checkSession();
-  const initial=checkPlan(plan);expectedGroup=initial.groupId;expectedDraw=String(initial.draw.drawId||'');
-  if(initial.firstId)return accept(plan);
-  for(let attempt=0;attempt<2;attempt++){
-   let abortReason='',alreadyRecorded=false,emptyCache=false;
-   const tx=await ref.transaction(old=>{
-    abortReason='';alreadyRecorded=false;emptyCache=false;
-    // A null transaction cache is not proof that the live event was deleted.
-    // Abort, refresh, and retry once; never recreate the event from a stale copy.
-    if(old===null){emptyCache=true;return;}
-    try{
-     checkSession();
-     const current=checkPlan(old);
-     // A competing successful first START can arrive during a transaction retry.
-     // Returning undefined avoids a no-op write rejected by revision + 1 rules.
-     if(current.firstId){alreadyRecorded=true;return;}
-     const next=JSON.parse(JSON.stringify(old)),target=next.groups[current.groupId];
-     const recorded=bs28Core.recordFirstStart(target,st,driverId,current.order,now,'firstDriverHistory');
-     if(!recorded.ok||!recorded.recorded)throw Error(recorded.reason||'The first-start record could not be prepared.');
-     const revision=Number(old.revision);
-     if(!Number.isSafeInteger(revision)||revision<0)throw Error('The race-plan revision is invalid. Ask Main Control to inspect it.');
-     next.revision=revision+1;
-     next.audit=next.audit||{};
-     next.audit['first-start-'+current.groupId+'-'+st+'-'+now]={action:'RECORD_ACTUAL_FIRST_START',groupId:current.groupId,stage:st,driverId,queuePosition:current.order.indexOf(driverId)+1,at:now};
-     return next;
-    }catch(e){abortReason=e.message;return;}
-   },undefined,false);
-   if(tx.committed)return accept(tx.snapshot.val());
-   if(abortReason)throw Error(abortReason);
-   if(!alreadyRecorded&&!emptyCache)throw Error('Firebase did not commit the first-start record.');
-   plan=(await ref.get()).val();
-   checkSession();
-   const latest=checkPlan(plan);
-   if(latest.firstId)return accept(plan);
-   if(alreadyRecorded)throw Error('The first-start record changed during verification. Refresh before START.');
-  }
-  throw Error('Firebase could not load the race plan for the history transaction. Refresh and try again.');
- }catch(e){
-  const code=String(e?.code||'').trim(),detail=String(e?.message||e);
-  bs28FirstStartError=(code?code+': ':'')+detail+'\nEvent: '+eid+' · '+st+'\nPath: '+path;
-  setMsg('First-start history could not be verified. Timer remains stopped. '+bs28FirstStartError,true);
-  return false;
- }
+  await BS28_COORDINATOR.call(app,activeEventId(),'recordFirstStart',{driverId:String(id),stage:bs28Core.ss(si),runId:owned.runId,marshalSessionId});
+  return true;
+ }catch(e){bs28FirstStartError=e.message;return false;}
 }
 async function bs28ReleaseUnstartedStageLock(id,si){
- if(!marshalLinkMode||!app||!localStageLock)return false;
- const owned={...localStageLock},eid=owned.eventId,stageName='SS'+(Number(si)+1);
- if(owned.stage!==stageName||owned.driverId!==String(id)||!owned.runId)return false;
- const ref=app.database().ref('stageLocks/'+eid+'/'+stageName);
+ const owned=localStageLock;if(!owned?.runId)return false;
  try{
-  const tx=await ref.transaction(current=>current&&current.status==='running'&&String(current.runId)===String(owned.runId)&&String(current.driverId)===String(id)&&String(current.marshalSessionId)===String(owned.marshalSessionId)?null:undefined,undefined,false);
-  if(!tx.committed||tx.snapshot.val())return false;
-  try{if(marshalGateRef&&activeEventId()===eid){const activeRef=marshalGateRef.child('activeLock');await activeRef.transaction(current=>current&&String(current.runId)===String(owned.runId)?null:undefined,undefined,false)}}catch(e){console.warn('Could not clear the unstarted marshal session lock:',e?.message||e)}
-  if(localStageLock?.runId===owned.runId){localStageLock=null;try{localStorage.removeItem(stageLockLocalKey(eid))}catch(e){}}
-  return true;
- }catch(e){console.warn('Could not release the unstarted stage lock:',e?.message||e);return false}
+  await BS28_COORDINATOR.call(app,owned.eventId,'releaseUnstarted',{driverId:String(id),stage:bs28Core.ss(si),runId:owned.runId,marshalSessionId});
+  if(localStageLock?.runId===owned.runId){localStageLock=null;localStorage.removeItem(stageLockLocalKey(owned.eventId));}return true;
+ }catch(e){setMsg('Unstarted lock remains reserved: '+e.message,true);return false;}
 }
 
+function bs28CatchupStartReason(plan,id,stageName){
+ const active=Object.entries(plan?.lateCatchup?.[id]||{}).find(([ss,t])=>t?.status==='IN_PROGRESS'&&ss!==stageName);
+ if(active)return 'Driver is assigned to catch-up '+active[0]+'. Finish and SAVE that catch-up first. Other group members may continue.';
+ const catchup=plan?.groups?.['C'+id];
+ if(catchup?.currentStage&&catchup.currentStage!==stageName)return 'Driver has an active catch-up at '+catchup.currentStage+'.';
+ return '';
+}
 async function bs28ValidateStart(id,si){
  if(!bs28IsActive())return true;
  if(!marshalLinkMode||marshalAccessRevoked||!online||!connectedToServer||!app||!auth?.currentUser||navigator.onLine===false){alert('V28: Marshal link must be OPEN and Firebase ONLINE before START.');return false}
@@ -2821,133 +2727,32 @@ async function bs28ValidateStart(id,si){
   const eid=activeEventId(),snap=await app.database().ref('events/'+eid+'/groupRotationV28').once('value'),p=snap.val(),st=bs28Core.ss(si),groupId=p?.stageOwners?.[st],g=p?.groups?.[groupId];
   const gate=(await app.database().ref('marshalAccessControl/'+eid+'/enabled').once('value')).val();
   if(gate!==true||!p?.enabled||!p.stages?.[st]?.included||!p.stages[st].open||p.stages[st].cancelled||!g||g.currentStage!==st||!bs28Core.memberIds(g.members).includes(id)||!p.orders?.[groupId]?.[st]?.order?.includes(id)){alert('V28: This driver is not assigned to an OPEN stage with a saved group draw. No timer started.');return false}
+  const catchupReason=bs28CatchupStartReason(p,String(id),st);
+  if(catchupReason){alert(catchupReason);return false;}
+  const locks=(await app.database().ref('stageLocks/'+eid).get()).val()||{};
+  const otherRun=Object.entries(locks).find(([ss,lock])=>ss!==st&&String(lock?.driverId)===String(id));
+  if(otherRun){alert('Driver has an unfinished or unverified run at '+otherRun[0]+'. No timer started.');return false;}
   if(g.status!=='READY'&&g.status!=='RACING'){alert('V28: Group is not READY for this SS.');return false}
   return true;
  }catch(e){alert('V28 stage authorization failed: '+e.message+'. No timer started.');return false}
 }
 async function bs28SelectSS(){
- if(!bs28IsActive())return;
- if(!marshalLinkMode||!online||!connectedToServer||!app||navigator.onLine===false||marshalAccessRevoked)return alert('Connect using an authorised OPEN marshal link and keep Firebase ONLINE. Main Control does not need to be online.');
- if(running||pendingRun||savingResult)return alert('Finish, CONFIRM STOP and SAVE the current run before changing stages.');
- const groupId=$('bs28NextGroup')?.value||'',dest=$('bs28NextSS')?.value||'';
- if(!groupId||!dest||!bs28GroupDestinations(bs28Plan(),groupId,data).includes(dest))return alert('Choose a group that has completed its stage and an OPEN/AVAILABLE SS.');
- if(!await verifyMarshalSessionOnline())return alert('Marshal session invalid or closed. Reopen the authorised marshal link.');
- if(!confirm('MOVE '+bs28GroupName(groupId)+' to '+dest+'?\n\nA fair-random driver queue will favour drivers with fewer actual first starts, while every driver keeps a chance to be first. The official draw is saved directly to Firebase. Main Control can be OFFLINE. START stays manual.'))return;
- const eid=activeEventId(),root=app.database().ref('events/'+eid),planRef=root.child('groupRotationV28'),now=Date.now();
- const requestId='marshal'+now.toString(36)+Math.random().toString(36).slice(2,9);
- bs28Submitting=true;
- $('bs28SwitchStatus').textContent='SAVING...';
- let transactionFailureReason='';
- let officialDrawSaved=false;
+ if(!bs28IsActive()||bs28Submitting)return;
+ if(!marshalLinkMode||!online||!connectedToServer||navigator.onLine===false||marshalAccessRevoked)return alert('Connect using an authorised OPEN marshal link. Main Control can be offline.');
+ if(running||pendingRun||savingResult)return alert('Finish, CONFIRM STOP and SAVE before changing stages.');
+ const groupId=$('bs28NextGroup')?.value||'',dest=$('bs28NextSS')?.value||'',g=bs28Plan()?.groups?.[groupId];
+ if(!g||!dest)return alert('Select a group and an OPEN/AVAILABLE SS.');
+ if(!confirm('MOVE '+bs28GroupName(groupId)+' to '+dest+'? A fair-random queue will be saved. START stays manual.'))return;
+ const eid=activeEventId();bs28Submitting=true;$('bs28SwitchStatus').textContent='SAVING...';
+ let saved=false;
  try{
-  // Group/SS selection does not acquire or require a timer stage lock.
-  // The official group reservation and draw are saved atomically in the
-  // Group Rotation plan. The existing stage lock is checked only on START.
-  const eventSnap=await root.once('value');
-  const event=eventSnap.val(),plan=event?.groupRotationV28,group=plan?.groups?.[groupId];
-  if(!bs28GroupDestinations(plan,groupId,event).includes(dest))throw Error('The selected group is no longer ready, or '+dest+' is no longer available.');
-  // Bind this one draw to the current group visit and fixed membership.
-  const expectedStage=group.currentStage||null,expectedVisit=Number(group.visitIndex||0);
-  const expectedMembers=bs28Core.memberIds(group.members);
-  const fairDraw=bs28Core.fairShuffle(expectedMembers,bs28Core.getFirstDriverCounts(group)),order=fairDraw.order,memberSignature=expectedMembers.slice().sort().join('|');
-  const tx=await planRef.transaction(old=>{
-   transactionFailureReason='';
-   if(!old?.enabled||old.phase!=='RACING'){
-    transactionFailureReason='The event is not in the active Group Rotation phase.';return;
-   }
-   const g=old.groups?.[groupId];
-   if(!g){transactionFailureReason='Group '+groupId+' no longer exists.';return;}
-   const liveVisit=Number(g.visitIndex||0);
-   const liveStage=g.currentStage||null;
-   const sameMembership=bs28Core.memberIds(g.members).slice().sort().join('|')===memberSignature;
-   if(!sameMembership){
-    transactionFailureReason='The driver membership of '+bs28GroupName(groupId)+' changed while preparing the draw. Refresh and select the group again.';return;
-   }
-   // Main Control automatically completes a group as soon as every result is
-   // confirmed. That can happen between this marshal's initial read and this
-   // Firebase transaction. Treat that exact completion as success, not as a
-   // competing-marshal conflict, and do not increment visitIndex twice.
-   const stillAtSnapshot=liveVisit===expectedVisit&&liveStage===expectedStage;
-   const alreadyCompletedByCoordinator=!!(
-    expectedStage&&liveStage===null&&g.lastStage===expectedStage&&
-    g.completedStages?.[expectedStage]===true&&liveVisit===expectedVisit+1
-   );
-   const stillChoosingFromSnapshot=!expectedStage&&liveStage===null&&liveVisit===expectedVisit;
-   if(!stillAtSnapshot&&!alreadyCompletedByCoordinator&&!stillChoosingFromSnapshot){
-    transactionFailureReason=liveStage?
-     bs28GroupName(groupId)+' has already moved to '+liveStage+'. Refresh and choose the next SS for its current visit.':
-     bs28GroupName(groupId)+' changed state while preparing the draw. Refresh and select again.';
-    return;
-   }
-   if(!bs28GroupDestinations(old,groupId,event).includes(dest)){
-    transactionFailureReason=dest+' is no longer OPEN and available. Another group may have been assigned there.';return;
-   }
-   const next=JSON.parse(JSON.stringify(old)),target=next.groups[groupId];
-   if(expectedStage&&!alreadyCompletedByCoordinator){
-     if(next.stageOwners?.[expectedStage]!==groupId){
-      transactionFailureReason=expectedStage+' is no longer assigned to '+bs28GroupName(groupId)+'.';return;
-     }
-     if(!bs28Core.allResultsConfirmed(target,event,expectedStage)){
-      transactionFailureReason='Results for '+expectedStage+' are not all confirmed by Firebase yet.';return;
-     }
-     target.completedStages=target.completedStages||{};target.completedStages[expectedStage]=true;
-     target.lastStage=expectedStage;target.currentStage=null;
-     target.visitIndex=(target.visitIndex||0)+1;
-     delete next.stageOwners[expectedStage];
-     target.status='CHOOSING';
-     next.audit=next.audit||{};
-     next.audit['complete-'+groupId+'-'+expectedStage+'-'+requestId]={action:'COMPLETE_SS',groupId,stage:expectedStage,at:now};
-   }else if(alreadyCompletedByCoordinator){
-     // Verify the completed stage's saved results once more, but preserve the
-     // coordinator's completion record and visitIndex unchanged.
-     if(!bs28Core.allResultsConfirmed(target,event,expectedStage)){
-      transactionFailureReason='Main Control marked '+expectedStage+' complete, but its saved results could not be reconfirmed. Refresh before drawing.';return;
-     }
-   }
-   const incomingVisit=Number(target.visitIndex)||0;
-   const reserved=bs28Core.reserveForRequest(next,{requestId,groupId,destination:dest,visitIndex:incomingVisit},order,{},now);
-   if(!reserved){transactionFailureReason='Firebase could not reserve '+dest+' for '+bs28GroupName(groupId)+'. The group or stage may have changed.';return;}
-   const savedDraw=reserved.orders?.[groupId]?.[dest];if(savedDraw){savedDraw.drawMethod='FAIR_RANDOM_WEIGHTED';savedDraw.queueFirstDriverId=fairDraw.firstDriverId;savedDraw.firstDriverWeight=fairDraw.firstDriverWeight;savedDraw.fairnessCountsAtDraw=fairDraw.countsAtDraw;}
-   // Keep the plan validator, but report its actual reason instead of a
-   // generic "another marshal claimed" message.
-   const validationErrors=bs28Core.validatePlan(reserved)||[];
-   if(validationErrors.length){
-    const details=validationErrors.slice(0,3).map(item=>typeof item==='string'?item:JSON.stringify(item)).join('; ');
-    transactionFailureReason='Group Rotation validation rejected the draw: '+details;return;
-   }
-   return reserved;
-  },undefined,false);
-  if(!tx.committed)throw Error(transactionFailureReason||'Firebase did not commit the official draw. Refresh and choose again.');
-  officialDrawSaved=true;
-  // The transaction is the official assignment. No organiser coordinator,
-  // group-selection lock, stage lock or admin PIN is needed for this step.
-  localStorage.setItem(bs28RequestKey(),JSON.stringify({requestId,groupId,destination:dest,savedAt:now}));
-  bs28NextGroupChoice='';bs28GroupUserChosen=false;
+  await BS28_COORDINATOR.call(app,eid,'selectStage',{groupId,stage:dest,currentStage:g.currentStage||null,visitIndex:Number(g.visitIndex||0),memberSignature:bs28Core.memberIds(g.members).sort().join('|')});
+  saved=true;bs28NextGroupChoice='';bs28GroupUserChosen=false;
+  const snap=await app.database().ref('events/'+eid).get();if(activeEventId()===eid)data=normalizeData(snap.val());
   $('bs28SwitchStatus').textContent=bs28GroupName(groupId)+' → '+dest+' · DRAW SAVED';
-  const savedSnap=await root.once('value');
-  if(savedSnap.exists())data=normalizeData(savedSnap.val());
-  bs28RenderMarshal();
  }catch(e){
-  // A competing marshal may have completed a valid draw at the same time.
-  // Reload the authoritative state so this phone never stays on stale options.
-  try{
-   const latest=await root.once('value');
-   if(latest.exists())data=normalizeData(latest.val());
-  }catch(refreshError){
-   console.warn('Could not refresh Group Rotation after draw attempt:',refreshError);
-  }
-  if(officialDrawSaved){
-   bs28RenderMarshal();
-   $('bs28SwitchStatus').textContent='DRAW SAVED · REFRESH REQUIRED';
-   alert('THE OFFICIAL DRAW WAS SAVED TO FIREBASE. This phone could not complete its refresh. Do not submit another draw. Refresh the marshal page; START remains manual.');
-  }else{
-   bs28NextGroupChoice='';bs28GroupUserChosen=false;
-   if($('bs28NextSS'))$('bs28NextSS').value='';
-   bs28RenderMarshal();
-   alert('NEXT DRAW NOT SAVED: '+e.message+'\n\nThe latest group and SS availability has been refreshed. Select again. No stage lock or admin PIN is required for selecting the next SS.');
-  }
- }
- finally{bs28Submitting=false;bs28RenderMarshal()}
+  alert(saved?'DRAW SAVED. This phone could not refresh. Refresh the page; START stays manual.':'DRAW NOT CONFIRMED: '+e.message+' If the connection dropped, retry the same choice; it will not assign twice.');
+ }finally{bs28Submitting=false;bs28RenderMarshal();}
 }
 $('bs28NextGroup')?.addEventListener('change',e=>{
  if(running||pendingRun||savingResult)return;
@@ -2958,7 +2763,7 @@ $('bs28NextGroup')?.addEventListener('change',e=>{
 $('bs28NextSS')?.addEventListener('change',bs28RenderMarshal);
 $('bs28SwitchButton')?.addEventListener('click',bs28SelectSS);
 
-window.BS28_MARSHAL_READY=true;window.BS28_MARSHAL_VERSION="28.7.5";
+window.BS28_MARSHAL_READY=true;window.BS28_MARSHAL_VERSION="28.8.1";
 setInterval(()=>{if(bs28IsActive())bs28ReconcileCompletedGroups().finally(()=>bs28RenderMarshal())},1800);
 bs28ReconcileCompletedGroups().finally(()=>bs28RenderMarshal());
 })();

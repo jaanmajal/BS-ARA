@@ -1,4 +1,4 @@
-<!doctype html><!-- v28.7.8: Lucky Draw as independent Section 10, Firebase-saved winner history and projector reveal. --><!-- v28.7.7: emergency reset preserves unfinished SS assignments; single-gate DNF automatically records 1/1. --><!-- v28.7.4: fair-random first queue weighting from actual first starts; no fixed first-driver rotation. --><!-- v28.7.3: group rotation supports 1-9 groups; desktop Jump To shortcuts visible; automatic format-based penalty presets; SORRCA 2024 scorecard, signed Progress, 60-point point-out and progress-aware DNF; no scale points. Mobile layout retained. -->
+<!doctype html><!-- v28.8.1: audited catch-up guards and visible failure reporting; Firebase coordinator required. --><!-- v28.7.8: Lucky Draw as independent Section 10, Firebase-saved winner history and projector reveal. --><!-- v28.7.7: emergency reset preserves unfinished SS assignments; single-gate DNF automatically records 1/1. --><!-- v28.7.4: fair-random first queue weighting from actual first starts; no fixed first-driver rotation. --><!-- v28.7.3: group rotation supports 1-9 groups; desktop Jump To shortcuts visible; automatic format-based penalty presets; SORRCA 2024 scorecard, signed Progress, 60-point point-out and progress-aware DNF; no scale points. Mobile layout retained. -->
 <!-- v28.7.2: SORRCA signed Progress values survive reload; editable Bonus award value; saved bonus taps retain their original value. -->
 <!-- v28.7.3: Group rotation supports 1-9 groups (A-I); desktop Jump To links are expanded by default; phones remain collapsed. -->
 <!-- v28.6.7: Main Control emergency admin reset for all stage, marshal-session, group-reservation and organiser-session locks; preserves race records and draw history. -->
@@ -702,7 +702,7 @@ details[data-main-section]>summary:focus-visible{outline:2px solid #93c5fd;outli
 
 
 
-<footer>© TEC-ARTS CRAWLER • RC CRAWLER · POINT &amp; TIME ATTACK SYSTEM · v28.7.8</footer><script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-app-compat.js"></script><script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-auth-compat.js"></script><script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-database-compat.js"></script><script src="firebase-config.js"></script><script src="bs28-core.js?v=28.7.6"></script><script>
+<footer>© TEC-ARTS CRAWLER • RC CRAWLER · POINT &amp; TIME ATTACK SYSTEM · v28.8.1</footer><script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-app-compat.js"></script><script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-auth-compat.js"></script><script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-database-compat.js"></script><script src="firebase-config.js"></script><script src="bs28-core.js?v=28.7.6"></script><script src="bs28-coordinator.js?v=28.8.1"></script><script>
 /* RC CRAWLER shared scoring engine. Used by Main Control, Marshal and Public Results. */
 (function (root) {
   'use strict';
@@ -1479,7 +1479,7 @@ $('saveEventScoringFormat').onclick=async()=>{
 };
 $('addStage')?.addEventListener('click',()=>setTimeout(refreshMarshalLockStageOptions,0));$('removeStage')?.addEventListener('click',()=>setTimeout(refreshMarshalLockStageOptions,0));$('saveStageSetupAll')?.addEventListener('click',()=>setTimeout(refreshMarshalLockStageOptions,0));const organiserEmailStorageKey='bs28-test-organiser-email';const savedOrganiserEmail=localStorage.getItem(organiserEmailStorageKey);$('email').value=savedOrganiserEmail||'';$('password').value='';$('email').addEventListener('input',()=>{const value=$('email').value.trim();if(/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value))localStorage.setItem(organiserEmailStorageKey,value)});$('email').addEventListener('change',()=>{const value=$('email').value.trim();if(value)localStorage.setItem(organiserEmailStorageKey,value)});updatePublicResultsLink();function refreshMarshalLockStageOptions(){const sel=$('marshalLockStage');if(!sel)return;const prior=sel.value;sel.innerHTML='';for(let i=0;i<(data.cutoffs||[]).length;i++){const op=document.createElement('option');op.value='SS'+(i+1);op.textContent='SS'+(i+1);sel.appendChild(op)}if(prior&&Array.from(sel.options).some(o=>o.value===prior))sel.value=prior;}refreshMarshalLockStageOptions();
 updateNewRacePreparationUI();
-$('resetMarshalStageLock').onclick=async()=>{const eventId=activeEventId(),stageName=$('marshalLockStage').value,info=$('marshalLockAdminStatus');if(!stageName)return alert('Select a stage first.');if(!online||!connectedToServer||!app||!navigator.onLine)return alert('Connect main control to Firebase before resetting a marshal stage lock.');if(!requireAdmin())return;const lockRef=app.database().ref('stageLocks/'+eventId+'/'+stageName);try{const snap=await lockRef.once('value'),lock=snap.val();if(!lock){info.textContent=eventId+' / '+stageName+': no stage lock exists.';return}let resultConfirmed=false;const driverId=String(lock.driverId||lock.driver||lock.id||'');const stageIndex=Number(stageName.replace('SS',''))-1;if(driverId&&Number.isInteger(stageIndex)&&stageIndex>=0){const rs=await app.database().ref('events/'+eventId+'/results/'+driverId+'/'+stageIndex).once('value');const val=rs.val();resultConfirmed=!!(val&&['finish','dnf','dns'].includes(String(val.status||'').toLowerCase())&&val.savedAt!==undefined||val&&['finish','dnf','dns'].includes(String(val.status||'').toLowerCase())&&val.timestamp!==undefined||val&&['finish','dnf','dns'].includes(String(val.status||'').toLowerCase()))}const running=String(lock.status||'').toLowerCase()==='running';let message='Reset the lock for '+eventId+' / '+stageName+'?';if(running&&!resultConfirmed)message+='\n\nWARNING: Firebase does not show a confirmed saved result for this run. Continue ONLY if you have physically verified the stage is no longer active. The current marshal will lose its lock.';else if(running&&resultConfirmed)message+='\n\nA matching saved result was found. This will release the stale lock only; the result will not be deleted.';if(!confirm(message))return;if(running&&!resultConfirmed&&!confirm('FINAL CHECK: Confirm nobody is currently running this stage and you accept the risk of releasing its lock?'))return;const tx=await lockRef.transaction(current=>{if(!current)return; if(JSON.stringify(current)!==JSON.stringify(lock))return;return null});if(!tx.committed){info.textContent='Reset failed: lock changed while you were checking it. Refresh and inspect the current lock.';return}const verify=await lockRef.once('value');if(verify.exists()){info.textContent='Reset not confirmed by Firebase. Lock remains in place.';return}info.textContent='Confirmed: '+eventId+' / '+stageName+' lock reset. Saved results and other stages were not changed.';setMsg('Marshal stage lock reset for '+stageName+' in Event ID '+eventId+'.',false)}catch(e){info.textContent='Could not reset stage lock: '+e.message;setMsg('Stage lock reset failed: '+e.message,true)}};
+$('resetMarshalStageLock').onclick=async()=>{const eventId=activeEventId(),stageName=$('marshalLockStage').value,info=$('marshalLockAdminStatus');if(!stageName)return alert('Select a stage first.');if(!online||!connectedToServer||!app||!navigator.onLine)return alert('Connect main control to Firebase before resetting a marshal stage lock.');if(!requireAdmin())return;const lockRef=app.database().ref('stageLocks/'+eventId+'/'+stageName);try{const snap=await lockRef.once('value'),lock=snap.val();if(!lock){info.textContent=eventId+' / '+stageName+': no stage lock exists.';return}let resultConfirmed=false;const driverId=String(lock.driverId||lock.driver||lock.id||'');const stageIndex=Number(stageName.replace('SS',''))-1;if(driverId&&Number.isInteger(stageIndex)&&stageIndex>=0){const rs=await app.database().ref('events/'+eventId+'/results/'+driverId+'/'+stageIndex).once('value');const val=rs.val();resultConfirmed=!!(val&&['finish','dnf','dns'].includes(String(val.status||'').toLowerCase())&&val.savedAt!==undefined||val&&['finish','dnf','dns'].includes(String(val.status||'').toLowerCase())&&val.timestamp!==undefined||val&&['finish','dnf','dns'].includes(String(val.status||'').toLowerCase()))}const running=String(lock.status||'').toLowerCase()==='running';let message='Reset the lock for '+eventId+' / '+stageName+'?';if(running&&!resultConfirmed)message+='\n\nWARNING: Firebase does not show a confirmed saved result for this run. Continue ONLY if you have physically verified the stage is no longer active. The current marshal will lose its lock.';else if(running&&resultConfirmed)message+='\n\nA matching saved result was found. This will release the stale lock only; the result will not be deleted.';if(!confirm(message))return;if(running&&!resultConfirmed&&!confirm('FINAL CHECK: Confirm nobody is currently running this stage and you accept the risk of releasing its lock?'))return;const tx=await lockRef.transaction(current=>{if(!current)return; if(JSON.stringify(current)!==JSON.stringify(lock))return;return null});if(!tx.committed){info.textContent='Reset failed: lock changed while you were checking it. Refresh and inspect the current lock.';return}if(data.groupRotationV28?.sparkProtocol===1&&lock.driverId&&lock.runId){const driverRef=app.database().ref('driverRunLocks/'+eventId+'/'+lock.driverId),driverListener=()=>{};driverRef.on('value',driverListener);try{await driverRef.get();await driverRef.transaction(current=>current?.runId===lock.runId&&current?.stage===stageName?null:undefined,undefined,false);}finally{driverRef.off('value',driverListener);}}const verify=await lockRef.once('value');if(verify.exists()){info.textContent='Reset not confirmed by Firebase. Lock remains in place.';return}info.textContent='Confirmed: '+eventId+' / '+stageName+' lock reset. Saved results and other stages were not changed.';setMsg('Marshal stage lock reset for '+stageName+' in Event ID '+eventId+'.',false)}catch(e){info.textContent='Could not reset stage lock: '+e.message;setMsg('Stage lock reset failed: '+e.message,true)}};
 $('emergencyAdminResetAllLocks').onclick=()=>emergencyAdminResetAllLocks($('emergencyAdminResetAllLocks'));
 let clearRaceBusy=false;
 function buildRestartedRace(event,resetId,now,uid){
@@ -1539,7 +1539,7 @@ async function clearResultsRestartRace(){
   const updates={};
   updates['events/'+eventId]=next;
   updates['marshalAccessControl/'+eventId]={enabled:false,token:newToken,updatedAt:now};
-  for(const path of ['stageLocks','marshalSessions','rotationRequests','marshalRecoveryInbox'])updates[path+'/'+eventId]=null;
+  for(const path of ['stageLocks','driverRunLocks','recoveryPendingByStage','marshalSessions','rotationRequests','marshalRecoveryInbox'])updates[path+'/'+eventId]=null;
   for(let i=1;i<=20;i++)updates['stageResetAuthorizations/'+eventId+'/SS'+i]=null;
   updates['controlSessions/'+eventId]={activeSessionId:controlSessionId,activeSince:now,runActive:false};
   status.textContent='Clearing results and resetting race progress…';
@@ -1606,7 +1606,7 @@ async function emergencyAdminResetAllLocks(sourceButton){
     const stageToRelease=oldStage||ownedStage;
     const memberIds=bs28Core?.memberIds?bs28Core.memberIds(group.members):Object.keys(group.members||{});
     const stageIndex=bs28Core?.stageIndex?bs28Core.stageIndex(stageToRelease):Number(String(stageToRelease).replace(/^SS/i,''))-1;
-    const hasPendingRecovery=pendingRecovery.some(ticket=>Number(ticket.stageIndex)===stageIndex&&memberIds.includes(String(ticket.driverId||'')));
+    const hasPendingRecovery=pendingRecovery.some(ticket=>Number(item.stageIndex)===stageIndex&&memberIds.includes(String(ticket.driverId||'')));
     const fullyConfirmed=!!(oldStage&&!hasPendingRecovery&&bs28Core?.allResultsConfirmed&&bs28Core.allResultsConfirmed(group,event,oldStage));
     const oldVisit=Number(group.visitIndex)||0;
     const previousOrder=clone(plan.orders?.[groupId]?.[stageToRelease]??null);
@@ -1657,7 +1657,7 @@ async function emergencyAdminResetAllLocks(sourceButton){
   if(typed!=='RESET ALL LOCKS'){if(status)status.textContent='Emergency reset cancelled. No Firebase data was changed.';return;}
   if(status)status.textContent='Applying emergency reset to Firebase…';
   const updates={};
-  updates['stageLocks/'+eventId]=null;
+  updates['stageLocks/'+eventId]=null;updates['driverRunLocks/'+eventId]=null;
   updates['marshalSessions/'+eventId]=null;
   updates['marshalAccessControl/'+eventId]=nextAccess;
   updates['rotationRequests/'+eventId]=null;
@@ -1774,7 +1774,7 @@ async function loadMarshalRecoveryInbox(){
       return current;
      },undefined,false);
      if(!tx.committed){note.textContent='NOT IMPORTED: '+(rejection||'The database changed during review.')+' Ticket remains available.';return;}
-     await app.database().ref('marshalRecoveryInbox/'+eventId+'/'+uid+'/'+ticketId).update({status:'approved',reviewedAt:firebase.database.ServerValue.TIMESTAMP,reviewedBy:String(auth.currentUser.uid||'')});
+     await app.database().ref().update({['marshalRecoveryInbox/'+eventId+'/'+uid+'/'+ticketId+'/status']:'approved',['marshalRecoveryInbox/'+eventId+'/'+uid+'/'+ticketId+'/reviewedAt']:firebase.database.ServerValue.TIMESTAMP,['marshalRecoveryInbox/'+eventId+'/'+uid+'/'+ticketId+'/reviewedBy']:String(auth.currentUser.uid||''),['recoveryPendingByStage/'+eventId+'/SS'+(Number(item.stageIndex)+1)+'/'+uid+'_'+ticketId]:null});
      note.textContent='APPROVED: official result imported without overwriting another result. Ask the marshal to tap Retry pending sync.';
      approve.textContent='APPROVED';reviewedSuccessfully=true;
     }catch(e){note.textContent='Recovery error: '+e.message+'. Check official results before retrying; the import may already have succeeded.';}
@@ -1995,11 +1995,11 @@ function bs28RenderMain(){
  const lateGroup=$('bs28LateGroup');if(lateGroup){const old=lateGroup.value;lateGroup.innerHTML=bs28BaseGroups(plan).map(([id])=>`<option value="${id}">Group ${id}</option>`).join('');if(old&&lateGroup.querySelector('option[value="'+old+'"]'))lateGroup.value=old}
  $('bs28LatePanel').style.display=mode==='RACING'?'block':'none';
  const needed=[];Object.entries(plan.lateCatchup||{}).forEach(([id,stages])=>Object.entries(stages).forEach(([s,x])=>{if(x.status==='REQUIRED'&&plan.stages?.[s]?.included&&!plan.stages[s].cancelled)needed.push({id,s})}));
- $('bs28Catchup').innerHTML=needed.length?needed.map(({id,s})=>`<div class="bs28-stage"><span>Catch-up #${bs28Clean(data.drivers[id]?.num||'?')} ${bs28Clean(data.drivers[id]?.name||id)} · ${s}</span><button data-v28-action="catchup" data-driver="${bs28Clean(id)}" data-stage="${s}" ${plan.stages[s]?.open&&!plan.stageOwners?.[s]?'':'disabled'}>SCHEDULE</button></div>`).join(''):'No unresolved catch-up slots.';
+ $('bs28Catchup').innerHTML=needed.length?needed.map(({id,s})=>`<div class="bs28-stage"><span>Catch-up #${bs28Clean(data.drivers[id]?.num||'?')} ${bs28Clean(data.drivers[id]?.name||id)} · ${s}</span><button data-v28-action="catchup" data-driver="${bs28Clean(id)}" data-stage="${s}" ${bs28CatchupReason(plan,id,s)?'disabled':''}>SCHEDULE</button><small>${bs28Clean(bs28CatchupReason(plan,id,s))}</small></div>`).join(''):'No unresolved catch-up slots.';
  $('bs28Coordinator').textContent=mode!=='RACING'?'Coordinator awaits race start':
-  !online||!connectedToServer||!controlSessionOwner?'COORDINATOR PAUSED — organiser must connect and own Main Control':
+  !online||!connectedToServer||!controlSessionOwner?'MAIN OFFLINE — authorised online marshals can continue stage rotation':
   bs28CoordinatorWarning?'COORDINATOR PAUSED — '+bs28CoordinatorWarning:
-  'COORDINATOR ACTIVE — '+(bs28InboxPending?bs28InboxPending+' REQUEST(S) PENDING; processing automatic draws':'ready for marshal stage selections');
+  'ROTATION READY — online marshals can select stages independently';
 }
 function bs28Schedule(){if(bs28PulseQueued)return;bs28PulseQueued=true;setTimeout(()=>{bs28PulseQueued=false;bs28Pulse().catch(e=>{bs28CoordinatorWarning=e.message;bs28Show('Rotation coordinator error: '+e.message,true);bs28RenderMain()})},200)}
 // Listen for requests instead of relying only on the periodic poll. One
@@ -2067,7 +2067,7 @@ async function bs28AddStage(){
  if(!confirm('Add SS'+(data.cutoffs.length+1)+' from Section 3? It will appear in Group Rotation as CLOSED. Open it when the obstacle is ready; every group will need to complete it.'))return;
  try{const tx=await dbRef.transaction(ev=>{
   if(!ev||!ev.groupRotationV28)return;const d=JSON.parse(JSON.stringify(ev)),p=d.groupRotationV28,cut=Array.isArray(d.cutoffs)?d.cutoffs:[];if(cut.length>=20)return;
-  const stage=bs28Core.ss(cut.length);cut.push(600000);d.cutoffs=cut;d.gateTotals=Array.isArray(d.gateTotals)?d.gateTotals:[];d.gateTotals.push(10);p.stages[stage]={included:true,open:false,cancelled:false};for(const g of Object.values(p.groups||{})){if(g.type!=='CATCHUP'&&g.status==='FINISHED'&&!g.currentStage)g.status='CHOOSING'}p.revision=(p.revision||0)+1;p.audit=p.audit||{};p.audit['add-'+Date.now()]={action:'ADD_SS',stage,at:Date.now()};return d;
+  const stage=bs28Core.ss(cut.length);cut.push(600000);d.cutoffs=cut;d.gateTotals=Array.isArray(d.gateTotals)?d.gateTotals:[];d.gateTotals.push(10);p.stages[stage]={index:cut.length-1,included:true,open:false,cancelled:false};for(const g of Object.values(p.groups||{})){if(g.type!=='CATCHUP'&&g.status==='FINISHED'&&!g.currentStage)g.status='CHOOSING'}p.revision=(p.revision||0)+1;p.audit=p.audit||{};p.audit['add-'+Date.now()]={action:'ADD_SS',stage,at:Date.now()};return d;
  },undefined,false);if(!tx.committed)throw Error('Event was modified during the operation.');if(tx.snapshot?.val)data=normalizeData(tx.snapshot.val());persist();render();bs28RenderMain();bs28Show('SS added from Section 3 and automatically included in Group Rotation as CLOSED. Set cutoff/gates, SAVE all change, then OPEN when ready.')}catch(e){bs28Show('Add stage failed: '+e.message,true)}
 }
 async function bs28RemoveLastStage(){
@@ -2187,7 +2187,7 @@ async function bs28StartRace(){
  try{const tx=await bs28EventRef().transaction(old=>{
   if(!old||old.phase!=='SETUP'||old.enabled||!old.preparedGroups)return;const current=JSON.parse(JSON.stringify(old));const enabledStages=bs28Core.includedStages(current);if(selections.some(x=>!enabledStages.includes(x.stage)||!current.stages[x.stage].open))return;
   const groups={},owners={},orders={};for(const [id,config] of Object.entries(initial)){groups[id]={id,type:'GROUP',leaderId:String(current.leaderSelections?.[id]||''),members:Object.fromEntries(proposed[id].map(driver=>[driver,true])),currentStage:config.stage,lastStage:null,completedStages:{},status:'READY',visitIndex:0,firstDriverCounts:{},firstStartByStage:{},firstDriverHistory:[]};owners[config.stage]=id;orders[id]={[config.stage]:{drawId:id+':'+config.stage+':0',order:config.order,createdAt:now,drawMethod:'FAIR_RANDOM_WEIGHTED',queueFirstDriverId:config.firstDriverId,firstDriverWeight:config.firstDriverWeight,fairnessCountsAtDraw:config.countsAtDraw}}}
-  current.enabled=true;current.phase='RACING';current.groupCount=Object.keys(groups).length;current.groups=groups;current.stageOwners=owners;current.orders=orders;current.startedAt=now;current.scoringFormatLockedAt=now;current.scoringFormatLockReason='FIRST_DRIVER_DRAW';current.revision=(current.revision||0)+1;current.audit=current.audit||{};current.audit['start-'+now]={action:'START_RACE_AND_FIRST_DRIVER_DRAW',leaders:JSON.parse(JSON.stringify(current.leaderSelections||{})),firstQueueDrivers:Object.fromEntries(Object.entries(initial).map(([g,draw])=>[g,draw.firstDriverId])),drawMethod:'FAIR_RANDOM_WEIGHTED',at:now};return current;
+  current.enabled=true;current.phase='RACING';current.groupCount=Object.keys(groups).length;current.groups=groups;current.stageOwners=owners;current.orders=orders;BS28_COORDINATOR.preparePlan(current);current.startedAt=now;current.scoringFormatLockedAt=now;current.scoringFormatLockReason='FIRST_DRIVER_DRAW';current.revision=(current.revision||0)+1;current.audit=current.audit||{};current.audit['start-'+now]={action:'START_RACE_AND_FIRST_DRIVER_DRAW',leaders:JSON.parse(JSON.stringify(current.leaderSelections||{})),firstQueueDrivers:Object.fromEntries(Object.entries(initial).map(([g,draw])=>[g,draw.firstDriverId])),drawMethod:'FAIR_RANDOM_WEIGHTED',at:now};return current;
  },undefined,false);if(!tx.committed)throw Error('Setup changed. Please check stage assignments.');if(tx.snapshot?.val)data.groupRotationV28=tx.snapshot.val();bs28Preview=null;renderScoringFormatIndicator();updateEventScoringFormatUI();bs28RenderMain();bs28Show('v28 race started! Fair-random starting orders are saved. Future SS draws favour drivers with fewer actual first starts, while every driver keeps a chance to be first. First-start history is verified at START and counted only once per group and SS. The event scoring format is now locked. Marshal timer remains stopped until START.');bs28Schedule()}catch(e){bs28Show('Race setup failed: '+e.message,true)}
 }
 async function bs28RegisterLate(){
@@ -2198,125 +2198,59 @@ async function bs28RegisterLate(){
  if(!confirm('Add late driver #'+num+' '+name+' to Group '+idGroup+'? Completed SS will become CATCH-UP REQUIRED, not DNS.'))return;
  try{const tx=await dbRef.transaction(ev=>{
   if(!ev?.groupRotationV28?.enabled||ev.drivers?.[id])return;const v=JSON.parse(JSON.stringify(ev)),p=v.groupRotationV28,g=p.groups[idGroup];if(!g||g.type==='CATCHUP')return;
-  v.drivers=v.drivers||{};v.drivers[id]={name,num};g.members=g.members||{};g.members[id]=true;
+  v.drivers=v.drivers||{};v.drivers[id]={name,num};g.members=Object.fromEntries(bs28Core.memberIds(g.members).map(member=>[member,true]));g.members[id]=true;
   if(g.currentStage){const order=p.orders?.[idGroup]?.[g.currentStage];if(order&&!order.order.includes(id)){order.order.push(id);order.amendedAt=Date.now();}}
   p.lateCatchup=p.lateCatchup||{};p.lateCatchup[id]={};for(const s of Object.keys(g.completedStages||{}))if(p.stages[s]?.included&&!p.stages[s].cancelled&&g.completedStages[s])p.lateCatchup[id][s]={groupId:idGroup,status:'REQUIRED'};
-  if(g.status==='FINISHED')g.status='CHOOSING';p.revision=(p.revision||0)+1;p.audit=p.audit||{};p.audit['late-'+id]={action:'LATE_ENTRY',driverId:id,groupId:idGroup,at:Date.now()};return v;
+  if(p.sparkProtocol===1)BS28_COORDINATOR.preparePlan(p);if(g.status==='FINISHED')g.status='CHOOSING';p.revision=(p.revision||0)+1;p.audit=p.audit||{};p.audit['late-'+id]={action:'LATE_ENTRY',driverId:id,groupId:idGroup,at:Date.now()};return v;
  },undefined,false);if(!tx.committed)throw Error('Driver/group changed during save.');$('bs28LateName').value='';bs28Show('Late driver '+name+' added to Group '+idGroup+'. Previous SS need catch-up.')}catch(e){bs28Show('Late driver registration failed: '+e.message,true)}
 }
-async function bs28ScheduleCatchup(driver,stage){
- if(!bs28CanWrite()||!bs28IsActive())return bs28Show('Main Control must be connected.',true);
- const p=bs28Plan(),ticket=p?.lateCatchup?.[driver]?.[stage],base=p?.groups?.[ticket?.groupId];
- if(!ticket||ticket.status!=='REQUIRED'||!base)return bs28Show('This catch-up is no longer waiting to be scheduled. Refresh the race status.',true);
- const id='C'+driver,other=Object.entries(p.lateCatchup?.[driver]||{}).find(([s,t])=>s!==stage&&t?.status==='IN_PROGRESS');
- if(other||p.groups?.[id]?.currentStage||Object.values(p.stageOwners||{}).some(owner=>String(owner)===id))return bs28Show('This driver already has a catch-up assigned. Finish and SAVE that SS before scheduling another.',true);
- if(!p.stages?.[stage]?.included||p.stages[stage].cancelled||!p.stages[stage].open||p.stageOwners?.[stage])return bs28Show(stage+' is CLOSED, cancelled, or occupied by another group.',true);
- if(!confirm('Schedule catch-up for #'+data.drivers[driver]?.num+' '+data.drivers[driver]?.name+' at '+stage+'? The original group may continue its current SS. Make sure this driver is not running another SS.'))return;
- // A catch-up is independent of the base group's currentStage, but never
- // reserve a second SS for a driver with an unfinished live timer.
- const locks=(await app.database().ref('stageLocks/'+activeEventId()).once('value')).val()||{};
- if(locks[stage])return bs28Show(stage+' has an active run lock.',true);
- const driverLock=Object.entries(locks).find(([,lock])=>lock?.status==='running'&&String(lock.driverId||'')===String(driver));
- if(driverLock)return bs28Show('Driver is currently running at '+driverLock[0]+'. STOP and SAVE that run before scheduling catch-up.',true);
- const now=Date.now();try{const tx=await bs28EventRef().transaction(old=>{
-  const t=old?.lateCatchup?.[driver]?.[stage],g=old?.groups?.[ticket.groupId],prior=old?.groups?.[id];
-  if(!old?.enabled||!t||t.status!=='REQUIRED'||t.groupId!==ticket.groupId||!g||g.type==='CATCHUP'||!g.members?.[driver]||old.stageOwners?.[stage]||!old.stages?.[stage]?.included||old.stages[stage].cancelled||!old.stages[stage].open)return;
-  if(prior?.currentStage||Object.values(old.stageOwners||{}).some(owner=>String(owner)===id)||Object.entries(old.lateCatchup?.[driver]||{}).some(([s,x])=>s!==stage&&x?.status==='IN_PROGRESS'))return;
-  const v=JSON.parse(JSON.stringify(old));v.stageOwners[stage]=id;v.groups[id]={id,type:'CATCHUP',baseGroupId:ticket.groupId,members:{[driver]:true},currentStage:stage,lastStage:null,completedStages:{},status:'READY',visitIndex:0};v.orders[id]={[stage]:{drawId:id+':'+stage+':0',order:[driver],createdAt:now}};v.lateCatchup[driver][stage].status='IN_PROGRESS';v.revision=(v.revision||0)+1;return v;
- },undefined,false);if(!tx.committed)throw Error('SS was claimed, or this driver already has another catch-up. Refresh and retry.');
- if(tx.snapshot?.val()){data.groupRotationV28=tx.snapshot.val();bs28RenderMain();}
- bs28Show('Catch-up scheduled at '+stage+'. Marshal can select '+stage+' for this driver while the original group continues.');
- }catch(e){bs28Show('Catch-up scheduling failed: '+e.message,true)}
+// Keep the UI and transaction checks consistent. Base-group currentStage is
+// deliberately not a rejection condition: its waiting driver may catch up elsewhere.
+function bs28CatchupReason(p,driver,stage){
+ const t=p?.lateCatchup?.[driver]?.[stage],id='C'+driver,g=p?.groups?.[t?.groupId];
+ if(!p?.enabled)return 'Group Rotation is not active.';
+ if(!t)return 'Catch-up ticket does not exist.';
+ if(t.status!=='REQUIRED')return 'Catch-up ticket is '+String(t.status||'invalid')+', not REQUIRED.';
+ if(!g||g.type==='CATCHUP'||!bs28Core.memberIds(g.members).includes(String(driver)))return 'Driver is no longer a member of the ticket’s original group.';
+ if(p.groups?.[id]?.currentStage||Object.values(p.stageOwners||{}).includes(id)||Object.values(p.lateCatchup?.[driver]||{}).some(x=>x?.status==='IN_PROGRESS'))return 'Driver already has an active catch-up. Finish and SAVE it first.';
+ const info=p.stages?.[stage];
+ if(!info?.included||info.cancelled)return stage+' is excluded or cancelled.';
+ if(!info.open)return stage+' is CLOSED.';
+ if(p.stageOwners?.[stage])return stage+' is OPEN but reserved by Group '+p.stageOwners[stage]+'.';
+ return '';
 }
-// Recover only an orphaned lock whose EXACT runId already has a verified
-// online FINISH/DNF/DNS. Never unlock an active or unsaved run.
-async function bs28ReleaseSavedRunLock(eid,ss,lock,event){
- if(!lock||lock.status!=='running'||!lock.runId||!lock.driverId)return false;
- const si=bs28Core.stageIndex(ss);
- const saved=si>=0?event?.results?.[String(lock.driverId)]?.[si]:null;
- if(!bs28Core.statusFor(saved)||!saved.runId||String(saved.runId)!==String(lock.runId))return false;
- const exact={runId:String(lock.runId),driverId:String(lock.driverId),authUid:String(lock.authUid||''),marshalSessionId:String(lock.marshalSessionId||'')};
- const ref=app.database().ref('stageLocks/'+eid+'/'+ss);
+function bs28CatchupFeedback(message,error=false){
+ bs28Show(message,error);
+ const panel=$('bs28Catchup'),old=$('bs28CatchupFeedback');
+ if(old)old.remove();
+ if(panel){const note=document.createElement('p');note.id='bs28CatchupFeedback';note.setAttribute('role','status');note.textContent=message;note.style.color=error?'#ff9999':'#94f0c6';panel.prepend(note);}
+ if(error)alert(message);
+}
+let bs28CatchupBusy=false;
+async function bs28ScheduleCatchup(driver,stage){
+ const fail=message=>bs28CatchupFeedback(message,true);
+ if(bs28CatchupBusy)return fail('Another catch-up assignment is being checked. Please wait.');
+ if(!online||!connectedToServer||navigator.onLine===false)return fail('Main Control is offline. Reconnect before scheduling.');
+ if(!bs28CanWrite()||!app||!dbRef)return fail('Main Control does not own the organiser session, or has an unfinished run.');
+ const eid=activeEventId();
+ if(!confirm('Schedule #'+(data.drivers?.[driver]?.num||'?')+' '+(data.drivers?.[driver]?.name||driver)+' at '+stage+'? The original group may continue its current SS.'))return;
+ bs28CatchupBusy=true;
  try{
-  const tx=await ref.transaction(current=>{
-   if(!current||current.status!=='running'||String(current.runId)!==exact.runId||String(current.driverId)!==exact.driverId||
-      String(current.authUid||'')!==exact.authUid||String(current.marshalSessionId||'')!==exact.marshalSessionId)return;
-   return null;
-  },undefined,false);
-  if(!tx.committed||tx.snapshot.val())return false;
-  // The stage is released. A stale session marker can be removed only if
-  // it still points at the same completed run. Failure here is non-fatal.
-  if(exact.authUid){
-   try{await app.database().ref('marshalSessions/'+eid+'/'+exact.authUid+'/activeLock').transaction(current=>
-     current&&String(current.runId||'')===exact.runId&&String(current.stageName||'')===ss?null:undefined,undefined,false)}
-   catch(e){console.warn('BS28: saved-stage session marker cleanup deferred',e)}
-  }
-  return true;
- }catch(e){console.warn('BS28: unable to clear verified completed-run lock',ss,e);return false}
+  bs28CatchupFeedback('Checking and reserving '+stage+' in Firebase…');
+  await BS28_COORDINATOR.call(app,eid,'scheduleCatchup',{driverId:driver,stage,controlSessionId});
+  if(activeEventId()===eid){const snap=await dbRef.get();data=normalizeData(snap.val());bs28RenderMain();}
+  bs28CatchupFeedback('Catch-up confirmed at '+stage+'. The original group can continue. This driver must finish catch-up before starting its other SS.');
+ }catch(e){fail('Catch-up could not be confirmed: '+e.message+'. If the connection dropped, retry the same operation; Firebase will not assign it twice.');}
+ finally{bs28CatchupBusy=false;}
 }
 async function bs28Pulse(){
  if(clearRaceBusy||bs28PulseBusy||!bs28IsActive()||!online||!connectedToServer||!controlSessionOwner||!app||!dbRef)return;
+ const candidate=Object.values(bs28Plan().groups||{}).some(g=>g.currentStage&&bs28Core.allResultsConfirmed(g,data,g.currentStage));
+ if(!candidate)return;
  bs28PulseBusy=true;
- try{
-  const eid=activeEventId(),session=(await app.database().ref('controlSessions/'+eid).once('value')).val();
-  if(!session||session.activeSessionId!==controlSessionId){bs28CoordinatorWarning='this page does not own the organiser session';bs28RenderMain();return}
-  if(session.runActive){bs28CoordinatorWarning='Main Control has an unfinished run; finish and SAVE it first';bs28RenderMain();return}
-  bs28CoordinatorWarning='';
-  const event=(await dbRef.once('value')).val();if(!event?.groupRotationV28?.enabled)return;
-  const locks=(await app.database().ref('stageLocks/'+eid).once('value')).val()||{};
-  const inbox=(await app.database().ref('marshalRecoveryInbox/'+eid).once('value')).val()||{};
-  const pendingTickets=Object.values(inbox).flatMap(x=>Object.values(x||{})).filter(x=>x?.status==='pending');
-  for(const [groupId,group] of Object.entries(event.groupRotationV28.groups||{})){
-    const ss=group.currentStage;if(!ss||!bs28Core.allResultsConfirmed(group,event,ss))continue;
-    if(pendingTickets.some(t=>Number(t.stageIndex)===bs28Core.stageIndex(ss)&&bs28Core.memberIds(group.members).includes(t.driverId)))continue;
-    // If the last marshal saved a result but its run lock was not removed,
-    // verify the exact saved run and release that lock before finalizing SS.
-    if(locks[ss]){
-     const cleared=await bs28ReleaseSavedRunLock(eid,ss,locks[ss],event);
-     if(!cleared)continue; // Live/unknown run: NEVER advance this group.
-     delete locks[ss];
-    }
-    await bs28EventRef().transaction(p=>{
-      if(!p?.enabled||p.groups?.[groupId]?.currentStage!==ss||p.stageOwners?.[ss]!==groupId)return;
-      const v=JSON.parse(JSON.stringify(p)),g=v.groups[groupId];g.currentStage=null;g.lastStage=ss;g.completedStages=g.completedStages||{};g.completedStages[ss]=true;g.visitIndex=(g.visitIndex||0)+1;delete v.stageOwners[ss];
-      if(g.type==='CATCHUP'){g.status='FINISHED';const who=bs28Core.memberIds(g.members)[0];if(v.lateCatchup?.[who]?.[ss])v.lateCatchup[who][ss].status='DONE'}
-      else{const required=bs28Core.includedStages(v),missing=required.some(st=>!g.completedStages[st]),due=Object.values(v.lateCatchup||{}).some(byStage=>Object.entries(byStage).some(([st,t])=>t.groupId===groupId&&t.status!=='DONE'&&required.includes(st)));g.status=missing||due?'CHOOSING':'FINISHED';}
-      for(const [gid,b] of bs28BaseGroups(v)){if(!b.currentStage&&b.status==='CHOOSING'&&bs28Core.includedStages(v).every(st=>b.completedStages?.[st])&&!Object.values(v.lateCatchup||{}).some(by=>Object.entries(by).some(([st,t])=>t.groupId===gid&&t.status!=='DONE'&&bs28Core.includedStages(v).includes(st))))b.status='FINISHED'}
-      v.revision=(v.revision||0)+1;v.audit=v.audit||{};v.audit['complete-'+groupId+'-'+ss]={action:'COMPLETE_SS',groupId,stage:ss,at:Date.now()};return v;
-    },undefined,false);
-  }
-  const reqRef=app.database().ref('rotationRequests/'+eid),requests=(await reqRef.once('value')).val()||{};
-  for(const [groupId,req] of Object.entries(requests)){
-    if(req?.status!=='pending'||!req?.requestId)continue;
-    const snapshot=(await dbRef.once('value')).val(),p=snapshot?.groupRotationV28,g=p?.groups?.[groupId];
-    if(p?.processedRequests?.[req.requestId]?.status==='accepted'){
-      await reqRef.child(groupId).transaction(old=>old?.requestId===req.requestId&&old.status==='pending'?{...old,status:'accepted',reason:'',decidedAt:Date.now()}:undefined,undefined,false);
-      continue;
-    }
-    let reason='',destination=req.destination;
-    const gate=await app.database().ref('marshalAccessControl/'+eid+'/enabled').once('value');
-    if(gate.val()!==true)reason='Marshal link closed';
-    if(!reason){
-      const uid=String(req.authUid||'');
-      const session=uid?(await app.database().ref('marshalSessions/'+eid+'/'+uid).once('value')).val():null;
-      const access=(await app.database().ref('marshalAccessControl/'+eid).once('value')).val();
-      if(!uid||!session?.enabled||!access?.enabled||session.token!==access.token)reason='Marshal session no longer authorized';
-    }
-    // These checks must execute AFTER a valid marshal session, rather
-    // than being attached as else-if branches to a failed access check.
-    if(!reason&&(!g||g.status!=='CHOOSING'||g.currentStage||Number(g.visitIndex)!==Number(req.visitIndex)))reason='Group not yet released by Main Control';
-    if(!reason&&!bs28Core.canChoose(p,groupId,destination,{}))reason='SS closed, occupied or already completed';
-    if(!reason&&!bs28Core.memberIds(g.members).length)reason='No drivers in group';
-    if(reason){await reqRef.child(groupId).transaction(old=>old?.requestId===req.requestId&&old.status==='pending'?{...old,status:'rejected',reason,decidedAt:Date.now()}:undefined,undefined,false);continue}
-    // A different marshal may replace this selection while we are checking
-    // availability. Do not commit an already superseded request.
-    const freshReq=(await reqRef.child(groupId).once('value')).val();
-    if(!freshReq||freshReq.requestId!==req.requestId||freshReq.status!=='pending')continue;
-    const newOrder=bs28Core.shuffle(bs28Core.memberIds(g.members)),now=Date.now();
-    const tx=await bs28EventRef().transaction(old=>bs28Core.reserveForRequest(old,{requestId:req.requestId,groupId,destination,visitIndex:req.visitIndex},newOrder,{},now),undefined,false);
-    const result=tx.committed?'accepted':'rejected';await reqRef.child(groupId).transaction(old=>old?.requestId===req.requestId&&old.status==='pending'?{...old,status:result,reason:result==='accepted'?'':'Stage was claimed or group changed',decidedAt:Date.now()}:undefined,undefined,false);
-  }
- }finally{bs28PulseBusy=false}
+ try{await BS28_COORDINATOR.call(app,activeEventId(),'reconcile');bs28CoordinatorWarning='';}
+ catch(e){bs28CoordinatorWarning=e.message;bs28Show('Stage release not confirmed: '+e.message,true);}
+ finally{bs28PulseBusy=false;bs28RenderMain();}
 }
 const bs28PanelEl=$('bs28Panel');if(bs28PanelEl){
  bs28PanelEl.addEventListener('change',async e=>{
