@@ -1,4 +1,4 @@
-<!doctype html><!-- v28.8.2: Group Rotation shared-library preflight; cache-busted core/coordinator dependencies; no event-data changes. --><!-- v28.8.1: audited catch-up guards and visible failure reporting; Firebase coordinator required. --><!-- v28.7.8: Lucky Draw as independent Section 10, Firebase-saved winner history and projector reveal. --><!-- v28.7.7: emergency reset preserves unfinished SS assignments; single-gate DNF automatically records 1/1. --><!-- v28.7.4: fair-random first queue weighting from actual first starts; no fixed first-driver rotation. --><!-- v28.7.3: group rotation supports 1-9 groups; desktop Jump To shortcuts visible; automatic format-based penalty presets; SORRCA 2024 scorecard, signed Progress, 60-point point-out and progress-aware DNF; no scale points. Mobile layout retained. -->
+<!doctype html><!-- v28.8.1: audited catch-up guards and visible failure reporting; Firebase coordinator required. --><!-- v28.7.8: Lucky Draw as independent Section 10, Firebase-saved winner history and projector reveal. --><!-- v28.7.7: emergency reset preserves unfinished SS assignments; single-gate DNF automatically records 1/1. --><!-- v28.7.4: fair-random first queue weighting from actual first starts; no fixed first-driver rotation. --><!-- v28.7.3: group rotation supports 1-9 groups; desktop Jump To shortcuts visible; automatic format-based penalty presets; SORRCA 2024 scorecard, signed Progress, 60-point point-out and progress-aware DNF; no scale points. Mobile layout retained. -->
 <!-- v28.7.2: SORRCA signed Progress values survive reload; editable Bonus award value; saved bonus taps retain their original value. -->
 <!-- v28.7.3: Group rotation supports 1-9 groups (A-I); desktop Jump To links are expanded by default; phones remain collapsed. -->
 <!-- v28.6.7: Main Control emergency admin reset for all stage, marshal-session, group-reservation and organiser-session locks; preserves race records and draw history. -->
@@ -702,7 +702,7 @@ details[data-main-section]>summary:focus-visible{outline:2px solid #93c5fd;outli
 
 
 
-<footer>© TEC-ARTS CRAWLER • RC CRAWLER · POINT &amp; TIME ATTACK SYSTEM · v28.8.2</footer><script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-app-compat.js"></script><script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-auth-compat.js"></script><script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-database-compat.js"></script><script src="firebase-config.js"></script><script src="bs28-core.js?v=28.8.2"></script><script src="bs28-coordinator.js?v=28.8.2"></script><script>
+<footer>© TEC-ARTS CRAWLER • RC CRAWLER · POINT &amp; TIME ATTACK SYSTEM · v28.8.1</footer><script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-app-compat.js"></script><script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-auth-compat.js"></script><script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-database-compat.js"></script><script src="firebase-config.js"></script><script src="bs28-core.js?v=28.7.6"></script><script src="bs28-coordinator.js?v=28.8.1"></script><script>
 /* RC CRAWLER shared scoring engine. Used by Main Control, Marshal and Public Results. */
 (function (root) {
   'use strict';
@@ -1925,17 +1925,6 @@ function bs28Show(msg,error=false){const h=$('bs28Message');if(h){h.textContent=
 function bs28StageLabel(plan,s){const info=plan?.stages?.[s];if(!info)return 'NOT CONFIGURED';if(info.cancelled||!info.included)return 'CANCELLED';const owner=plan.stageOwners?.[s];if(!info.open)return owner?'CLOSED · IN USE':'CLOSED';return owner?'BUSY · GROUP '+owner:'OPEN · AVAILABLE'}
 function bs28RenderMain(){
  const panel=$('bs28Panel');if(!panel)return;
- const missing=[];
- if(!bs28Core||typeof bs28Core.ss!=='function'||typeof bs28Core.stageNames!=='function')missing.push('bs28-core.js');
- if(!window.BS28_COORDINATOR||typeof window.BS28_COORDINATOR.preparePlan!=='function')missing.push('bs28-coordinator.js');
- if(missing.length){
-  $('bs28Message').textContent='Missing required library: '+missing.join(' and ')+'. Upload the file(s) beside index.html, then reload.';
-  $('bs28Initialize').disabled=true;
-  $('bs28StageCards').textContent='Group Rotation is unavailable until the shared libraries load.';
-  $('bs28LiveGroups').textContent='Shared library not loaded.';
-  return;
- }
- $('bs28Initialize').disabled=false;
  const plan=bs28Plan(),mode=plan?.enabled?'RACING':plan?.phase==='SETUP'?'SETUP':'NOT CONFIGURED';
  $('bs28Mode').textContent='GROUP ROTATION: '+mode;const summary=$('bs28SummaryState');if(summary){summary.textContent=mode;summary.dataset.mode=mode;}
  $('bs28Setup').style.display=mode==='RACING'?'none':'block';
@@ -2039,9 +2028,6 @@ function bs28WatchInbox(){
  });
 }
 async function bs28Initialize(){
- if(!bs28Core||typeof bs28Core.ss!=='function')return bs28Show('Shared library bs28-core.js is not loaded. Upload bs28-core.js beside index.html, then reload.',true);
- if(!window.BS28_COORDINATOR||typeof window.BS28_COORDINATOR.preparePlan!=='function')return bs28Show('Shared library bs28-coordinator.js is not loaded. Upload bs28-coordinator.js beside index.html, then reload.',true);
- if(!Array.isArray(data?.cutoffs)||!data.cutoffs.length)return bs28Show('Add at least one SS in Section 5 before initializing Group Rotation.',true);
  if(!bs28CanWrite())return bs28Show('Connect as the active Main Control device before configuring v28.',true);
  if(bs28Plan())return bs28Show('V28 is already initialized for this event.',true);
  if(Object.values(data.results||{}).some(byStage=>Object.values(byStage||{}).some(Boolean)))return bs28Show('Cannot enable v28 during an existing race. Use a fresh v28 Event ID.',true);
