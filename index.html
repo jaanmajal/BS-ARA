@@ -1,4 +1,4 @@
-<!doctype html><!-- v28.7.8: Lucky Draw as independent Section 10, Firebase-saved winner history and projector reveal. --><!-- v28.7.7: emergency reset preserves unfinished SS assignments; single-gate DNF automatically records 1/1. --><!-- v28.7.4: fair-random first queue weighting from actual first starts; no fixed first-driver rotation. --><!-- v28.7.3: group rotation supports 1-9 groups; desktop Jump To shortcuts visible; automatic format-based penalty presets; SORRCA 2024 scorecard, signed Progress, 60-point point-out and progress-aware DNF; no scale points. Mobile layout retained. -->
+<!doctype html><!-- v28.7.9: independently scheduled late-driver catch-up at different available SS, with visible confirmation and driver timer checks. --><!-- v28.7.8: Lucky Draw as independent Section 10, Firebase-saved winner history and projector reveal. --><!-- v28.7.7: emergency reset preserves unfinished SS assignments; single-gate DNF automatically records 1/1. --><!-- v28.7.4: fair-random first queue weighting from actual first starts; no fixed first-driver rotation. --><!-- v28.7.3: group rotation supports 1-9 groups; desktop Jump To shortcuts visible; automatic format-based penalty presets; SORRCA 2024 scorecard, signed Progress, 60-point point-out and progress-aware DNF; no scale points. Mobile layout retained. -->
 <!-- v28.7.2: SORRCA signed Progress values survive reload; editable Bonus award value; saved bonus taps retain their original value. -->
 <!-- v28.7.3: Group rotation supports 1-9 groups (A-I); desktop Jump To links are expanded by default; phones remain collapsed. -->
 <!-- v28.6.7: Main Control emergency admin reset for all stage, marshal-session, group-reservation and organiser-session locks; preserves race records and draw history. -->
@@ -702,7 +702,7 @@ details[data-main-section]>summary:focus-visible{outline:2px solid #93c5fd;outli
 
 
 
-<footer>© TEC-ARTS CRAWLER • RC CRAWLER · POINT &amp; TIME ATTACK SYSTEM · v28.7.8</footer><script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-app-compat.js"></script><script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-auth-compat.js"></script><script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-database-compat.js"></script><script src="firebase-config.js"></script><script src="bs28-core.js?v=28.7.6"></script><script>
+<footer>© TEC-ARTS CRAWLER • RC CRAWLER · POINT &amp; TIME ATTACK SYSTEM · v28.7.9</footer><script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-app-compat.js"></script><script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-auth-compat.js"></script><script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-database-compat.js"></script><script src="firebase-config.js"></script><script src="bs28-core.js?v=28.7.6"></script><script>
 /* RC CRAWLER shared scoring engine. Used by Main Control, Marshal and Public Results. */
 (function (root) {
   'use strict';
@@ -1994,8 +1994,15 @@ function bs28RenderMain(){
  if($('removeStage')){const removeReason=bs28LastStageRemovalReason(data),localEmptyRemoval=bs28CanRemoveEmptyEventLocally(data),needsOnline=!!plan&&!bs28CanWrite()&&!localEmptyRemoval;$('removeStage').dataset.bs28Guard=plan?'1':'0';$('removeStage').disabled=!!running||!!pendingRun||!!removeReason||needsOnline;$('removeStage').title=removeReason||(localEmptyRemoval?'Empty new event: remove this unused SS locally; the change will sync when Firebase reconnects.':needsOnline?'Connect Main Control to Firebase and ensure it owns the organiser session.':'Remove the final SS only if it has never been opened, assigned or used, or has been cancelled, and has no result/penalty history.');}
  const lateGroup=$('bs28LateGroup');if(lateGroup){const old=lateGroup.value;lateGroup.innerHTML=bs28BaseGroups(plan).map(([id])=>`<option value="${id}">Group ${id}</option>`).join('');if(old&&lateGroup.querySelector('option[value="'+old+'"]'))lateGroup.value=old}
  $('bs28LatePanel').style.display=mode==='RACING'?'block':'none';
- const needed=[];Object.entries(plan.lateCatchup||{}).forEach(([id,stages])=>Object.entries(stages).forEach(([s,x])=>{if(x.status==='REQUIRED'&&plan.stages?.[s]?.included&&!plan.stages[s].cancelled)needed.push({id,s})}));
- $('bs28Catchup').innerHTML=needed.length?needed.map(({id,s})=>`<div class="bs28-stage"><span>Catch-up #${bs28Clean(data.drivers[id]?.num||'?')} ${bs28Clean(data.drivers[id]?.name||id)} · ${s}</span><button data-v28-action="catchup" data-driver="${bs28Clean(id)}" data-stage="${s}" ${plan.stages[s]?.open&&!plan.stageOwners?.[s]?'':'disabled'}>SCHEDULE</button></div>`).join(''):'No unresolved catch-up slots.';
+ const catchupTickets=[];Object.entries(plan.lateCatchup||{}).forEach(([id,stages])=>Object.entries(stages||{}).forEach(([s,t])=>{
+  if(['REQUIRED','IN_PROGRESS'].includes(t?.status)&&plan.stages?.[s]?.included&&!plan.stages[s].cancelled)catchupTickets.push({id,s,t});
+ }));
+ $('bs28Catchup').innerHTML=catchupTickets.length?catchupTickets.map(({id,s,t})=>{
+  const label='Catch-up #'+bs28Clean(data.drivers[id]?.num||'?')+' '+bs28Clean(data.drivers[id]?.name||id)+' · '+bs28Clean(s);
+  if(t.status==='IN_PROGRESS')return `<div class="bs28-stage"><span>${label} · <strong>ASSIGNED / WAITING FOR RESULT</strong></span><small>Temporary catch-up group is reserved at ${bs28Clean(s)}. Other groups can continue.</small></div>`;
+  const available=!!(plan.stages[s]?.open&&!plan.stageOwners?.[s]&&plan.groups?.[t.groupId]?.currentStage!==s);
+  return `<div class="bs28-stage"><span>${label}</span><button data-v28-action="catchup" data-driver="${bs28Clean(id)}" data-stage="${bs28Clean(s)}" ${available?'':'disabled'}>SCHEDULE</button></div>`;
+ }).join(''):'No unresolved catch-up slots.';
  $('bs28Coordinator').textContent=mode!=='RACING'?'Coordinator awaits race start':
   !online||!connectedToServer||!controlSessionOwner?'COORDINATOR PAUSED — organiser must connect and own Main Control':
   bs28CoordinatorWarning?'COORDINATOR PAUSED — '+bs28CoordinatorWarning:
@@ -2205,28 +2212,56 @@ async function bs28RegisterLate(){
  },undefined,false);if(!tx.committed)throw Error('Driver/group changed during save.');$('bs28LateName').value='';bs28Show('Late driver '+name+' added to Group '+idGroup+'. Previous SS need catch-up.')}catch(e){bs28Show('Late driver registration failed: '+e.message,true)}
 }
 async function bs28ScheduleCatchup(driver,stage){
- if(!bs28CanWrite()||!bs28IsActive())return bs28Show('Main Control must be connected.',true);
- const p=bs28Plan(),ticket=p?.lateCatchup?.[driver]?.[stage],base=p?.groups?.[ticket?.groupId];
- if(!ticket||ticket.status!=='REQUIRED'||!base)return bs28Show('This catch-up is no longer waiting to be scheduled. Refresh the race status.',true);
- const id='C'+driver,other=Object.entries(p.lateCatchup?.[driver]||{}).find(([s,t])=>s!==stage&&t?.status==='IN_PROGRESS');
- if(other||p.groups?.[id]?.currentStage||Object.values(p.stageOwners||{}).some(owner=>String(owner)===id))return bs28Show('This driver already has a catch-up assigned. Finish and SAVE that SS before scheduling another.',true);
- if(!p.stages?.[stage]?.included||p.stages[stage].cancelled||!p.stages[stage].open||p.stageOwners?.[stage])return bs28Show(stage+' is CLOSED, cancelled, or occupied by another group.',true);
- if(!confirm('Schedule catch-up for #'+data.drivers[driver]?.num+' '+data.drivers[driver]?.name+' at '+stage+'? The original group may continue its current SS. Make sure this driver is not running another SS.'))return;
- // A catch-up is independent of the base group's currentStage, but never
- // reserve a second SS for a driver with an unfinished live timer.
- const locks=(await app.database().ref('stageLocks/'+activeEventId()).once('value')).val()||{};
- if(locks[stage])return bs28Show(stage+' has an active run lock.',true);
- const driverLock=Object.entries(locks).find(([,lock])=>lock?.status==='running'&&String(lock.driverId||'')===String(driver));
- if(driverLock)return bs28Show('Driver is currently running at '+driverLock[0]+'. STOP and SAVE that run before scheduling catch-up.',true);
- const now=Date.now();try{const tx=await bs28EventRef().transaction(old=>{
-  const t=old?.lateCatchup?.[driver]?.[stage],g=old?.groups?.[ticket.groupId],prior=old?.groups?.[id];
-  if(!old?.enabled||!t||t.status!=='REQUIRED'||t.groupId!==ticket.groupId||!g||g.type==='CATCHUP'||!g.members?.[driver]||old.stageOwners?.[stage]||!old.stages?.[stage]?.included||old.stages[stage].cancelled||!old.stages[stage].open)return;
-  if(prior?.currentStage||Object.values(old.stageOwners||{}).some(owner=>String(owner)===id)||Object.entries(old.lateCatchup?.[driver]||{}).some(([s,x])=>s!==stage&&x?.status==='IN_PROGRESS'))return;
-  const v=JSON.parse(JSON.stringify(old));v.stageOwners[stage]=id;v.groups[id]={id,type:'CATCHUP',baseGroupId:ticket.groupId,members:{[driver]:true},currentStage:stage,lastStage:null,completedStages:{},status:'READY',visitIndex:0};v.orders[id]={[stage]:{drawId:id+':'+stage+':0',order:[driver],createdAt:now}};v.lateCatchup[driver][stage].status='IN_PROGRESS';v.revision=(v.revision||0)+1;return v;
- },undefined,false);if(!tx.committed)throw Error('SS was claimed, or this driver already has another catch-up. Refresh and retry.');
- if(tx.snapshot?.val()){data.groupRotationV28=tx.snapshot.val();bs28RenderMain();}
- bs28Show('Catch-up scheduled at '+stage+'. Marshal can select '+stage+' for this driver while the original group continues.');
- }catch(e){bs28Show('Catch-up scheduling failed: '+e.message,true)}
+ if(!bs28CanWrite()||!bs28IsActive())return bs28Show('Connect as the active Main Control organiser first.',true);
+ const eventId=activeEventId(),p=bs28Plan(),ticket=p?.lateCatchup?.[driver]?.[stage],base=p?.groups?.[ticket?.groupId];
+ if(!ticket||ticket.status!=='REQUIRED'||!base)return bs28Show('Catch-up is not REQUIRED. Refresh from Firebase and check its status.',true);
+ if(base.currentStage===stage)return bs28Show('The original group is already on '+stage+'. Catch-up must use a DIFFERENT SS.',true);
+ const catchupGroupId='C'+driver;
+ if(p.groups?.[catchupGroupId]?.currentStage||Object.values(p.stageOwners||{}).some(owner=>String(owner)===catchupGroupId)||
+    Object.entries(p.lateCatchup?.[driver]||{}).some(([s,t])=>s!==stage&&t?.status==='IN_PROGRESS'))
+  return bs28Show('This driver already has an active catch-up assignment. Finish and SAVE it first.',true);
+ if(!p.stages?.[stage]?.included||p.stages[stage].cancelled||!p.stages[stage].open||p.stageOwners?.[stage])
+  return bs28Show(stage+' is CLOSED, CANCELLED or occupied. Catch-up was not scheduled.',true);
+ if(!data.drivers?.[driver])return bs28Show('Late driver is missing from the registered driver list.',true);
+ try{
+  // A completed result, or an active timer on ANY SS, must block a new catch-up.
+  const [lockSnap,resultSnap]=await Promise.all([
+   app.database().ref('stageLocks/'+eventId).once('value'),
+   dbRef.child('results/'+driver+'/'+bs28Core.stageIndex(stage)).once('value')
+  ]);
+  const locks=lockSnap.val()||{};
+  const active=Object.entries(locks).find(([,lock])=>lock?.status==='running'&&String(lock.driverId||'')===String(driver));
+  if(active)return bs28Show('Driver has an active or unsaved timer at '+active[0]+'. STOP and SAVE before catch-up.',true);
+  if(locks[stage])return bs28Show(stage+' has an active stage lock. Wait for the run to be saved.',true);
+  if(resultSnap.exists())return bs28Show('Driver already has an official result at '+stage+'. No catch-up needed.',true);
+ }catch(e){return bs28Show('Cannot verify driver/stage locks in Firebase: '+e.message+'. Nothing was scheduled.',true)}
+ if(!confirm('SCHEDULE independent catch-up for #'+data.drivers[driver].num+' '+data.drivers[driver].name+' at '+stage+'? The original Group '+ticket.groupId+' may continue '+(base.currentStage||'its race')+'. START remains blocked while this driver has another active run.'))return;
+ const now=Date.now();let rejected='Event was modified while scheduling.';
+ try{
+  const tx=await bs28EventRef().transaction(old=>{
+   const t=old?.lateCatchup?.[driver]?.[stage],g=old?.groups?.[ticket.groupId],prior=old?.groups?.[catchupGroupId];
+   if(!old?.enabled||!t||t.status!=='REQUIRED'||t.groupId!==ticket.groupId||!g||g.type==='CATCHUP'||!bs28Core.memberIds(g.members).includes(String(driver))){rejected='Catch-up ticket or group membership changed.';return;}
+   if(g.currentStage===stage){rejected='Original group is already on '+stage+'; a different SS is required.';return;}
+   if(!old.stages?.[stage]?.included||old.stages[stage].cancelled||!old.stages[stage].open||old.stageOwners?.[stage]){rejected=stage+' is no longer open and available.';return;}
+   if(prior?.currentStage||Object.values(old.stageOwners||{}).some(owner=>String(owner)===catchupGroupId)||
+      Object.entries(old.lateCatchup?.[driver]||{}).some(([s,ticket])=>s!==stage&&ticket?.status==='IN_PROGRESS')){rejected='Driver already has a catch-up in progress.';return;}
+   const v=JSON.parse(JSON.stringify(old));
+   v.stageOwners=v.stageOwners||{};v.groups=v.groups||{};v.orders=v.orders||{};
+   v.stageOwners[stage]=catchupGroupId;
+   v.groups[catchupGroupId]={id:catchupGroupId,type:'CATCHUP',baseGroupId:ticket.groupId,members:{[driver]:true},currentStage:stage,lastStage:null,completedStages:{},status:'READY',visitIndex:0};
+   v.orders[catchupGroupId]={[stage]:{drawId:catchupGroupId+':'+stage+':0',order:[driver],createdAt:now}};
+   v.lateCatchup[driver][stage].status='IN_PROGRESS';
+   v.lateCatchup[driver][stage].scheduledAt=now;
+   v.revision=(Number(v.revision)||0)+1;
+   v.audit=v.audit||{};v.audit['catchup-'+driver+'-'+stage+'-'+now]={action:'CATCHUP_SCHEDULED',driverId:String(driver),baseGroupId:ticket.groupId,stage,at:now};
+   return v;
+  },undefined,false);
+  if(!tx.committed)throw Error(rejected);
+  data.groupRotationV28=tx.snapshot.val();
+  try{localStorage.setItem(key,JSON.stringify(data))}catch(e){console.warn('Catch-up saved in Firebase, but local cache failed:',e)}
+  bs28RenderMain();
+  bs28Show('CATCH-UP CONFIRMED: #'+data.drivers[driver].num+' '+data.drivers[driver].name+' assigned to '+stage+'. Other Group '+ticket.groupId+' drivers may continue '+(base.currentStage||'their race')+'.',false);
+ }catch(e){bs28Show('Catch-up NOT scheduled: '+e.message,true)}
 }
 // Recover only an orphaned lock whose EXACT runId already has a verified
 // online FINISH/DNF/DNS. Never unlock an active or unsaved run.

@@ -1,4 +1,4 @@
-<!doctype html><!-- v28.7.5: marshal-side verified completion releases stale SS reservations when Main Control is offline. --><!-- v28.7.7: emergency reset preserves unfinished SS assignments; single-gate DNF automatically records 1/1. --><!-- v28.7.4: fair-random group draws and actual first-starter history. --><!-- v28.7.2: automatic SORRCA 2024 preset scoring; signed Progress, dynamic Bonuses and progress-aware DNF; no scale points. --><!-- v27.7.8: recovery inbox for stage-lock-rejected queued results; no direct overwrite. --><!-- v27.7.7: next-driver ready reminder, any pending driver selection, blank manual stopwatch. --><!-- v27.7.5: pin-authorized stage reset protected by Firebase Rules v7 run ID; avoids stale local transaction cache abort; legacy transaction fallback. --><!-- v27.6.6: updated penalty schedule, DNF minimum Gate-1 scoring, frozen DNF roster base, and official tie-break order. --><!-- v28.7.7: verified first-start history; no duplicate history writes; weighted fair draws retained. -->
+<!doctype html><!-- v28.7.9: independent late-driver catch-up visibility and cross-stage driver timer guards. --><!-- v28.7.7: emergency reset preserves unfinished SS assignments; single-gate DNF automatically records 1/1. --><!-- v28.7.4: fair-random group draws and actual first-starter history. --><!-- v28.7.2: automatic SORRCA 2024 preset scoring; signed Progress, dynamic Bonuses and progress-aware DNF; no scale points. --><!-- v27.7.8: recovery inbox for stage-lock-rejected queued results; no direct overwrite. --><!-- v27.7.7: next-driver ready reminder, any pending driver selection, blank manual stopwatch. --><!-- v27.7.5: pin-authorized stage reset protected by Firebase Rules v7 run ID; avoids stale local transaction cache abort; legacy transaction fallback. --><!-- v27.6.6: updated penalty schedule, DNF minimum Gate-1 scoring, frozen DNF roster base, and official tie-break order. --><!-- v28.7.7: verified first-start history; no duplicate history writes; weighted fair draws retained. -->
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#101827"><meta name="application-name" content="RC CRAWLER"><meta name="apple-mobile-web-app-title" content="RC CRAWLER"><link rel="icon" type="image/png" sizes="128x128" href="logo.png"><link rel="apple-touch-icon" href="logo.png"><title>RC CRAWLER | MARSHAL RACE CONTROL</title><style>
 <!-- v28.7.2: SORRCA signed Progress values survive reload; editable Bonus award value; saved bonus taps retain their original value. -->
 :root{font-family:system-ui,-apple-system,sans-serif;color:#edf3ff;background:#0a1120}*{box-sizing:border-box}body{margin:auto;max-width:980px;padding:18px}header,.flex{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}h1{font-size:25px;margin:0}h2{font-size:19px;margin:0 0 12px}.muted,small{color:#aab9ce}.card{background:#172238;border:1px solid #30425e;border-radius:16px;padding:16px;margin:14px 0}.card.firebase-online{border:4px solid #22c55e!important;box-shadow:0 0 0 1px rgba(34,197,94,.32),0 0 18px rgba(34,197,94,.24)!important;transition:border-color .15s ease,box-shadow .15s ease}.card.firebase-online:focus-within{border-color:#4ade80!important}button,input,select,textarea{font:inherit;border-radius:10px;border:1px solid #425572;padding:11px;background:#0c1729;color:white}button{cursor:pointer;font-weight:700}button:disabled{opacity:.4;cursor:default}.primary{background:#2563eb}.start{background:#168348}.stop{background:#b92d39}.warn{background:#8d5918}.row{display:flex;gap:8px;flex-wrap:wrap;margin:8px 0}.row>*{flex:1;min-width:120px}label{display:block;font-size:13px;color:#b8c7da;margin-bottom:4px}input,select{width:100%}.clock-wrap{display:flex;align-items:center;justify-content:center;gap:12px;flex-wrap:wrap;margin:10px 0}.clock{text-align:center;font-size:clamp(48px,10vw,90px);font-weight:800;font-variant-numeric:tabular-nums;letter-spacing:-3px;margin:0}.connection-indicator{font-size:14px;font-weight:900;letter-spacing:.04em;border:2px solid #ef4444;background:#651e2b;color:#ffe4e6;padding:9px 12px;white-space:nowrap}.connection-indicator.online{border-color:#22c55e;background:#14532d;color:#dcfce7}.connection-indicator.offline{border-color:#ef4444;background:#651e2b;color:#ffe4e6}.save-result{background:#087443;border-color:#22c55e}.confirm-stop{background:#087443;border-color:#22c55e;color:#ffffff}.fault-restart-button{background:#7c2d12;border:2px solid #fb923c;color:#fff7ed;min-height:50px;font-weight:900}.fault-restart-note{font-size:12px;color:#fed7aa;align-self:center}.confirm-stop-row{margin-top:6px}.confirm-stop-row button{width:100%;min-height:52px;font-size:17px}.manual-help{font-size:13px;line-height:1.5}.stage{display:flex;gap:8px}.stage button{flex:1}.selected{outline:3px solid #66b1ff}table{width:100%;border-collapse:collapse;font-size:14px}td,th{padding:10px 5px;border-bottom:1px solid #35445c;text-align:left}th{color:#b3c4db}.scroll{overflow:auto}.pill{border-radius:99px;background:#273a55;padding:5px 10px;font-size:12px}.error{color:#ff9f9f}.ok{color:#85e7ae}.hidden{display:none!important}details{margin:12px 0}summary{cursor:pointer;font-weight:700}.buttons button{min-height:65px;font-size:22px}.dns-row{display:flex;justify-content:flex-end;margin:-3px 0 6px}.dns-tab{flex:0 0 auto;min-width:64px;min-height:30px;padding:4px 13px;font-size:11px;font-weight:850;letter-spacing:.06em;border-radius:7px;background:#263b56;border:1px solid #6b86a8;color:#e4efff}.dns-tab:not(:disabled):hover{background:#345273}textarea{width:100%;min-height:100px}a{color:#8cc8ff}.brand{display:flex;align-items:center;gap:12px}.brand-logo{width:66px;height:66px;object-fit:contain;border-radius:9px}footer{text-align:center;color:#aab9ce;font-size:12px;padding:25px 0 15px;letter-spacing:.08em}.wake-state{font-size:13px;color:#b9d7ff;margin-top:8px}.row .alarm-icon{flex:0 0 44px;min-width:44px;width:44px;padding:7px 4px;font-size:19px;line-height:1}.alarm-row{align-items:center}.alarm-row #alarmStatus{flex:1;min-width:0}.timer-selectors>div{flex:1;min-width:130px}
@@ -1220,6 +1220,7 @@ body.marshal-view #marshalConnectionFields #publicResultsLink {display:none!impo
 <div class="row timer-selectors"><div><label for="stageSelect">SS</label><select id="stageSelect"></select></div><div><label for="driver">DRIVER</label><select id="driver"></select></div></div>
 
 <div id="runInfo" class="muted">Ready</div>
+<div id="bs28CatchupAssignments" class="bs28-catchup-banner" style="display:none" role="status" aria-live="polite"></div>
 <div id="bs28AssignmentNotice" role="status" aria-live="polite" style="display:none;padding:10px 12px;margin:9px 0;border:1px solid #3cbb83;border-radius:10px;background:#113426;color:#d1ffe5;font-weight:700"></div>
 <div id="bs28DrawPendingNotice" role="status" aria-live="polite" style="display:none;padding:10px 12px;margin:9px 0;border:1px solid #d49b3c;border-radius:10px;background:#332710;color:#ffe1a6;font-weight:750"></div>
 <div id="nextDriverReady" class="next-driver-ready hidden" role="status" aria-live="polite" aria-atomic="true"><span class="next-driver-icon" aria-hidden="true">📣</span><div class="next-driver-text"><span class="next-driver-kicker">NEXT DRIVER</span><strong id="nextDriverReadyName">—</strong><small id="nextDriverReadyMeta">Suggested next driver in the saved SS order</small></div></div>
@@ -1317,7 +1318,7 @@ body.marshal-view #marshalConnectionFields #publicResultsLink {display:none!impo
 <section class="card"><details><summary>FIREBASE PROJECT INFORMATION</summary><p class="muted">RC CRAWLER v28 Firebase project fields are supplied by firebase-config.js. The organiser must first publish the correct Realtime Database URL in that file. Marshal links connect anonymously when Main Control opens marshal access; no organiser password is needed on the marshal phone. The Event ID must match on all devices. To change it while connected, disconnect first, edit the ID, then reconnect. Only enter your authorized organizer email and password when connecting; the app does not save those credentials. The public results link below includes the selected Event ID. Host this site on HTTPS (e.g. GitHub Pages) and use the SAME Firebase Realtime Database on every device. Local mode does NOT synchronize devices.</p><div class="row"><div><label>Firebase API key</label><input id="apiKey" placeholder="Firebase apiKey" readonly></div><div><label>Firebase auth domain</label><input id="authDomain" placeholder="project.firebaseapp.com" readonly></div></div><div class="row"><div><label>Firebase database URL</label><input id="databaseURL" placeholder="https://project-default-rtdb.firebaseio.com" readonly></div><div><label>Firebase project ID</label><input id="projectId" placeholder="project-id" readonly></div></div><div class="row"><div><label>Event ID (same on all devices)</label><input id="eventId" value="bs28-test" maxlength="80" placeholder="e.g. bs28-test" autocapitalize="off" spellcheck="false"><div class="muted">Editable and saved on this device. Letters, numbers and hyphens only. Disconnect before changing while online.</div></div><div><label>Firebase email</label><input id="email" type="email" placeholder="organizer@example.com" autocomplete="off"></div><div><label>Firebase password</label><input id="password" type="password" placeholder="Password" autocomplete="off"></div></div><div class="row"><button id="connect" class="primary">Connect / sign in</button><button id="disconnect">Disconnect</button></div><div class="muted" style="margin-top:8px">Public results for this Event ID: <a id="publicResultsLink" href="results.html?event=bs28-test" target="_blank" rel="noopener">Open public results</a>. Share the generated link with spectators.</div><div class="muted marshal-share-link" style="margin-top:8px">Marshal Race Control for this Event ID: <a id="marshalLink" href="marshal.html?event=bs28-test" target="_blank" rel="noopener">Open marshal control</a> <button type="button" id="copyMarshalLink" class="copy-link-button">Copy marshal link</button><small class="marshal-share-help">Share this link with the marshal. It opens Section 1 only and preselects this Event ID.</small></div><div id="syncMsg" class="muted"></div></details><details><summary>BACKUPS, RESULT RECOVERY &amp; CORRECTIONS</summary><div class="row"><button id="export">Export JSON backup</button><button id="snapshotDownload">Download latest safety backup</button><button id="historyDownload">Export correction history</button><span id="safetyStatus" class="muted" role="status"></span><button id="csv">Export CSV leaderboard</button><label>Import JSON backup<input type="file" id="import" accept=".json,application/json"></label></div><p class="muted">Choose a driver and SS to compare the saved record with your proposed correction. Result status, time/gate progress and penalty counts are saved together. Leave a penalty count blank to keep its recorded value; enter 0 to remove that penalty type.</p><div class="row"><div><label for="correctionDriver">Driver to correct</label><select id="correctionDriver"></select></div><div><label for="correctionStage">Special Stage</label><select id="correctionStage"></select></div></div><div class="correction-compare-grid"><div class="correction-snapshot"><div class="correction-snapshot-title">Recorded before correction</div><div id="correctionBefore" class="correction-snapshot-body" aria-live="polite">Select a driver and SS.</div></div><div class="correction-snapshot after"><div class="correction-snapshot-title" id="correctionAfterTitle">After correction preview</div><div id="correctionAfter" class="correction-snapshot-body" aria-live="polite">Select a driver and SS.</div></div></div><div class="row"><div><label for="editStatus">New status (blank = keep current)</label><select id="editStatus" aria-label="Correction status"><option value="" selected>Keep current status</option><option value="finish">Finish</option><option value="dnf">DNF</option><option value="dns">DNS</option><option value="clear">Clear result</option></select></div><div><label for="editTime">Finish time (blank = keep current)</label><input id="editTime" placeholder="mm:ss.cc (finish only)" inputmode="numeric" autocomplete="off"></div><div id="correctionGateCountField"><label for="editGatesCleared">Gates cleared (DNF)</label><input id="editGatesCleared" type="number" min="0" step="1" inputmode="numeric" placeholder="Blank = keep current" disabled></div></div><div class="penalty-quick-wrap correction-penalty-section"><div class="flex"><strong>Penalty counts to save with correction</strong><span class="pill" id="correctionPenaltyTapTotal">0 taps</span></div><div id="correctionPenaltyDriverLabel" class="muted penalty-note">Select a driver and SS above.</div><p class="muted">The input shows the currently recorded tap count. Use <b>−</b> and <b>+</b>, or type a number, to prepare a correction. Changes are preview-only and do not overwrite saved data until you press <b>Save Correction</b>. Enter <b>0</b> to remove all taps of that type.</p><div id="correctionPenaltyCounters" class="correction-penalty-list"><div class="muted">Select a driver and SS.</div></div><div id="correctionPenaltySummary" class="ok correction-penalty-summary">Total taps: 0 • Deduction: 0 pts</div></div><div id="correctionInfo" class="muted" aria-live="polite" style="margin-top:8px"></div><div class="correction-save-row"><button id="correct" class="primary">Save result + penalties together</button></div></details></section>
 <section class="card clear-race-panel" id="clearRaceDataPanel"><details><summary>RESET EVENT — CLEAR ALL RACE DATA</summary><p class="clear-race-warning"><b>Destructive action:</b> clears registered drivers, results, penalty records, late-entry records, SS draw orders and draw locks for the currently selected Firebase Event ID on all connected devices. It keeps SS cutoff times, gate totals, shared penalty rules, Firebase configuration and Event ID. This action requires a live Firebase connection and zero pending uploads. Local safety snapshots are kept for recovery.</p><div class="clear-race-controls"><div><label for="clearRacePassword">Reset password</label><input id="clearRacePassword" type="password" inputmode="numeric" maxlength="6" placeholder="6-digit reset password" autocomplete="new-password"></div><button id="clearAllRaceData" type="button">🗑 Clear all race data</button></div><div id="clearRaceDataStatus" class="clear-race-status muted" role="status" aria-live="polite">Connect to Firebase and sync all pending changes before starting a new race.</div></details></section>
 
-<footer>© TEC-ARTS CRAWLER • RC CRAWLER · POINT &amp; TIME ATTACK SYSTEM · ALL RIGHTS RESERVED · v28.7.7</footer><script>
+<footer>© TEC-ARTS CRAWLER • RC CRAWLER · POINT &amp; TIME ATTACK SYSTEM · ALL RIGHTS RESERVED · v28.7.9</footer><script>
 (function(){
   const host=document.getElementById('marshalConnectionFields');
   if(!host)return;
@@ -2229,6 +2230,13 @@ $('start').onclick=async()=>{
   }
   if(marshalLinkMode){if(!await acquireStageLock(id,runStage))return;lockAcquired=true;}
   if(!unchanged())throw Error('Driver, stage or event changed while obtaining the stage lock. Check the selection and press START again.');
+  if(usesGroupRotation){
+   // Second check after acquiring our stage lock catches competing STARTs on
+   // another SS before starting this device's stopwatch.
+   const locks=(await app.database().ref('stageLocks/'+eventId).once('value')).val()||{};
+   const other=Object.entries(locks).find(([lockedSS,lock])=>lockedSS!==bs28Core.ss(runStage)&&lock?.status==='running'&&String(lock.driverId||'')===String(id));
+   if(other)throw Error('Driver already has an active timer at '+other[0]+'. START cancelled.');
+  }
   if(bs28IsActive()!==usesGroupRotation)throw Error('Group Rotation changed during START. Refresh and check the event.');
   if(usesGroupRotation&&!await bs28RecordFirstStart(id,runStage))throw Error(bs28FirstStartError||'Firebase did not confirm the first-start history.');
   if(!usesGroupRotation&&!marshalLinkMode&&!await recordLegacyFirstStart(id,runStage))throw Error('First-start history could not be saved. Check sync and try again.');
@@ -2271,6 +2279,7 @@ $('retrySync').onclick=()=>{if(!online||!connectedToServer){setMsg('Connect to F
 /* v28 marshal SS selection extension inside the existing Marshal closure. */
 const bs28Core=window.BS28;
 let bs28StickyGroup='',bs28NextGroupChoice='',bs28GroupUserChosen=false,bs28LockRef=null,bs28LockListener=null,bs28LockEventId='',bs28Locks={},bs28RequestRef=null,bs28RequestListener=null,bs28RequestEventId='',bs28Requests={},bs28RequestLoaded=false,bs28Switching=false,bs28Submitting=false;
+let bs28CatchupRef=null,bs28CatchupSub=null,bs28CatchupEventId='',bs28DriverRef=null,bs28DriverSub=null,bs28DriverEventId='';
 let bs28AssignmentNoticeUntil=0,bs28AssignmentNoticeText='';
 
 // v28.5.4: Animate the already-saved official order. Does NOT reshuffle, write Firebase, or start a timer.
@@ -2356,71 +2365,6 @@ function bs28GroupDestinations(plan,groupId,event){
  if(g.currentStage&&tentative.stageOwners[g.currentStage]===groupId)delete tentative.stageOwners[g.currentStage];
  return bs28Core.stageNames(tentative).filter(s=>s!==g.currentStage&&bs28Core.availability(tentative,groupId,s,{})==='AVAILABLE');
 }
-// Main Control normally releases completed group reservations. If Main Control is
-// offline, an authorised marshal performs the same verified, idempotent cleanup.
-// A stage is released only after every member has an official Firebase result and
-// any remaining timer lock is proven to belong to that exact saved run.
-let bs28MarshalReconcileBusy=false,bs28MarshalReconcileLast=0;
-async function bs28ReconcileCompletedGroups(){
- if(bs28MarshalReconcileBusy||!marshalLinkMode||!bs28IsActive()||!online||!connectedToServer||!navigator.onLine||!app||!dbRef||!marshalSessionVerified||savingResult)return;
- if(Date.now()-bs28MarshalReconcileLast<1200)return;
- bs28MarshalReconcileLast=Date.now();bs28MarshalReconcileBusy=true;
- try{
-  const eid=activeEventId(),root=app.database().ref('events/'+eid),snapshot=await root.once('value'),event=snapshot.val();
-  const plan=event?.groupRotationV28;if(!plan?.enabled)return;
-  let changed=false;
-  for(const [groupId,group] of Object.entries(plan.groups||{})){
-   const ss=group?.currentStage;if(!ss||!bs28Core.allResultsConfirmed(group,event,ss))continue;
-   const si=bs28Core.stageIndex(ss);if(si<0)continue;
-   const lockRef=app.database().ref('stageLocks/'+eid+'/'+ss);
-   let lock=(await lockRef.once('value')).val();
-   if(lock){
-    // Only the marshal session that owns this lock may release it. Never clear
-    // another marshal's live/unknown run just because an older result exists.
-    if(String(lock.authUid||'')!==String(auth?.currentUser?.uid||''))continue;
-    const released=await releaseStageLockIfResultAlreadySaved(lock,eid,si);
-    if(!released)lock=(await lockRef.once('value')).val();else lock=null;
-    if(lock)continue;
-   }
-   const completedAt=Date.now();
-   const tx=await root.child('groupRotationV28').transaction(old=>{
-    const live=old?.groups?.[groupId];
-    if(!old?.enabled||!live||live.currentStage!==ss||old.stageOwners?.[ss]!==groupId)return;
-    if(!bs28Core.allResultsConfirmed(live,event,ss))return;
-    const next=JSON.parse(JSON.stringify(old)),g=next.groups[groupId];
-    g.currentStage=null;g.lastStage=ss;g.completedStages=g.completedStages||{};g.completedStages[ss]=true;
-    g.visitIndex=(g.visitIndex||0)+1;delete next.stageOwners[ss];
-    if(g.type==='CATCHUP'){
-     g.status='FINISHED';
-     const who=bs28Core.memberIds(g.members)[0];
-     if(who&&next.lateCatchup?.[who]?.[ss])next.lateCatchup[who][ss].status='DONE';
-    }else{
-     const required=bs28Core.includedStages(next);
-     const missing=required.some(st=>!g.completedStages?.[st]);
-     const due=Object.values(next.lateCatchup||{}).some(byStage=>Object.entries(byStage||{}).some(([st,t])=>t?.groupId===groupId&&t.status!=='DONE'&&required.includes(st)));
-     g.status=missing||due?'CHOOSING':'FINISHED';
-    }
-    for(const [gid,base] of Object.entries(next.groups||{})){
-     if(base.type==='CATCHUP'||base.currentStage||base.status!=='CHOOSING')continue;
-     const required=bs28Core.includedStages(next);
-     const missing=required.some(st=>!base.completedStages?.[st]);
-     const due=Object.values(next.lateCatchup||{}).some(byStage=>Object.entries(byStage||{}).some(([st,t])=>t?.groupId===gid&&t.status!=='DONE'&&required.includes(st)));
-     if(!missing&&!due)base.status='FINISHED';
-    }
-    next.revision=(next.revision||0)+1;next.audit=next.audit||{};
-    next.audit['complete-'+groupId+'-'+ss]={action:'COMPLETE_SS',groupId,stage:ss,at:completedAt,source:'MARSHAL_OFFLINE_RECOVERY'};
-    return next;
-   },undefined,false);
-   if(tx.committed&&tx.snapshot?.val){
-    event.groupRotationV28=tx.snapshot.val();data=normalizeData(event);
-    try{localStorage.setItem(key,JSON.stringify(data))}catch(e){console.warn('BS28: local cache update after group completion failed',e)}
-    changed=true;
-   }
-  }
-  if(changed){render();bs28RenderMarshal();}
- }catch(e){console.warn('BS28 marshal-side completed-group reconciliation failed',e)}
- finally{bs28MarshalReconcileBusy=false}
-}
 const bs28SavedGroupKey=()=>'bs-style-v28-marshal-group:'+activeEventId();
 const bs28RequestKey=()=>'bs-style-v28-marshal-request:'+activeEventId();
 const bs28CurrentStage=()=>bs28Core.ss(stage);
@@ -2430,8 +2374,10 @@ const bs28CurrentAssignment=()=>bs28Core.groupForStage(bs28Plan(),bs28CurrentSta
 function bs28StopListeners(){
  if(bs28LockRef&&bs28LockListener)bs28LockRef.off('value',bs28LockListener);
  if(bs28RequestRef&&bs28RequestListener)bs28RequestRef.off('value',bs28RequestListener);
- bs28LockRef=bs28RequestRef=bs28LockListener=bs28RequestListener=null;
- bs28LockEventId=bs28RequestEventId='';bs28Locks={};bs28Requests={};bs28RequestLoaded=false;
+ if(bs28CatchupRef&&bs28CatchupSub)bs28CatchupRef.off('value',bs28CatchupSub);
+ if(bs28DriverRef&&bs28DriverSub)bs28DriverRef.off('value',bs28DriverSub);
+ bs28LockRef=bs28RequestRef=bs28CatchupRef=bs28DriverRef=bs28LockListener=bs28RequestListener=bs28CatchupSub=bs28DriverSub=null;
+ bs28LockEventId=bs28RequestEventId=bs28CatchupEventId=bs28DriverEventId='';bs28Locks={};bs28Requests={};bs28RequestLoaded=false;
 }
 function bs28StartListeners(){
  if(!app||!online||!connectedToServer||!bs28IsActive())return;
@@ -2449,9 +2395,79 @@ function bs28StartListeners(){
   bs28RequestListener=snapshot=>{bs28Requests=snapshot.val()||{};bs28RequestLoaded=true;bs28RenderMarshal()};
   bs28RequestRef.on('value',bs28RequestListener);
  }
+ // Dedicated read-only subscriptions do not wait for the original group's
+ // timer or for other locally queued results to finish.
+ if(!bs28CatchupRef||bs28CatchupEventId!==eid){
+  if(bs28CatchupRef&&bs28CatchupSub)bs28CatchupRef.off('value',bs28CatchupSub);
+  bs28CatchupEventId=eid;bs28CatchupRef=dbRef.child('groupRotationV28');
+  bs28CatchupSub=snapshot=>{
+   if(activeEventId()!==eid)return;
+   const incoming=snapshot.val();if(!incoming?.enabled)return;
+   if(JSON.stringify(data.groupRotationV28||null)===JSON.stringify(incoming))return;
+   data.groupRotationV28=incoming;
+   try{localStorage.setItem(key,JSON.stringify(data))}catch(e){console.warn('Live catch-up plan could not be cached:',e)}
+   if(!running&&!pendingRun&&!savingResult){render();bs28RenderMarshal()}
+  };
+  bs28CatchupRef.on('value',bs28CatchupSub,e=>setMsg('Catch-up plan listener failed: '+e.message,true));
+ }
+ if(!bs28DriverRef||bs28DriverEventId!==eid){
+  if(bs28DriverRef&&bs28DriverSub)bs28DriverRef.off('value',bs28DriverSub);
+  bs28DriverEventId=eid;bs28DriverRef=dbRef.child('drivers');
+  bs28DriverSub=snapshot=>{
+   if(activeEventId()!==eid)return;
+   const remote=snapshot.val()||{};let changed=false;
+   for(const [id,driver] of Object.entries(remote)){
+    // Never overwrite an unsynced local driver record.
+    if(pending.some(item=>queueEventId(item)===eid&&item.path==='drivers/'+id))continue;
+    if(JSON.stringify(data.drivers?.[id])!==JSON.stringify(driver)){
+     data.drivers=data.drivers||{};data.drivers[id]=driver;changed=true;
+    }
+   }
+   if(changed){
+    try{localStorage.setItem(key,JSON.stringify(data))}catch(e){console.warn('Live catch-up driver list could not be cached:',e)}
+    if(!running&&!pendingRun&&!savingResult){render();bs28RenderMarshal()}
+   }
+  };
+  bs28DriverRef.on('value',bs28DriverSub,e=>setMsg('Late-driver listener failed: '+e.message,true));
+ }
 }
 function bs28GroupName(id){const group=bs28Plan()?.groups?.[id];if(!group)return 'No Group';if(group.type==='CATCHUP'){const who=bs28Core.memberIds(group.members)[0],d=data.drivers[who]||{};return 'CATCH-UP · #'+(d.num||'?')+' '+(d.name||'')}return 'GROUP '+id}
 function bs28GetSticky(){return bs28StickyGroup||localStorage.getItem(bs28SavedGroupKey())||''}
+function bs28CatchupAssignments(){
+ const plan=bs28Plan();if(!plan?.enabled)return [];
+ return Object.entries(plan.lateCatchup||{}).flatMap(([driver,byStage])=>Object.entries(byStage||{}).filter(([ss,t])=>{
+  const gid='C'+driver,g=plan.groups?.[gid];
+  return t?.status==='IN_PROGRESS'&&g?.type==='CATCHUP'&&g.currentStage===ss&&
+   plan.stageOwners?.[ss]===gid&&Array.isArray(plan.orders?.[gid]?.[ss]?.order)&&
+   plan.orders[gid][ss].order.map(String).includes(String(driver))&&plan.stages?.[ss]?.open;
+ }).map(([ss,t])=>({driver,ss,baseGroupId:t.groupId}))).sort((a,b)=>a.ss.localeCompare(b.ss));
+}
+function bs28RenderCatchupAssignments(){
+ const host=$('bs28CatchupAssignments');if(!host)return;
+ const pendingAssignments=bs28CatchupAssignments();
+ if(!pendingAssignments.length){host.style.display='none';host.textContent='';return}
+ host.style.display='block';
+ const busy=!!(running||pendingRun||savingResult||bs28Starting);
+ host.innerHTML='<b>INDEPENDENT CATCH-UP ASSIGNMENTS</b>'+pendingAssignments.map(({driver,ss,baseGroupId})=>{
+  const d=data.drivers?.[driver]||{},chosen=bs28CurrentStage()===ss;
+  const otherTimer=Object.entries(bs28Locks||{}).some(([lockedSS,lock])=>lockedSS!==ss&&lock?.status==='running'&&String(lock.driverId||'')===String(driver));
+  return `<div class="bs28-catchup-line"><span>#${bs28Esc(d.num||'?')} ${bs28Esc(d.name||driver)} · ${bs28Esc(ss)} · Group ${bs28Esc(baseGroupId||'?')} may continue</span><button type="button" data-bs28-catchup-ss="${bs28Esc(ss)}" data-bs28-catchup-driver="${bs28Esc(driver)}" ${busy||otherTimer||chosen?'disabled':''}>${otherTimer?'DRIVER TIMER ACTIVE':chosen?'SS SELECTED':'SHOW '+bs28Esc(ss)}</button></div>`;
+ }).join('');
+}
+$('bs28CatchupAssignments')?.addEventListener('click',async e=>{
+ const btn=e.target.closest('button[data-bs28-catchup-ss]');if(!btn)return;
+ if(running||pendingRun||savingResult||bs28Starting)return alert('Finish, CONFIRM STOP and SAVE the current run before changing SS.');
+ const ss=btn.dataset.bs28CatchupSs,driver=btn.dataset.bs28CatchupDriver,si=bs28Core.stageIndex(ss);
+ if(si<0||!bs28CatchupAssignments().some(x=>x.ss===ss&&x.driver===driver))return alert('The catch-up assignment changed. Refresh and check again.');
+ const eid=activeEventId(),locks=(await app.database().ref('stageLocks/'+eid).once('value')).val()||{};
+ const other=Object.entries(locks).find(([lockedSS,lock])=>lockedSS!==ss&&lock?.status==='running'&&String(lock.driverId||'')===String(driver));
+ if(other)return alert('This driver has an active timer on '+other[0]+'. Finish and SAVE it first.');
+ stage=si;localStorage.setItem('bs28-stage',String(si));
+ localStorage.setItem(selectedDriverKey,String(driver));$('driver').value='';$('manualTime').value='';
+ localStorage.setItem(lastClockKey,'0');$('clock').textContent='00:00.00';
+ render();bs28RenderMarshal();
+});
+
 // Preserve focused mobile dropdowns during the 1.8-second live update loop.
 // Replacing select.innerHTML on every refresh can close the native phone picker.
 function bs28SyncOptions(select,options,value){
@@ -2493,6 +2509,7 @@ function bs28CheckSavedLocalLock(){
 function bs28RenderMarshal(){
  const panel=$('bs28MarshalPanel');if(!panel)return;
  const plan=bs28Plan();panel.style.display='block';
+ bs28RenderCatchupAssignments();
  bs28CheckSavedLocalLock();
  if(!plan?.enabled){
   bs28StopListeners();
@@ -2822,6 +2839,18 @@ async function bs28ValidateStart(id,si){
   const gate=(await app.database().ref('marshalAccessControl/'+eid+'/enabled').once('value')).val();
   if(gate!==true||!p?.enabled||!p.stages?.[st]?.included||!p.stages[st].open||p.stages[st].cancelled||!g||g.currentStage!==st||!bs28Core.memberIds(g.members).includes(id)||!p.orders?.[groupId]?.[st]?.order?.includes(id)){alert('V28: This driver is not assigned to an OPEN stage with a saved group draw. No timer started.');return false}
   if(g.status!=='READY'&&g.status!=='RACING'){alert('V28: Group is not READY for this SS.');return false}
+  // The original group may continue its own SS, but the same driver must
+  // complete a reserved catch-up before starting a different SS.
+  const activeCatchup=p.groups?.['C'+id];
+  if(g.type!=='CATCHUP'&&activeCatchup?.type==='CATCHUP'&&activeCatchup.currentStage&&activeCatchup.currentStage!==st){
+   alert('V28: This driver must finish the active catch-up at '+activeCatchup.currentStage+' before START on '+st+'.');return false;
+  }
+  if(g.type==='CATCHUP'&&(p.lateCatchup?.[id]?.[st]?.status!=='IN_PROGRESS'||p.groups?.[g.baseGroupId]?.currentStage===st)){
+   alert('V28: Invalid catch-up assignment. A different SS and IN_PROGRESS ticket are required.');return false;
+  }
+  const locks=(await app.database().ref('stageLocks/'+eid).once('value')).val()||{};
+  const other=Object.entries(locks).find(([lockedSS,lock])=>lockedSS!==st&&lock?.status==='running'&&String(lock.driverId||'')===String(id));
+  if(other){alert('V28: This driver has an active/unsaved timer at '+other[0]+'. Finish and SAVE it first.');return false}
   return true;
  }catch(e){alert('V28 stage authorization failed: '+e.message+'. No timer started.');return false}
 }
@@ -2958,9 +2987,7 @@ $('bs28NextGroup')?.addEventListener('change',e=>{
 $('bs28NextSS')?.addEventListener('change',bs28RenderMarshal);
 $('bs28SwitchButton')?.addEventListener('click',bs28SelectSS);
 
-window.BS28_MARSHAL_READY=true;window.BS28_MARSHAL_VERSION="28.7.5";
-setInterval(()=>{if(bs28IsActive())bs28ReconcileCompletedGroups().finally(()=>bs28RenderMarshal())},1800);
-bs28ReconcileCompletedGroups().finally(()=>bs28RenderMarshal());
+window.BS28_MARSHAL_READY=true;window.BS28_MARSHAL_VERSION="28.7.9";setInterval(()=>{if(bs28IsActive())bs28RenderMarshal()},1800);bs28RenderMarshal();
 })();
 /* System-wide uppercase for human-readable text fields, including dynamically rendered inputs. */
 (function installUppercaseWordInputs(){
