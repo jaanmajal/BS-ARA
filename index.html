@@ -1,4 +1,4 @@
-<!doctype html><!-- v28.7.9: independently scheduled late-driver catch-up at different available SS, with visible confirmation and driver timer checks. --><!-- v28.7.8: Lucky Draw as independent Section 10, Firebase-saved winner history and projector reveal. --><!-- v28.7.7: emergency reset preserves unfinished SS assignments; single-gate DNF automatically records 1/1. --><!-- v28.7.4: fair-random first queue weighting from actual first starts; no fixed first-driver rotation. --><!-- v28.7.3: group rotation supports 1-9 groups; desktop Jump To shortcuts visible; automatic format-based penalty presets; SORRCA 2024 scorecard, signed Progress, 60-point point-out and progress-aware DNF; no scale points. Mobile layout retained. -->
+<!doctype html><!-- v28.7.12: optional Random Draw or previous-stage Fastest Time / SORRCA Best Score first. --><!-- v28.7.9: independently scheduled late-driver catch-up at different available SS, with visible confirmation and driver timer checks. --><!-- v28.7.8: Lucky Draw as independent Section 10, Firebase-saved winner history and projector reveal. --><!-- v28.7.7: emergency reset preserves unfinished SS assignments; single-gate DNF automatically records 1/1. --><!-- v28.7.4: fair-random first queue weighting from actual first starts; no fixed first-driver rotation. --><!-- v28.7.3: group rotation supports 1-9 groups; desktop Jump To shortcuts visible; automatic format-based penalty presets; SORRCA 2024 scorecard, signed Progress, 60-point point-out and progress-aware DNF; no scale points. Mobile layout retained. -->
 <!-- v28.7.2: SORRCA signed Progress values survive reload; editable Bonus award value; saved bonus taps retain their original value. -->
 <!-- v28.7.3: Group rotation supports 1-9 groups (A-I); desktop Jump To links are expanded by default; phones remain collapsed. -->
 <!-- v28.6.7: Main Control emergency admin reset for all stage, marshal-session, group-reservation and organiser-session locks; preserves race records and draw history. -->
@@ -524,6 +524,7 @@ details[data-main-section]>summary:focus-visible{outline:2px solid #93c5fd;outli
   <div class="bs28-coordinator" id="bs28Coordinator" role="status">Coordinator awaits connection</div>
   
   <div class="pill" id="bs28Mode">GROUP ROTATION: NOT CONFIGURED</div>
+  <div class="muted" id="bs28StartOrderInfo" style="font-weight:700;margin:7px 0" aria-live="polite"></div>
   <p id="bs28Message" class="muted" role="status" aria-live="polite"></p>
   <div id="bs28Setup">
     <button type="button" class="primary" data-v28-action="init" id="bs28Initialize">INITIALIZE GROUPS</button>
@@ -532,6 +533,14 @@ details[data-main-section]>summary:focus-visible{outline:2px solid #93c5fd;outli
       <p class="muted">Choose a different leader for each group.</p>
       <label for="bs28GroupCount">Number of groups</label>
       <select id="bs28GroupCount"><option value="1">1 Group</option><option value="2">2 Groups</option><option value="3">3 Groups</option><option value="4">4 Groups</option><option value="5">5 Groups</option><option value="6">6 Groups</option><option value="7">7 Groups</option><option value="8">8 Groups</option><option value="9">9 Groups</option></select>
+      <div class="bs28-stage" id="bs28StartingOrderSettings">
+        <label for="bs28StartOrderMode"><strong>NEXT SS STARTING ORDER</strong></label>
+        <select id="bs28StartOrderMode" aria-label="Next SS starting order">
+          <option value="random">Random Draw (Fair Random)</option>
+          <option value="performance">Fastest Time First</option>
+        </select>
+        <small class="muted" id="bs28StartOrderHelp">The first SS always uses Random Draw. Select and SAVE the rule before starting the race.</small>
+      </div>
       <div id="bs28LeaderSelectionPanel" class="bs28-card-grid">Select group leaders here.</div>
       <button type="button" id="bs28DivideGroups" data-v28-action="divide" class="primary" style="display:none">DIVIDE GROUPS</button>
       <div id="bs28GroupPreview" class="bs28-card-grid">Group membership will appear here after division.</div>
@@ -702,7 +711,7 @@ details[data-main-section]>summary:focus-visible{outline:2px solid #93c5fd;outli
 
 
 
-<footer>© TEC-ARTS CRAWLER • RC CRAWLER · POINT &amp; TIME ATTACK SYSTEM · v28.7.9</footer><script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-app-compat.js"></script><script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-auth-compat.js"></script><script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-database-compat.js"></script><script src="firebase-config.js"></script><script src="bs28-core.js?v=28.7.6"></script><script>
+<footer>© TEC-ARTS CRAWLER • RC CRAWLER · POINT &amp; TIME ATTACK SYSTEM · v28.7.12</footer><script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-app-compat.js"></script><script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-auth-compat.js"></script><script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-database-compat.js"></script><script src="firebase-config.js"></script><script src="bs28-core.js?v=28.7.12"></script><script>
 /* RC CRAWLER shared scoring engine. Used by Main Control, Marshal and Public Results. */
 (function (root) {
   'use strict';
@@ -1797,6 +1806,9 @@ let bs28Preview=null,bs28PulseBusy=false,bs28PulseQueued=false,bs28PreviewSignat
 let bs28InboxWatcher=null,bs28InboxHandler=null,bs28InboxEvent='',bs28InboxPending=0,bs28CoordinatorWarning='';
 const bs28Core=window.BS28;
 const bs28Plan=()=>data?.groupRotationV28||null;
+const bs28OrderMode=p=>p?.startOrderMode==='performance'?'performance':'random';
+const bs28OrderLabel=(p,format=data.scoringFormat)=>bs28OrderMode(p)==='random'?'RANDOM DRAW (FAIR RANDOM)':
+ (BS28_SCORING.isSorrca(format)?'BEST SCORE FIRST (SORRCA)':'FASTEST TIME FIRST (RAW STOPWATCH)');
 const bs28IsActive=()=>bs28Plan()?.enabled===true;
 const bs28CanWrite=()=>!!(!clearRaceBusy&&online&&connectedToServer&&app&&auth?.currentUser&&!auth.currentUser.isAnonymous&&controlSessionOwner&&!running&&!pendingRun);
 const bs28EventRef=()=>dbRef?.child('groupRotationV28');
@@ -1926,6 +1938,16 @@ function bs28StageLabel(plan,s){const info=plan?.stages?.[s];if(!info)return 'NO
 function bs28RenderMain(){
  const panel=$('bs28Panel');if(!panel)return;
  const plan=bs28Plan(),mode=plan?.enabled?'RACING':plan?.phase==='SETUP'?'SETUP':'NOT CONFIGURED';
+ const orderInfo=$('bs28StartOrderInfo');if(orderInfo)orderInfo.textContent=plan?'NEXT SS START ORDER: '+bs28OrderLabel(plan):'';
+ const orderSelect=$('bs28StartOrderMode');if(orderSelect){
+  const choice=orderSelect.querySelector('option[value="performance"]');
+  if(choice)choice.textContent=BS28_SCORING.isSorrca(data.scoringFormat)?'Best Score First (SORRCA)':'Fastest Time First (Raw Stopwatch)';
+  if(document.activeElement!==orderSelect)orderSelect.value=bs28OrderMode(plan);
+  orderSelect.disabled=mode!=='SETUP'||!bs28CanWrite()||bs28GroupCountSaving;
+  const help=$('bs28StartOrderHelp');if(help)help.textContent=
+   'First SS is always Fair Random. Next SS uses '+(BS28_SCORING.isSorrca(data.scoringFormat)?'previous SS net SORRCA points (lowest first)':'previous SS raw stopwatch times (fastest first)')+
+   '. FINISH, then DNF, then DNS, then drivers without a prior result. Ties use previous order. Rule locks when race starts.';
+ }
  $('bs28Mode').textContent='GROUP ROTATION: '+mode;const summary=$('bs28SummaryState');if(summary){summary.textContent=mode;summary.dataset.mode=mode;}
  $('bs28Setup').style.display=mode==='RACING'?'none':'block';
  $('bs28Initialize').style.display=plan?'none':'inline-block';
@@ -2040,7 +2062,7 @@ async function bs28Initialize(){
  if(Object.values(data.results||{}).some(byStage=>Object.values(byStage||{}).some(Boolean)))return bs28Show('Cannot enable v28 during an existing race. Use a fresh v28 Event ID.',true);
  if(!confirm('Create RC CRAWLER GROUP ROTATION setup on Event ID '+activeEventId()+'? This should be a new test event. All SS will start CLOSED.'))return;
  const stages={};data.cutoffs.forEach((_,i)=>{stages[bs28Core.ss(i)]={included:true,open:false,cancelled:false}});
- const plan={version:28,enabled:false,phase:'SETUP',revision:1,groupCount:0,setupGroupCount:2,setupGroupIds:[],leaderSelections:{},preparedGroups:null,stages,groups:{},stageOwners:{},orders:{},lateCatchup:{},audit:{init:{action:'INITIALIZE',at:Date.now()}}};
+ const plan={version:28,enabled:false,phase:'SETUP',revision:1,groupCount:0,startOrderMode:'random',setupGroupCount:2,setupGroupIds:[],leaderSelections:{},preparedGroups:null,stages,groups:{},stageOwners:{},orders:{},lateCatchup:{},audit:{init:{action:'INITIALIZE',at:Date.now()}}};
  try{const tx=await bs28EventRef().transaction(old=>old===null?plan:undefined,undefined,false);if(!tx.committed)throw Error('Already initialized by another device.');bs28Preview=null;bs28Show('Group setup created. Open the SS that are ready for racing.')}catch(e){bs28Show('Cannot initialize: '+e.message,true)}
 }
 async function bs28Toggle(stage){
@@ -2105,6 +2127,26 @@ async function bs28RemoveLastStage(){
   if(!tx.committed){const latest=(await dbRef.once('value')).val()||data;throw Error(bs28LastStageRemovalReason(latest)||'The event changed during removal. Refresh and check the last SS before trying again.')}
   if(tx.snapshot?.val)data=normalizeData(tx.snapshot.val());stage=Math.min(stage,index-1);localStorage.setItem('bs28-stage',String(Math.max(0,index-1)));persist();render();bs28RenderMain();bs28Show(stageName+' removed successfully. Other SS, groups and historical records were preserved.');
  }catch(e){bs28Show('Remove SS failed: '+e.message,true)}
+}
+async function bs28SetStartOrderMode(value){
+ const mode=String(value||'');
+ if(mode!=='random'&&mode!=='performance')return bs28Show('Choose Random Draw or Fastest/Best Score First.',true);
+ if(!bs28CanWrite())return bs28Show('Main Control must own the organiser session to save the start-order rule.',true);
+ const p=bs28Plan();if(!p||p.phase!=='SETUP'||p.enabled)return bs28Show('Starting-order rule is locked once the race begins.',true);
+ const el=$('bs28StartOrderMode');if(el)el.disabled=true;
+ try{
+  const tx=await bs28EventRef().transaction(old=>{
+   if(!old||old.phase!=='SETUP'||old.enabled)return;
+   const v=JSON.parse(JSON.stringify(old));v.startOrderMode=mode;
+   v.revision=(v.revision||0)+1;v.audit=v.audit||{};
+   v.audit['start-order-'+Date.now()]={action:'SET_START_ORDER_MODE',mode,at:Date.now()};
+   return v;
+  },undefined,false);
+  if(!tx.committed)throw Error('Group setup changed while saving the starting-order rule.');
+  if(tx.snapshot?.val)data.groupRotationV28=tx.snapshot.val();
+  bs28Show('Next SS starting order SAVED: '+bs28OrderLabel(data.groupRotationV28)+'. First SS remains Fair Random.');
+ }catch(e){bs28Show('Could not save starting-order option: '+e.message,true)}
+ finally{bs28RenderMain()}
 }
 async function bs28SetGroupCount(value){
  if(bs28GroupCountSaving)return;
@@ -2182,6 +2224,7 @@ async function bs28StartRace(){
  const p=bs28Plan();if(!p||p.phase!=='SETUP')return;
  if(!BS28_SCORING.normalizeFormat(data.scoringFormat))return bs28Show('Select and save a scoring format in Event Utilities before the first driver draw.',true);
  if($('eventScoringFormatSelect')?.dataset.dirty==='true')return bs28Show('Save the selected scoring format in Event Utilities before making the first driver draw.',true);
+ if(($('bs28StartOrderMode')?.value||'random')!==bs28OrderMode(p))return bs28Show('The starting-order selection has not been saved to Firebase. Wait for confirmation.',true);
  if(pending.some(item=>item?.path==='scoringFormat'&&queueEventId(item)===activeEventId()))return bs28Show('The scoring format is still waiting for Firebase sync. Wait for sync confirmation before the first driver draw.',true);
  const proposed=bs28PreparedGroups(p);if(!Object.keys(proposed).length)return bs28Show('Select group leaders and press DIVIDE GROUPS first.',true);
  const selections=[...document.querySelectorAll('.bs28-initial')].map(s=>({group:s.dataset.group,stage:s.value}));
@@ -2194,8 +2237,8 @@ async function bs28StartRace(){
  try{const tx=await bs28EventRef().transaction(old=>{
   if(!old||old.phase!=='SETUP'||old.enabled||!old.preparedGroups)return;const current=JSON.parse(JSON.stringify(old));const enabledStages=bs28Core.includedStages(current);if(selections.some(x=>!enabledStages.includes(x.stage)||!current.stages[x.stage].open))return;
   const groups={},owners={},orders={};for(const [id,config] of Object.entries(initial)){groups[id]={id,type:'GROUP',leaderId:String(current.leaderSelections?.[id]||''),members:Object.fromEntries(proposed[id].map(driver=>[driver,true])),currentStage:config.stage,lastStage:null,completedStages:{},status:'READY',visitIndex:0,firstDriverCounts:{},firstStartByStage:{},firstDriverHistory:[]};owners[config.stage]=id;orders[id]={[config.stage]:{drawId:id+':'+config.stage+':0',order:config.order,createdAt:now,drawMethod:'FAIR_RANDOM_WEIGHTED',queueFirstDriverId:config.firstDriverId,firstDriverWeight:config.firstDriverWeight,fairnessCountsAtDraw:config.countsAtDraw}}}
-  current.enabled=true;current.phase='RACING';current.groupCount=Object.keys(groups).length;current.groups=groups;current.stageOwners=owners;current.orders=orders;current.startedAt=now;current.scoringFormatLockedAt=now;current.scoringFormatLockReason='FIRST_DRIVER_DRAW';current.revision=(current.revision||0)+1;current.audit=current.audit||{};current.audit['start-'+now]={action:'START_RACE_AND_FIRST_DRIVER_DRAW',leaders:JSON.parse(JSON.stringify(current.leaderSelections||{})),firstQueueDrivers:Object.fromEntries(Object.entries(initial).map(([g,draw])=>[g,draw.firstDriverId])),drawMethod:'FAIR_RANDOM_WEIGHTED',at:now};return current;
- },undefined,false);if(!tx.committed)throw Error('Setup changed. Please check stage assignments.');if(tx.snapshot?.val)data.groupRotationV28=tx.snapshot.val();bs28Preview=null;renderScoringFormatIndicator();updateEventScoringFormatUI();bs28RenderMain();bs28Show('v28 race started! Fair-random starting orders are saved. Future SS draws favour drivers with fewer actual first starts, while every driver keeps a chance to be first. First-start history is verified at START and counted only once per group and SS. The event scoring format is now locked. Marshal timer remains stopped until START.');bs28Schedule()}catch(e){bs28Show('Race setup failed: '+e.message,true)}
+  current.enabled=true;current.phase='RACING';current.startOrderMode=bs28OrderMode(current);current.groupCount=Object.keys(groups).length;current.groups=groups;current.stageOwners=owners;current.orders=orders;current.startedAt=now;current.scoringFormatLockedAt=now;current.scoringFormatLockReason='FIRST_DRIVER_DRAW';current.revision=(current.revision||0)+1;current.audit=current.audit||{};current.audit['start-'+now]={action:'START_RACE_AND_FIRST_DRIVER_DRAW',leaders:JSON.parse(JSON.stringify(current.leaderSelections||{})),firstQueueDrivers:Object.fromEntries(Object.entries(initial).map(([g,draw])=>[g,draw.firstDriverId])),drawMethod:'FAIR_RANDOM_WEIGHTED',startOrderMode:current.startOrderMode,at:now};return current;
+ },undefined,false);if(!tx.committed)throw Error('Setup changed. Please check stage assignments.');if(tx.snapshot?.val)data.groupRotationV28=tx.snapshot.val();bs28Preview=null;renderScoringFormatIndicator();updateEventScoringFormatUI();bs28RenderMain();bs28Show('Race started! First SS orders use Fair Random. Future SS: '+bs28OrderLabel(data.groupRotationV28)+'. The selected order mode and scoring format are locked. START remains manual.');bs28Schedule()}catch(e){bs28Show('Race setup failed: '+e.message,true)}
 }
 async function bs28RegisterLate(){
  if(!bs28CanWrite()||!bs28IsActive())return bs28Show('Main Control must be connected during a v28 race.',true);
@@ -2347,8 +2390,18 @@ async function bs28Pulse(){
     // availability. Do not commit an already superseded request.
     const freshReq=(await reqRef.child(groupId).once('value')).val();
     if(!freshReq||freshReq.requestId!==req.requestId||freshReq.status!=='pending')continue;
-    const newOrder=bs28Core.shuffle(bs28Core.memberIds(g.members)),now=Date.now();
-    const tx=await bs28EventRef().transaction(old=>bs28Core.reserveForRequest(old,{requestId:req.requestId,groupId,destination,visitIndex:req.visitIndex},newOrder,{},now),undefined,false);
+    const draw=bs28Core.nextStartingOrder(p,groupId,snapshot,BS28_SCORING),now=Date.now();
+    const tx=await bs28EventRef().transaction(old=>{
+      if(bs28OrderMode(old)!==bs28OrderMode(p))return;
+      const saved=bs28Core.reserveForRequest(old,{requestId:req.requestId,groupId,destination,visitIndex:req.visitIndex},draw.order,{},now);
+      if(!saved)return;
+      const row=saved.orders?.[groupId]?.[destination];
+      if(row){row.drawMethod=draw.drawMethod;row.queueFirstDriverId=draw.firstDriverId;
+       if(draw.firstDriverWeight!==undefined)row.firstDriverWeight=draw.firstDriverWeight;
+       if(draw.fairnessCountsAtDraw)row.fairnessCountsAtDraw=draw.fairnessCountsAtDraw;
+       if(draw.sourceStage){row.sourceStage=draw.sourceStage;row.sourceMetric=draw.sourceMetric;}}
+      return saved;
+    },undefined,false);
     const result=tx.committed?'accepted':'rejected';await reqRef.child(groupId).transaction(old=>old?.requestId===req.requestId&&old.status==='pending'?{...old,status:result,reason:result==='accepted'?'':'Stage was claimed or group changed',decidedAt:Date.now()}:undefined,undefined,false);
   }
  }finally{bs28PulseBusy=false}
@@ -2357,6 +2410,7 @@ const bs28PanelEl=$('bs28Panel');if(bs28PanelEl){
  bs28PanelEl.addEventListener('change',async e=>{
   if(e.target.matches('.bs28-initial')){bs28InitialSelections[e.target.dataset.group]=e.target.value;return}
   if(e.target.id==='bs28GroupCount'){await bs28SetGroupCount(e.target.value);return}
+  if(e.target.id==='bs28StartOrderMode'){await bs28SetStartOrderMode(e.target.value);return}
   if(e.target.matches('.bs28-leader-select')){const select=e.target;if(!select.value)return;select.disabled=true;await bs28SetGroupLeader(select.dataset.group,select.value);return}
  });
  bs28PanelEl.addEventListener('click',async e=>{

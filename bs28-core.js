@@ -1,4 +1,4 @@
-/* BS-STYLE RC v28.7.4 - shared race-plan and fair-random draw helpers.
+/* BS-STYLE RC v28.7.12 - shared official draw helpers, random and performance-based.
    State-changing transactions belong to the authorized Main Control browser. */
 (function(root,factory){
   const api=factory();
@@ -80,6 +80,86 @@
   }
   const clone=x=>JSON.parse(JSON.stringify(x));
   function makeDraw(plan,groupId,stage,random){const group=plan?.groups?.[groupId];if(!group)throw Error('Unknown group.');const old=plan?.orders?.[groupId]?.[stage];if(old)return clone(old);const fair=fairShuffle(memberIds(group.members),getFirstDriverCounts(group),random);return {drawId:`${groupId}:${stage}:${group.visitIndex||0}`,order:fair.order,createdAt:Date.now(),drawMethod:'FAIR_RANDOM_WEIGHTED',queueFirstDriverId:fair.firstDriverId,firstDriverWeight:fair.firstDriverWeight,fairnessCountsAtDraw:fair.countsAtDraw}}
+  // v28.7.12: one shared starting-order algorithm for Main and every Marshal.
+  // The ranking is based only on the group's PREVIOUS saved SS, never the
+  // destination SS or cumulative event leaderboard. Ties use the old order.
+  function nextStartingOrder(plan,groupId,event,scoring,random){
+    const group=plan?.groups?.[groupId];
+    if(!group)throw Error('Cannot draw: group does not exist.');
+    const members=memberIds(group.members),mode=plan?.startOrderMode==='performance'?'performance':'random';
+    if(!members.length)throw Error('Cannot draw: group has no drivers.');
+    const current=group.currentStage;
+    const previousStage=current&&allResultsConfirmed(group,event,current)?current:
+      (group.lastStage&&group.completedStages?.[group.lastStage]===true?group.lastStage:null);
+    // First SS, catch-up single-driver group, and legacy events use the exact
+    // v28.7.11 fair-random algorithm, without requiring any new plan field.
+    if(mode!=='performance'||!previousStage||group.type==='CATCHUP'){
+      const fair=fairShuffle(members,getFirstDriverCounts(group),random);
+      return {order:fair.order,firstDriverId:fair.firstDriverId,
+        firstDriverWeight:fair.firstDriverWeight,fairnessCountsAtDraw:fair.countsAtDraw,
+        drawMethod:'FAIR_RANDOM_WEIGHTED',sourceStage:null,sourceMetric:null};
+    }
+    if(!scoring?.normalizeFormat||!scoring?.isSorrca||!scoring?.scoreStage||!scoring?.isBonusGateItem){
+      throw Error('Scoring engine unavailable. Official performance draw was NOT saved.');
+    }
+    const format=scoring.normalizeFormat(event?.scoringFormat);
+    if(!format)throw Error('The event scoring format is missing. Official draw was NOT saved.');
+    const sorrca=scoring.isSorrca(format),si=stageIndex(previousStage);
+    if(si<0)throw Error('Invalid previous SS for performance order.');
+    const asArray=value=>Array.isArray(value)?value:value&&typeof value==='object'?Object.values(value):[];
+    const rules=asArray(event?.penaltyRules);
+    const preset2024=sorrca&&rules.some(rule=>String(rule?.id||'')==='sorrcca-progress');
+    const rulesById=new Map(rules.map(r=>[String(r?.id||''),r]));
+    function itemPoints(item){
+      const direct=Number(item?.points);
+      if(item?.points!==undefined&&item?.points!==null&&Number.isFinite(direct))return direct;
+      const rule=rulesById.get(String(item?.ruleId||''))||rules.find(r=>
+        String(r?.name||'').toLowerCase()===String(item?.name||'').toLowerCase());
+      if(rule&&Number.isFinite(Number(rule.points)))return Number(rule.points);
+      const name=String(item?.name||'').toLowerCase();
+      if(/touch/.test(name))return 15;
+      if(/outrack|out.?track/.test(name))return 10;
+      if(/gate|roll.?over/.test(name))return 5;
+      return 0;
+    }
+    function scoreFor(id,record){
+      const items=asArray(event?.penalties?.[id]?.[si]);
+      let penaltyValue=0,bonusPenaltyValue=0,progressPoints=0,bonusGates=0;
+      for(const item of items){
+        const count=Number(item?.count)||1,p=itemPoints(item);
+        if(scoring.isBonusGateItem(item)){
+          const fallback=preset2024?Math.abs(Number(event?.sorrCaBonusPoints??-5)):10;
+          const value=item?.points!==undefined&&Number.isFinite(Number(item.points))?Math.abs(Number(item.points)):fallback;
+          bonusPenaltyValue+=value*Math.max(0,count);bonusGates+=Math.max(0,count);
+        }else{
+          penaltyValue+=(preset2024?p:Math.max(0,p))*count;
+          if(String(item?.ruleId||'')==='sorrcca-progress'||String(item?.name||'').toLowerCase()==='progress'){
+            progressPoints+=Math.min(0,p)*count;
+          }
+        }
+      }
+      const total=Number(event?.gateTotals?.[si]),totalGates=Number.isInteger(total)&&total>0?total:10;
+      const elapsed=Number(record?.ms);
+      const score=scoring.scoreStage({format,status:'finish',elapsedMs:Number.isFinite(elapsed)?elapsed:0,
+        cutoffMs:event?.cutoffs?.[si],totalGates,gatesCleared:record?.gatesCleared,
+        penaltyValue,bonusGates,bonusPenaltyValue,sorrCa2024:preset2024,progressPoints});
+      return Number.isFinite(Number(score))?Number(score):Infinity;
+    }
+    const oldOrder=asArray(plan?.orders?.[groupId]?.[previousStage]?.order).map(String);
+    const oldPositions=new Map(oldOrder.map((id,i)=>[id,i]));
+    const rows=members.map(id=>{
+      const r=event?.results?.[id]?.[si],status=String(r?.status||'').toLowerCase();
+      const priority=status==='finish'?0:status==='dnf'?1:status==='dns'?2:3;
+      const n=Number(r?.ms),time=status==='finish'&&Number.isFinite(n)&&n>=0?n:Infinity;
+      return {id,priority,time,metric:priority===0?(sorrca?scoreFor(id,r):time):Infinity,
+        prior:oldPositions.has(id)?oldPositions.get(id):Infinity};
+    });
+    rows.sort((a,b)=>a.priority-b.priority||a.metric-b.metric||
+      (sorrca?a.time-b.time:0)||a.prior-b.prior||a.id.localeCompare(b.id));
+    const order=rows.map(row=>row.id);
+    return {order,firstDriverId:order[0],drawMethod:sorrca?'BEST_SORRCA_SCORE':'FASTEST_RAW_TIME',
+      sourceStage:previousStage,sourceMetric:sorrca?'NET_POINTS':'RAW_STOPWATCH_MS'};
+  }
   function reserveForRequest(plan,request,proposedOrder,locks={},now=Date.now()){
     if(!plan?.enabled||!request?.requestId||!request?.groupId||!request?.destination)return null;
     const {groupId,destination,visitIndex,requestId}=request;
@@ -120,5 +200,5 @@
     }
     return errors;
   }
-  return {ss,stageIndex,memberIds,stageNames,includedStages,shuffle,secureRandom,getFirstDriverCounts,fairShuffle,recordFirstStart,balancedGroups,statusFor,allResultsConfirmed,completeForDriver,groupForStage,availability,canChoose,nextDriver,makeDraw,reserveForRequest,planStatus,validatePlan};
+  return {ss,stageIndex,memberIds,stageNames,includedStages,shuffle,secureRandom,getFirstDriverCounts,fairShuffle,recordFirstStart,balancedGroups,statusFor,allResultsConfirmed,completeForDriver,groupForStage,availability,canChoose,nextDriver,makeDraw,nextStartingOrder,reserveForRequest,planStatus,validatePlan};
 });
