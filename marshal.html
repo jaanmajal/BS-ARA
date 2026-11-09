@@ -1,4 +1,4 @@
-<!doctype html><!-- v28.7.12: selected event start-order mode applied to independent official SS draws. --><!-- v28.7.11: official draw START, DNS and manual controls refresh without SS toggle. --><!-- v28.7.10: LIVE Firebase stage board and independent authorised Marshal direct draw when Main Control is offline. --><!-- v28.7.9: independent late-driver catch-up visibility and cross-stage driver timer guards. --><!-- v28.7.7: emergency reset preserves unfinished SS assignments; single-gate DNF automatically records 1/1. --><!-- v28.7.4: fair-random group draws and actual first-starter history. --><!-- v28.7.2: automatic SORRCA 2024 preset scoring; signed Progress, dynamic Bonuses and progress-aware DNF; no scale points. --><!-- v27.7.8: recovery inbox for stage-lock-rejected queued results; no direct overwrite. --><!-- v27.7.7: next-driver ready reminder, any pending driver selection, blank manual stopwatch. --><!-- v27.7.5: pin-authorized stage reset protected by Firebase Rules v7 run ID; avoids stale local transaction cache abort; legacy transaction fallback. --><!-- v27.6.6: updated penalty schedule, DNF minimum Gate-1 scoring, frozen DNF roster base, and official tie-break order. --><!-- v28.7.7: verified first-start history; no duplicate history writes; weighted fair draws retained. -->
+<!doctype html><!-- v28.7.13: group-first picker, last-completed local group default, FINISH SS cards, always-expanded rotation panel. --><!-- v28.7.12: selected event start-order mode applied to independent official SS draws. --><!-- v28.7.11: official draw START, DNS and manual controls refresh without SS toggle. --><!-- v28.7.10: LIVE Firebase stage board and independent authorised Marshal direct draw when Main Control is offline. --><!-- v28.7.9: independent late-driver catch-up visibility and cross-stage driver timer guards. --><!-- v28.7.7: emergency reset preserves unfinished SS assignments; single-gate DNF automatically records 1/1. --><!-- v28.7.4: fair-random group draws and actual first-starter history. --><!-- v28.7.2: automatic SORRCA 2024 preset scoring; signed Progress, dynamic Bonuses and progress-aware DNF; no scale points. --><!-- v27.7.8: recovery inbox for stage-lock-rejected queued results; no direct overwrite. --><!-- v27.7.7: next-driver ready reminder, any pending driver selection, blank manual stopwatch. --><!-- v27.7.5: pin-authorized stage reset protected by Firebase Rules v7 run ID; avoids stale local transaction cache abort; legacy transaction fallback. --><!-- v27.6.6: updated penalty schedule, DNF minimum Gate-1 scoring, frozen DNF roster base, and official tie-break order. --><!-- v28.7.7: verified first-start history; no duplicate history writes; weighted fair draws retained. -->
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#101827"><meta name="application-name" content="RC CRAWLER"><meta name="apple-mobile-web-app-title" content="RC CRAWLER"><link rel="icon" type="image/png" sizes="128x128" href="logo.png"><link rel="apple-touch-icon" href="logo.png"><title>RC CRAWLER | MARSHAL RACE CONTROL</title><style>
 <!-- v28.7.2: SORRCA signed Progress values survive reload; editable Bonus award value; saved bonus taps retain their original value. -->
 :root{font-family:system-ui,-apple-system,sans-serif;color:#edf3ff;background:#0a1120}*{box-sizing:border-box}body{margin:auto;max-width:980px;padding:18px}header,.flex{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}h1{font-size:25px;margin:0}h2{font-size:19px;margin:0 0 12px}.muted,small{color:#aab9ce}.card{background:#172238;border:1px solid #30425e;border-radius:16px;padding:16px;margin:14px 0}.card.firebase-online{border:4px solid #22c55e!important;box-shadow:0 0 0 1px rgba(34,197,94,.32),0 0 18px rgba(34,197,94,.24)!important;transition:border-color .15s ease,box-shadow .15s ease}.card.firebase-online:focus-within{border-color:#4ade80!important}button,input,select,textarea{font:inherit;border-radius:10px;border:1px solid #425572;padding:11px;background:#0c1729;color:white}button{cursor:pointer;font-weight:700}button:disabled{opacity:.4;cursor:default}.primary{background:#2563eb}.start{background:#168348}.stop{background:#b92d39}.warn{background:#8d5918}.row{display:flex;gap:8px;flex-wrap:wrap;margin:8px 0}.row>*{flex:1;min-width:120px}label{display:block;font-size:13px;color:#b8c7da;margin-bottom:4px}input,select{width:100%}.clock-wrap{display:flex;align-items:center;justify-content:center;gap:12px;flex-wrap:wrap;margin:10px 0}.clock{text-align:center;font-size:clamp(48px,10vw,90px);font-weight:800;font-variant-numeric:tabular-nums;letter-spacing:-3px;margin:0}.connection-indicator{font-size:14px;font-weight:900;letter-spacing:.04em;border:2px solid #ef4444;background:#651e2b;color:#ffe4e6;padding:9px 12px;white-space:nowrap}.connection-indicator.online{border-color:#22c55e;background:#14532d;color:#dcfce7}.connection-indicator.offline{border-color:#ef4444;background:#651e2b;color:#ffe4e6}.save-result{background:#087443;border-color:#22c55e}.confirm-stop{background:#087443;border-color:#22c55e;color:#ffffff}.fault-restart-button{background:#7c2d12;border:2px solid #fb923c;color:#fff7ed;min-height:50px;font-weight:900}.fault-restart-note{font-size:12px;color:#fed7aa;align-self:center}.confirm-stop-row{margin-top:6px}.confirm-stop-row button{width:100%;min-height:52px;font-size:17px}.manual-help{font-size:13px;line-height:1.5}.stage{display:flex;gap:8px}.stage button{flex:1}.selected{outline:3px solid #66b1ff}table{width:100%;border-collapse:collapse;font-size:14px}td,th{padding:10px 5px;border-bottom:1px solid #35445c;text-align:left}th{color:#b3c4db}.scroll{overflow:auto}.pill{border-radius:99px;background:#273a55;padding:5px 10px;font-size:12px}.error{color:#ff9f9f}.ok{color:#85e7ae}.hidden{display:none!important}details{margin:12px 0}summary{cursor:pointer;font-weight:700}.buttons button{min-height:65px;font-size:22px}.dns-row{display:flex;justify-content:flex-end;margin:-3px 0 6px}.dns-tab{flex:0 0 auto;min-width:64px;min-height:30px;padding:4px 13px;font-size:11px;font-weight:850;letter-spacing:.06em;border-radius:7px;background:#263b56;border:1px solid #6b86a8;color:#e4efff}.dns-tab:not(:disabled):hover{background:#345273}textarea{width:100%;min-height:100px}a{color:#8cc8ff}.brand{display:flex;align-items:center;gap:12px}.brand-logo{width:66px;height:66px;object-fit:contain;border-radius:9px}footer{text-align:center;color:#aab9ce;font-size:12px;padding:25px 0 15px;letter-spacing:.08em}.wake-state{font-size:13px;color:#b9d7ff;margin-top:8px}.row .alarm-icon{flex:0 0 44px;min-width:44px;width:44px;padding:7px 4px;font-size:19px;line-height:1}.alarm-row{align-items:center}.alarm-row #alarmStatus{flex:1;min-width:0}.timer-selectors>div{flex:1;min-width:130px}
@@ -1212,6 +1212,16 @@ body.marshal-view #marshalConnectionFields #publicResultsLink {display:none!impo
 .bs28-live-stage.is-selected{box-shadow:inset 0 0 0 2px #7df5bb}
 .bs28-live-stage:disabled{opacity:1}
 #bs28StageBoardHint{font-size:11px;color:#c4d8e9;line-height:1.45;margin:6px 0 10px}
+/* v28.7.13 group-first, stage-card-only draw selection */
+#bs28RotationDetails .bs28-group-first{grid-template-columns:minmax(0,1fr)}
+#bs28RotationDetails .bs28-group-first label{display:block}
+#bs28RotationDetails #bs28NextGroup{width:100%;min-height:48px}
+#bs28RotationDetails #bs28StageBoardTitle{margin:13px 0 8px;font-size:13px;letter-spacing:.025em}
+.bs28-live-stage.stage-finished{border-color:#8290a8;background:#252f40;color:#e2e8f0}
+.bs28-live-stage.stage-finished .bs28-live-status:before{content:'✓  ';font-weight:950}
+.bs28-live-stage.is-selected{border-color:#54ffb5;box-shadow:inset 0 0 0 3px #54ffb5,0 0 0 1px #1f6e56;background:#123d32}
+#bs28RotationDetails #bs28SwitchButton{min-height:52px;margin:12px 0 0!important}
+@media(max-width:600px){#bs28RotationDetails .bs28-group-first{grid-template-columns:1fr}}
 #bs28StageMini{font-size:10px;letter-spacing:0;margin-left:6px;opacity:.9}
 @media(min-width:650px){#bs28StageBoard{grid-template-columns:repeat(4,minmax(0,1fr))}}
 </style>
@@ -1268,38 +1278,35 @@ body.marshal-view #marshalConnectionFields #publicResultsLink {display:none!impo
 </section>
 
 <section class="card bs28-section bs28-rotation-below" id="bs28MarshalPanel" style="display:none" aria-label="Group rotation control">
-  <details id="bs28RotationDetails" class="bs28-rotation-details">
-    <summary><span class="bs28-rotation-summary-title">GROUP ROTATION</span><span id="bs28StageMini" aria-live="polite">CHECKING SS</span></summary>
+  <details id="bs28RotationDetails" class="bs28-rotation-details" open>
+    <summary><span class="bs28-rotation-summary-title">GROUP ROTATION · ASSIGN &amp; DRAW</span><span id="bs28StageMini" aria-live="polite">CHECKING SS</span></summary>
     <div class="bs28-rotation-body">
       <div id="bs28StageLiveBar" class="is-syncing" role="status" aria-live="polite">
         <div><div id="bs28LiveFirebaseState">VERIFYING FIREBASE...</div><div class="bs28-independent-subtitle">INDEPENDENT DRAW · MAIN CONTROL NOT REQUIRED</div></div>
         <button id="bs28RefreshStageBoard" type="button">REFRESH SS</button>
       </div>
-      <div id="bs28StartOrderStatus" class="bs28-independent-subtitle" aria-live="polite" style="font-weight:800;padding:8px 0">NEXT SS ORDER: RANDOM DRAW</div>
-      <div id="bs28StageBoard" aria-label="Live stage availability"></div>
-      <p id="bs28StageBoardHint">The official OPEN/BUSY/CLOSED states load from Firebase. Draws require a confirmed connection and a ready group.</p>
       <h2 id="bs28MarshalHeading" class="hidden">GROUP ROTATION</h2>
       <p class="hidden" id="bs28MarshalInfo"></p>
       <div id="bs28Selection" class="bs28-next-panel" style="display:none">
-        <div id="bs28WaitingGroupsSummary" class="bs28-waiting-summary" role="status" aria-live="polite">Checking groups...</div>
-        <div class="bs28-next-fields">
+        <div class="bs28-next-fields bs28-group-first">
           <label for="bs28NextGroup">GROUP
-            <select id="bs28NextGroup" aria-label="Choose group"></select>
-          </label>
-          <label for="bs28NextSS">NEXT SS
-            <select id="bs28NextSS" aria-label="Choose next Special Stage"></select>
+            <select id="bs28NextGroup" aria-label="Choose eligible group"></select>
           </label>
         </div>
+        <div id="bs28WaitingGroupsSummary" class="bs28-waiting-summary" role="status" aria-live="polite">Checking groups...</div>
         <p id="bs28SelectedGroupProgress" class="bs28-select-progress" aria-live="polite"></p>
+        <h3 id="bs28StageBoardTitle">STAGE (SS) AVAILABILITY</h3>
+        <div id="bs28StageBoard" aria-label="Select a stage for the chosen group"></div>
+        <p id="bs28StageBoardHint">Select a ready group, then tap an OPEN/AVAILABLE SS. Completed stages are locked.</p>
+        <div id="bs28StartOrderStatus" class="bs28-independent-subtitle" aria-live="polite" style="font-weight:800;padding:8px 0">NEXT SS ORDER: RANDOM DRAW</div>
+        <h3>DRIVER ORDER</h3>
+        <div id="bs28RunningOrder" class="bs28-order"></div>
+        <p id="bs28SwitchStatus" class="muted" role="status" aria-live="polite"></p>
         <button type="button" id="bs28SwitchButton" class="primary">ASSIGN &amp; DRAW</button>
       </div>
-      <p id="bs28SwitchStatus" class="muted" role="status" aria-live="polite"></p>
-      <h3>DRIVER ORDER</h3>
-      <div id="bs28RunningOrder" class="bs28-order"></div>
     </div>
   </details>
 </section>
-
 
 
 
@@ -2308,7 +2315,7 @@ $('exportPendingBackup').onclick=()=>{
 $('retrySync').onclick=()=>{if(!online||!connectedToServer){setMsg('Connect to Firebase and wait for ONLINE before retrying pending uploads.',true);return}flushPending()};$('disconnect').onclick=async()=>{const count=eventPendingCount(activeEventId());if(count&&!confirm('There are '+count+' unsynchronized change(s). They will remain in this browser and upload only after reconnecting to Event ID '+activeEventId()+'. Disconnect anyway?'))return;localStorage.removeItem('bs28-test-auto-online');if(dbRef&&sub)dbRef.off('value',sub);online=false;connectedToServer=false;dbRef=null;sub=null;if(auth)await auth.signOut();updateConnectionIndicator();showConnectionToast('offline','Disconnected','You are now offline. Local data is retained.',2500);setMsg(count?'Disconnected. '+count+' change(s) remain queued locally for Event ID '+activeEventId()+'.':'Disconnected; local copy retained.');updateSyncHealth()};window.addEventListener('online',()=>{updateConnectionIndicator();if(online)flushPending()});window.addEventListener('offline',()=>{updateConnectionIndicator();if(hadFirebaseConnection)notifyFirebaseDisconnected();updateSyncHealth()});window.addEventListener('beforeunload',e=>{if(hasPendingForEvent(activeEventId())||pendingRun||running){e.preventDefault();e.returnValue='';}});updateSafetyStatus();clearCorrectionInputs();$('manualTime').value='';render();updateSyncHealth();if(running){acquireWake();tick=setInterval(updateClock,40);updateClock()}if(pendingRun)syncManualOverrideInputs();function ensureMarshalNameForAction(){if(!marshalLinkMode)return true;let name=String(marshalName||localStorage.getItem(marshalNameKey)||'').trim().toLocaleUpperCase('en-US');const input=$('marshalNameInput');if(!name&&input)name=String(input.value||'').trim().toLocaleUpperCase('en-US');if(!name){const status=$('marshalIdentityStatus');if(status)status.textContent='Marshal name is required before starting the timer or recording penalties.';if(input){input.focus();try{input.scrollIntoView({behavior:'smooth',block:'center'})}catch(e){}}return false}if(name.length>60){const status=$('marshalIdentityStatus');if(status)status.textContent='Marshal name must be 60 characters or fewer.';if(input)input.focus();return false}try{localStorage.setItem(marshalNameKey,name)}catch(e){const status=$('marshalIdentityStatus');if(status)status.textContent='Could not save marshal name on this device. Please try again.';return false}marshalName=name;if(input)input.value=name;const status=$('marshalIdentityStatus');if(status)status.textContent='Saved on this device as '+name+'.';if(saveMarshalNameBtn)saveMarshalNameBtn.textContent='Save / update name';return true}document.addEventListener('click',function(e){const action=e.target&&e.target.closest?e.target.closest('#start, #dnf, #penaltyCounters button[data-add-penalty], #penaltyCounters button[data-remove-penalty]'):null;if(action&&!ensureMarshalNameForAction()){e.preventDefault();e.stopImmediatePropagation()}},true);const marshalNameInput=$('marshalNameInput'),marshalNameStatus=$('marshalIdentityStatus'),saveMarshalNameBtn=$('saveMarshalName'),marshalIdentityBadge=$('marshalIdentityBadge'),marshalIdentitySavedView=$('marshalIdentitySavedView'),marshalIdentityDisplayName=$('marshalIdentityDisplayName'),marshalIdentityEditor=$('marshalIdentityEditor'),editMarshalNameBtn=$('editMarshalName');let marshalNameEditing=!String(localStorage.getItem(marshalNameKey)||'').trim();if(marshalNameInput){marshalNameInput.value=marshalName;const refreshMarshalIdentity=()=>{marshalName=String(localStorage.getItem(marshalNameKey)||'').trim().toLocaleUpperCase('en-US');marshalNameInput.value=marshalName;if(marshalIdentityDisplayName)marshalIdentityDisplayName.textContent=marshalName||'MARSHAL NAME';if(marshalNameStatus)marshalNameStatus.textContent=marshalName?'SAVED':'NAME REQUIRED';if(marshalIdentityBadge){marshalIdentityBadge.textContent=marshalName?'SAVED':'NOT SAVED';marshalIdentityBadge.classList.toggle('saved',!!marshalName);marshalIdentityBadge.classList.toggle('unsaved',!marshalName)}if(marshalIdentitySavedView)marshalIdentitySavedView.classList.toggle('hidden',!marshalName||marshalNameEditing);if(marshalIdentityEditor)marshalIdentityEditor.classList.toggle('hidden',!!marshalName&&!marshalNameEditing);if(editMarshalNameBtn)editMarshalNameBtn.textContent=marshalNameEditing?'CANCEL':'EDIT';if(saveMarshalNameBtn)saveMarshalNameBtn.textContent='SAVE'};refreshMarshalIdentity();if(editMarshalNameBtn)editMarshalNameBtn.onclick=()=>{if(marshalNameEditing){marshalNameEditing=false;refreshMarshalIdentity();return}marshalNameEditing=true;refreshMarshalIdentity();marshalNameInput.focus()};saveMarshalNameBtn.onclick=async()=>{const nextName=String(marshalNameInput.value||'').trim().toLocaleUpperCase('en-US');if(!nextName){if(marshalNameStatus)marshalNameStatus.textContent='Please enter your marshal name.';marshalNameInput.focus();return}if(nextName.length>60){if(marshalNameStatus)marshalNameStatus.textContent='Name must be 60 characters or fewer.';return}try{localStorage.setItem(marshalNameKey,nextName)}catch(e){if(marshalNameStatus)marshalNameStatus.textContent='Could not save your marshal name on this device: '+e.message;return}marshalName=nextName;marshalNameEditing=false;refreshMarshalIdentity();if(marshalLinkMode&&!online)await connectFirebase({automatic:false,passwordless:true});else if(online)setMsg('Marshal name updated on this device. It will be attached to the next saved result.')}}if(marshalLinkMode){connectFirebase({automatic:false,passwordless:true})}setupAutoOnline()
 /* v28 marshal SS selection extension inside the existing Marshal closure. */
 const bs28Core=window.BS28;
-let bs28StickyGroup='',bs28NextGroupChoice='',bs28GroupUserChosen=false,bs28LockRef=null,bs28LockListener=null,bs28LockEventId='',bs28Locks={},bs28RequestRef=null,bs28RequestListener=null,bs28RequestEventId='',bs28Requests={},bs28RequestLoaded=false,bs28Switching=false,bs28Submitting=false;
+let bs28StickyGroup='',bs28NextGroupChoice='',bs28NextSSChoice='',bs28GroupUserChosen=false,bs28LockRef=null,bs28LockListener=null,bs28LockEventId='',bs28Locks={},bs28RequestRef=null,bs28RequestListener=null,bs28RequestEventId='',bs28Requests={},bs28RequestLoaded=false,bs28Switching=false,bs28Submitting=false;
 let bs28CatchupRef=null,bs28CatchupSub=null,bs28CatchupEventId='',bs28DriverRef=null,bs28DriverSub=null,bs28DriverEventId='';
 // Read-only Firebase snapshots drive stage visibility even if another device
 // has an active stopwatch or this browser has unsynced local results.
@@ -2404,15 +2411,23 @@ function bs28RenderLiveStageBoard(plan,selectedGroupId,availableSS){
  const list=plan?bs28Core.stageNames(plan):[];
  const available=list.filter(ss=>bs28StageLabelForBoard(plan,ss).state==='AVAILABLE');
  if(mini)mini.textContent=onlineState?'· '+available.length+' OPEN SS':connected?'· SYNCING':'· OFFLINE';
+ const group=plan?.groups?.[selectedGroupId];
+ const stageTitle=$('bs28StageBoardTitle');
+ if(stageTitle)stageTitle.textContent=selectedGroupId?'SELECT SS FOR '+bs28GroupName(selectedGroupId):'STAGE (SS) AVAILABILITY';
  host.innerHTML=list.length?list.map(ss=>{
-  const x=bs28StageLabelForBoard(plan,ss),choose=onlineState&&selectedGroupId&&availableSS.includes(ss)&&x.state==='AVAILABLE';
-  const chosen=$('bs28NextSS')?.value===ss;
-  return `<button type="button" class="bs28-live-stage ${x.className}${chosen?' is-selected':''}" ${choose?`data-bs28-pick-stage="${bs28Esc(ss)}"`:''} ${choose?'':'disabled'}><strong>${bs28Esc(ss)}</strong><span class="bs28-live-status">${bs28Esc(x.label)}${choose?' · TAP TO SELECT':''}</span></button>`;
+  // FINISH means THIS selected group has completed that stage, not that
+  // the stage is globally closed for other groups.
+  const finished=!!(group&&(group.completedStages?.[ss]===true||
+   (group.currentStage===ss&&bs28Core.allResultsConfirmed(group,bs28RotationEvent(),ss)&&!bs28Locks?.[ss])));
+  const x=finished?{state:'FINISH',className:'stage-finished',label:'FINISH · COMPLETED'}:bs28StageLabelForBoard(plan,ss);
+  const choose=!!(onlineState&&selectedGroupId&&!finished&&availableSS.includes(ss)&&x.state==='AVAILABLE');
+  const chosen=choose&&bs28NextSSChoice===ss;
+  return `<button type="button" class="bs28-live-stage ${x.className}${chosen?' is-selected':''}" ${choose?`data-bs28-pick-stage="${bs28Esc(ss)}"`:''} ${choose?'':'disabled'} aria-pressed="${chosen?'true':'false'}"><strong>${bs28Esc(ss)}</strong><span class="bs28-live-status">${bs28Esc(x.label)}${choose?' · TAP TO SELECT':''}</span></button>`;
  }).join(''):'<p class="muted">No stage data available yet.</p>';
  hint.textContent=!connected?'This is a cached view only. Connect this Marshal to Firebase to see and draw live stages.':
    !onlineState?'Stage verification is in progress. Wait for Firebase confirmation; do not draw from cached data.':
-   selectedGroupId?`Firebase verified ${available.length} OPEN, unoccupied SS. Tap one to select it for the ready group. Main Control may be offline.`:
-   `Firebase verified ${available.length} OPEN, unoccupied SS. A group must finish its current SS before ASSIGN & DRAW becomes available.`;
+   selectedGroupId?`For ${bs28GroupName(selectedGroupId)}, tap an OPEN/AVAILABLE SS. FINISH marks stages this group has completed and cannot be selected. Main Control may be offline.`:
+   `Select a READY group above, then tap an OPEN/AVAILABLE SS. FINISH will mark stages already completed by that group.`;
 }
 
 const bs28Esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -2516,6 +2531,37 @@ async function bs28ReconcileCompletedStages(){
  }finally{bs28ReconcileBusy=false;}
 }
 const bs28SavedGroupKey=()=>'bs-style-v28-marshal-group:'+activeEventId();
+const bs28ObservedGroupKey=()=>'bs-style-v28-marshal-observed-group:'+activeEventId();
+const bs28LastCompletedGroupKey=()=>'bs-style-v28-marshal-last-completed-group:'+activeEventId();
+// Only this browser's *previously observed* active group can become the
+// automatic dropdown default. Never silently select another group's first
+// available entry. Store no race authority here: Firebase remains the source.
+function bs28RememberGroupCompletedHere(plan,assignment){
+ if(!plan?.enabled)return;
+ const ss=bs28CurrentStage();
+ let observed=null;
+ try{observed=JSON.parse(localStorage.getItem(bs28ObservedGroupKey())||'null')}catch(e){}
+ if(observed?.ss===ss&&observed?.eventId===activeEventId()){
+  const previous=plan.groups?.[observed.groupId];
+  if(previous?.type==='GROUP'&&previous.lastStage===ss&&
+     previous.completedStages?.[ss]===true&&
+     previous.status==='CHOOSING'&&!previous.currentStage&&
+     Number(previous.visitIndex||0)>Number(observed.visitIndex||0)){
+   try{
+    localStorage.setItem(bs28LastCompletedGroupKey(),observed.groupId);
+    localStorage.removeItem(bs28ObservedGroupKey());
+   }catch(e){console.warn('Could not remember this Marshal group:',e)}
+  }
+ }
+ if(assignment?.group?.type==='GROUP'&&assignment.group.currentStage===ss){
+  const record={eventId:activeEventId(),groupId:assignment.id,ss,visitIndex:Number(assignment.group.visitIndex||0)};
+  if(!observed||observed.groupId!==record.groupId||observed.ss!==record.ss||
+     Number(observed.visitIndex)!==record.visitIndex){
+   try{localStorage.setItem(bs28ObservedGroupKey(),JSON.stringify(record))}catch(e){}
+  }
+ }
+}
+
 const bs28RequestKey=()=>'bs-style-v28-marshal-request:'+activeEventId();
 const bs28CurrentStage=()=>bs28Core.ss(stage);
 const bs28CurrentAssignment=()=>bs28Core.groupForStage(bs28Plan(),bs28CurrentStage());
@@ -2708,6 +2754,7 @@ function bs28RenderMarshal(){
  }
  bs28RefreshAssignmentNotice();
  const assignment=bs28CurrentAssignment();
+ bs28RememberGroupCompletedHere(plan,assignment);
  if(assignment){bs28StickyGroup=assignment.id;localStorage.setItem(bs28SavedGroupKey(),assignment.id)}
  const stageGroupId=assignment?.id||bs28GetSticky(),stageGroup=plan.groups?.[stageGroupId];
  const current=stageGroup?.currentStage||null,last=stageGroup?.lastStage||null;
@@ -2778,31 +2825,28 @@ function bs28RenderMarshal(){
   summary.classList.toggle('is-pending',!readyGroups.length);
  }
  if(bs28NextGroupChoice&&!candidates.includes(bs28NextGroupChoice)){
-  bs28NextGroupChoice='';bs28GroupUserChosen=false;
+  bs28NextGroupChoice='';bs28GroupUserChosen=false;bs28NextSSChoice='';
  }
- if(!bs28GroupUserChosen||!bs28NextGroupChoice){
-  bs28NextGroupChoice=(ownReq?.groupId&&candidates.includes(ownReq.groupId)?ownReq.groupId:'')||readyGroups[0]?.id||'';
+ if(!bs28GroupUserChosen&&!bs28NextGroupChoice){
+  // The only allowed default is the group that just finished on THIS
+  // Marshal phone. Otherwise the Marshal must choose explicitly.
+  const lastLocal=localStorage.getItem(bs28LastCompletedGroupKey())||'';
+  bs28NextGroupChoice=candidates.includes(lastLocal)?lastLocal:'';
  }
  const groupPicker=$('bs28NextGroup'),selectedGroupId=bs28NextGroupChoice;
  const selectedGroup=plan.groups?.[selectedGroupId];
- const groupOptions=readyGroups.length?readyGroups.map(x=>({
-  value:x.id,label:bs28GroupName(x.id)+' — Finished '+(x.g.currentStage||x.g.lastStage||'previous SS')
- })):[{value:'',label:'No group available to move'}];
+ const groupOptions=readyGroups.length?
+  [{value:'',label:'SELECT AN AVAILABLE GROUP'},...readyGroups.map(x=>({
+   value:x.id,label:bs28GroupName(x.id)+' — Finished '+(x.g.currentStage||x.g.lastStage||'previous SS')
+  }))]:[{value:'',label:'NO GROUP READY'}];
  bs28SyncOptions(groupPicker,groupOptions,selectedGroupId);
  $('bs28Selection').style.display='block';
- // Follow the actual submitted request even when that group disappears from
- // the AVAILABLE list after Main Control assigns the destination SS.
- const destSelect=$('bs28NextSS'),previousDest=destSelect.value;
  // Group/SS CHOICE is not a stage run lock. Firebase stageLocks are
  // checked when START is pressed, where the existing admin PIN override applies.
  // stageOwners still prevents assigning two competing groups to an occupied SS.
  const available=bs28IsFirebaseLive()?bs28GroupDestinations(plan,selectedGroupId,bs28RotationEvent()).map(st=>({stage:st,status:'AVAILABLE'})):[];
+ if(!available.some(x=>x.stage===bs28NextSSChoice))bs28NextSSChoice='';
  bs28RenderLiveStageBoard(plan,selectedGroupId,available.map(x=>x.stage));
- const nextOptions=available.length?
-  [{value:'',label:'Choose available SS'},...available.map(x=>({value:x.stage,label:x.stage+' — OPEN & AVAILABLE'}))]:
-  [{value:'',label:selectedGroupId?'No SS available — ask organiser to OPEN one':'Select available group first'}];
- const chosen=available.some(x=>x.stage===previousDest)?previousDest:'';
- bs28SyncOptions(destSelect,nextOptions,chosen);
  const accessOK=!!(bs28IsFirebaseLive()&&!marshalAccessRevoked);
  const busy=!!(running||pendingRun||savingResult); // Selection is separate from the START-only stage lock and device sync queue.
  const movable=bs28GroupCanRotate(plan,selectedGroupId,bs28RotationEvent());
@@ -2815,8 +2859,7 @@ function bs28RenderMarshal(){
  // on every authorized marshal phone. Only an unfinished LOCAL run or
  // in-progress submit prevents this device from submitting a new choice.
  groupPicker.disabled=!!(!readyGroups.length||running||pendingRun||savingResult||bs28Submitting||bs28Switching);
- destSelect.disabled=!!(!selectedGroupId||busy||bs28Submitting||bs28Switching||!available.length);
- $('bs28SwitchButton').disabled=!!(!movable||!destSelect.value||!accessOK||busy||bs28Submitting||bs28Switching);
+ $('bs28SwitchButton').disabled=!!(!movable||!bs28NextSSChoice||!accessOK||busy||bs28Submitting||bs28Switching);
  const status=$('bs28SwitchStatus');
  if(!accessOK)status.textContent=online&&connectedToServer?'VERIFYING LIVE FIREBASE STAGES':'FIREBASE OFFLINE · NO DRAW';
  else if(busy)status.textContent='FINISH CURRENT RUN FIRST';
@@ -2826,9 +2869,10 @@ function bs28RenderMarshal(){
   'VERIFYING RESULTS':
   'NO GROUP READY';
  else if(!available.length)status.textContent='NO SS AVAILABLE';
- else if(!destSelect.value)status.textContent='SELECT SS';
+ else if(!selectedGroupId)status.textContent='SELECT GROUP';
+ else if(!bs28NextSSChoice)status.textContent='SELECT SS';
  else if(pendingRequest)status.textContent='DRAW PROCESSING';
- else status.textContent='READY · '+bs28GroupName(selectedGroupId)+' → '+destSelect.value;
+ else status.textContent='READY · '+bs28GroupName(selectedGroupId)+' → '+bs28NextSSChoice;
 
  // The official assignment and draw must BOTH exist in Firebase before
  // Race Control changes. A saved *request* alone never authorises START.
@@ -2863,7 +2907,7 @@ function bs28RenderMarshal(){
    localStorage.removeItem(bs28RequestKey());
    bs28StickyGroup=confirmed.groupId;
    localStorage.setItem(bs28SavedGroupKey(),confirmed.groupId);
-   bs28NextGroupChoice='';bs28GroupUserChosen=false;
+   bs28NextGroupChoice='';bs28NextSSChoice='';bs28GroupUserChosen=false;
    bs28ShowAssignmentNotice(bs28GroupName(confirmed.groupId)+' ASSIGNED TO '+confirmed.destination+' — official draw ready. Choose driver and press START.');
    status.textContent=confirmed.destination+' READY · Official running order saved. Timer is STOPPED.';
    if(pendingNotice)pendingNotice.style.display='none';
@@ -3056,7 +3100,7 @@ async function bs28SelectSS(){
  if(!bs28IsActive())return;
  if(!marshalLinkMode||!online||!connectedToServer||!app||navigator.onLine===false||marshalAccessRevoked||!bs28IsFirebaseLive())return alert('Connect the authorised Marshal link and wait for LIVE Firebase verification. Main Control may be offline, but Firebase must be online.');
  if(running||pendingRun||savingResult)return alert('Finish, CONFIRM STOP and SAVE the current run before changing stages.');
- const groupId=$('bs28NextGroup')?.value||'',dest=$('bs28NextSS')?.value||'';
+ const groupId=$('bs28NextGroup')?.value||'',dest=bs28NextSSChoice;
  if(!groupId||!dest||!bs28GroupDestinations(bs28Plan(),groupId,bs28RotationEvent()).includes(dest))return alert('Choose a group that has completed its stage and an OPEN/AVAILABLE SS.');
  if(!await verifyMarshalSessionOnline())return alert('Marshal session invalid or closed. Reopen the authorised marshal link.');
  const displayMode=bs28Plan()?.startOrderMode==='performance'?
@@ -3167,7 +3211,7 @@ async function bs28SelectSS(){
   // The transaction is the official assignment. No organiser coordinator,
   // group-selection lock, stage lock or admin PIN is needed for this step.
   localStorage.setItem(bs28RequestKey(),JSON.stringify({requestId,groupId,destination:dest,savedAt:now}));
-  bs28NextGroupChoice='';bs28GroupUserChosen=false;
+  bs28NextGroupChoice='';bs28NextSSChoice='';bs28GroupUserChosen=false;
   $('bs28SwitchStatus').textContent=bs28GroupName(groupId)+' → '+dest+' · DRAW SAVED';
   const savedSnap=await root.once('value');
   if(savedSnap.exists()){
@@ -3190,7 +3234,7 @@ async function bs28SelectSS(){
    alert('THE OFFICIAL DRAW WAS SAVED TO FIREBASE. This phone could not complete its refresh. Do not submit another draw. Refresh the marshal page; START remains manual.');
   }else{
    bs28NextGroupChoice='';bs28GroupUserChosen=false;
-   if($('bs28NextSS'))$('bs28NextSS').value='';
+   bs28NextSSChoice='';
    bs28RenderMarshal();
    alert('NEXT DRAW NOT SAVED: '+e.message+'\n\nThe latest group and SS availability has been refreshed. Select again. No stage lock or admin PIN is required for selecting the next SS.');
   }
@@ -3204,8 +3248,7 @@ $('bs28StageBoard')?.addEventListener('click',e=>{
  if(!bs28IsFirebaseLive()||running||pendingRun||savingResult||bs28Submitting)return;
  const ss=btn.dataset.bs28PickStage,groupId=$('bs28NextGroup')?.value||'';
  if(!groupId||!bs28GroupDestinations(bs28Plan(),groupId,bs28RotationEvent()).includes(ss))return;
- const dest=$('bs28NextSS');if(!dest)return;
- dest.value=ss;bs28RenderMarshal();
+ bs28NextSSChoice=ss;bs28RenderMarshal();
 });
 // Manual refresh reads the server, never creating or changing race data.
 $('bs28RefreshStageBoard')?.addEventListener('click',async()=>{
@@ -3237,13 +3280,12 @@ $('bs28RefreshStageBoard')?.addEventListener('click',async()=>{
 $('bs28NextGroup')?.addEventListener('change',e=>{
  if(running||pendingRun||savingResult)return;
  bs28NextGroupChoice=String(e.target.value||'');bs28GroupUserChosen=true;
- $('bs28NextSS').value='';
+ bs28NextSSChoice='';
  bs28RenderMarshal();
 });
-$('bs28NextSS')?.addEventListener('change',bs28RenderMarshal);
 $('bs28SwitchButton')?.addEventListener('click',bs28SelectSS);
 
-window.BS28_MARSHAL_READY=true;window.BS28_MARSHAL_VERSION="28.7.12";
+window.BS28_MARSHAL_READY=true;window.BS28_MARSHAL_VERSION="28.7.13";
 setInterval(()=>{if(bs28IsActive()){
   bs28ReconcileCompletedStages().catch(e=>console.warn('Stage release check:',e));
   bs28RenderMarshal();
