@@ -516,7 +516,7 @@ details[data-main-section]>summary:focus-visible{outline:2px solid #93c5fd;outli
 <section class="card" id="manualInputPanel"><details><summary>Manual Time</summary><div class="row"><div><label>Manual elapsed time</label><input id="manualTime" type="text" placeholder="Phone: 021435 = 02:14.35" inputmode="numeric" pattern="[0-9]*" autocomplete="off" enterkeyhint="done" aria-describedby="manualTimeHelp"><small id="manualTimeHelp" class="muted">021435 = 02:14.35 · or mm:ss.cc</small></div><div><label>Manual result status</label><select id="manualStatus"><option value="finish">Finish</option><option value="dnf">DNF</option><option value="dns">DNS</option></select></div><button id="prepareManual" class="primary">Review Result</button></div><div id="manualStatusMessage" class="muted" aria-live="polite"></div></details></section>
 <section class="card" id="mainDriverRegistration"><details data-main-section=""><summary>1. DRIVER REGISTRATION</summary><div class="row"><input id="num" type="hidden"><input id="name" placeholder="Driver / Team Name" aria-label="Driver or team name" autocomplete="name"><button id="add" type="button">Register driver</button></div><div class="scroll"><table><thead><tr><th>Race #</th><th>Driver / Team</th><th>Action</th></tr></thead><tbody id="roster"></tbody></table></div></details></section>
 <section class="card" id="penaltyPanel"><details data-main-section=""><summary>2. PENALTIES SETUP</summary><div class="flex"><span class="pill">All SS</span></div><p class="muted">Applies to all SS. Changes affect future taps only.</p><h3 style="font-size:15px;margin:14px 0 8px">SHARED PENALTY TYPES</h3><div class="row"><div><label>Penalty type name</label><input id="penaltyName" data-admin-control="" placeholder="e.g. Gate violation"></div><div><label>Point deduction per tap</label><input id="penaltyPoints" data-admin-control="" type="number" step="1" min="0" max="9999" value="5" inputmode="numeric"></div><button id="addPenaltyType" class="primary" data-admin-control="">+ Add penalty type</button><button id="applyFinalPenaltyPreset" type="button" data-admin-control="">Apply Format Preset</button></div><div class="scroll"><table><thead><tr><th>Penalty type</th><th>Points deducted each</th><th>Actions</th></tr></thead><tbody id="penaltyRulesBody"></tbody></table></div></details></section>
-<section class="card" id="stageGateSetup"><details data-main-section=""><summary>3. STAGE SETUP</summary><p class="muted stage-setup-note">Only unused stages can be removed.</p><div id="stageSetupRows" class="stage-setup-rows"></div><div class="stage-setup-actions"><button id="addStage" class="primary">+ Add SS</button><button id="removeStage" class="warn">− Remove last SS</button><button id="saveStageSetupAll" class="start" data-admin-control="">Save Changes</button></div></details></section>
+<section class="card" id="stageGateSetup"><details data-main-section=""><summary>3. STAGE SETUP</summary><p class="muted stage-setup-note">Only unused stages can be removed.</p><div id="stageSetupRows" class="stage-setup-rows"></div><div class="stage-setup-actions"><button id="addStage" class="primary">+ Add SS</button><button id="removeStage" class="warn" aria-describedby="removeStageReason">− Remove last SS</button><button id="saveStageSetupAll" class="start" data-admin-control="">Save Changes</button></div><p id="removeStageReason" class="muted" role="status" aria-live="polite"></p></details></section>
 <section class="card bs28-section" id="bs28Panel" aria-label="Group rotation control">
   <details data-main-section="" id="bs28Details">
     <summary>4. GROUP ROTATION &amp; STAGE STATUS <span class="bs28-summary-state" id="bs28SummaryState">NOT CONFIGURED</span></summary>
@@ -1894,7 +1894,7 @@ function bs28CanRemoveEmptyEventLocally(event){
 function bs28BuildLastStageRemoval(event,index,stageName){
  if(!event)return null;
  const cut=bs28RawArray(event.cutoffs);
- if(cut.length!==index+1||index<1||bs28LastStageRemovalReason(event))return null;
+ if(cut.length!==index+1||index<1||stageName!==bs28Core.ss(index)||bs28LastStageRemovalReason(event))return null;
  const v=JSON.parse(JSON.stringify(event)),plan=v.groupRotationV28;
  if(plan){
   delete plan.stages?.[stageName];delete plan.stageOwners?.[stageName];
@@ -1907,14 +1907,14 @@ function bs28BuildLastStageRemoval(event,index,stageName){
   for(const [driverId,stages] of Object.entries(plan.lateCatchup||{})){if(stages&&typeof stages==='object'){delete stages[stageName];if(!Object.keys(stages).length)delete plan.lateCatchup[driverId]}}
   plan.revision=(plan.revision||0)+1;plan.audit=plan.audit||{};for(const [auditId,item] of Object.entries(plan.audit))if(item?.action==='OPEN_SS'&&String(item.stage)===stageName)delete plan.audit[auditId];plan.audit['remove-'+Date.now()]={action:'REMOVE_SS',stage:stageName,wasCancelled:!!(event.groupRotationV28?.stages?.[stageName]?.cancelled||event.groupRotationV28?.stages?.[stageName]?.included===false),at:Date.now()};
  }
- cut.pop();v.cutoffs=cut;const gates=bs28RawArray(v.gateTotals);gates.pop();v.gateTotals=gates;
+ cut.pop();v.cutoffs=cut;const gates=bs28RawArray(v.gateTotals);gates.splice(index,1);v.gateTotals=gates;
  v.drawOrders=v.drawOrders||{};v.drawLocks=v.drawLocks||{};delete v.drawOrders[index];delete v.drawLocks[index];
  for(const [driverId,byStage] of Object.entries(v.results||{})){
-  if(Array.isArray(byStage)){byStage.pop();if(!byStage.length)delete v.results[driverId]}
+  if(Array.isArray(byStage)){byStage.splice(index,1);if(!byStage.length)delete v.results[driverId]}
   else if(byStage&&typeof byStage==='object'){delete byStage[String(index)];if(!Object.keys(byStage).length)delete v.results[driverId]}
  }
  for(const [driverId,byStage] of Object.entries(v.penalties||{})){
-  if(Array.isArray(byStage)){byStage.pop();if(!byStage.length)delete v.penalties[driverId]}
+  if(Array.isArray(byStage)){byStage.splice(index,1);if(!byStage.length)delete v.penalties[driverId]}
   else if(byStage&&typeof byStage==='object'){delete byStage[String(index)];if(!Object.keys(byStage).length)delete v.penalties[driverId]}
  }
  return v;
@@ -2013,7 +2013,7 @@ function bs28RenderMain(){
    return `<div class="bs28-group"><b>GROUP ${bs28Clean(g)} · ${bs28Clean(group.status||'WAITING')}</b>${leaderId?`<div><small>LEADER · #${bs28Clean(leader.num||'?')} ${bs28Clean(leader.name||leaderId)}</small></div>`:''}<div>Current: ${current} · ${group.currentStage?done+'/'+total+' saved':'Choose next SS'}${stateHint} · Completed: ${completed.join(', ')||'None'}</div>${outstanding.length?`<small>CATCH-UP REQUIRED: ${bs28Clean(outstanding.join(', '))}</small>`:''}<div><small>${memberIds.map(id=>'#'+bs28Clean(data.drivers[id]?.num||'?')+' '+bs28Clean(data.drivers[id]?.name||id)).join(' / ')}</small></div></div>`;
  }).join(''):'Start competition after selecting leaders, dividing groups and confirming the initial driver draw.';
  if($('addStage'))$('addStage').disabled=!!(running||pendingRun)||(!!plan&&!bs28CanWrite());
- if($('removeStage')){const removeReason=bs28LastStageRemovalReason(data),localEmptyRemoval=bs28CanRemoveEmptyEventLocally(data),needsOnline=!!plan&&!bs28CanWrite()&&!localEmptyRemoval;$('removeStage').dataset.bs28Guard=plan?'1':'0';$('removeStage').disabled=!!running||!!pendingRun||!!removeReason||needsOnline;$('removeStage').title=removeReason||(localEmptyRemoval?'Empty new event: remove this unused SS locally; the change will sync when Firebase reconnects.':needsOnline?'Connect Main Control to Firebase and ensure it owns the organiser session.':'Remove the final SS only if it has never been opened, assigned or used, or has been cancelled, and has no result/penalty history.');}
+ if($('removeStage')){const removeReason=bs28LastStageRemovalReason(data),localEmptyRemoval=bs28CanRemoveEmptyEventLocally(data),needsOnline=!!plan&&!bs28CanWrite()&&!localEmptyRemoval;$('removeStage').dataset.bs28Guard=plan?'1':'0';$('removeStage').disabled=!!running||!!pendingRun||!!removeReason||needsOnline;$('removeStage').title=(running||pendingRun?'Finish and save the current run before removing an SS.':removeReason)||(localEmptyRemoval?'Empty new event: remove this unused SS locally; the change will sync when Firebase reconnects.':needsOnline?'Connect Main Control to Firebase and ensure it owns the organiser session.':'Remove the final SS only if it has never been opened, assigned or used, or has been cancelled, and has no result/penalty history.');if($('removeStageReason'))$('removeStageReason').textContent=$('removeStage').title;}
  const lateGroup=$('bs28LateGroup');if(lateGroup){const old=lateGroup.value;lateGroup.innerHTML=bs28BaseGroups(plan).map(([id])=>`<option value="${id}">Group ${id}</option>`).join('');if(old&&lateGroup.querySelector('option[value="'+old+'"]'))lateGroup.value=old}
  $('bs28LatePanel').style.display=mode==='RACING'?'block':'none';
  const catchupTickets=[];Object.entries(plan.lateCatchup||{}).forEach(([id,stages])=>Object.entries(stages||{}).forEach(([s,t])=>{
@@ -2085,7 +2085,7 @@ async function bs28CancelStage(stage){
  if(!confirm('FINAL CHECK: Cancel '+stage+'? It will be excluded from official scoring. This SS cannot be cancelled if any result or penalty history exists.'))return;
  try{const tx=await dbRef.transaction(ev=>{
   const p=ev?.groupRotationV28;if(!p?.stages?.[stage]||p.stages[stage].cancelled||bs28StageHasHistory(ev,stage))return;
-  const v=JSON.parse(JSON.stringify(ev)),plan=v.groupRotationV28;plan.stages[stage]={...plan.stages[stage],included:false,open:false,cancelled:true,reason:reason.trim(),updatedAt:Date.now()};delete plan.stageOwners[stage];
+  const v=JSON.parse(JSON.stringify(ev)),plan=v.groupRotationV28;plan.stages[stage]={...plan.stages[stage],included:false,open:false,cancelled:true,reason:reason.trim(),updatedAt:Date.now()};delete plan.stageOwners?.[stage];
   for(const g of Object.values(plan.groups||{})){if(g.currentStage===stage){g.lastStage=stage;g.currentStage=null;g.status=g.type==='CATCHUP'?'FINISHED':'CHOOSING'}if(g.type==='CATCHUP')continue;if(!g.currentStage){const required=bs28Core.includedStages(plan);const missing=required.some(s=>!g.completedStages?.[s]);const catchups=Object.values(plan.lateCatchup||{}).some(d=>Object.entries(d||{}).some(([s,t])=>t.groupId===g.id&&t.status!=='DONE'&&required.includes(s)));g.status=missing||catchups?'CHOOSING':'FINISHED'}}
   plan.revision=(plan.revision||0)+1;plan.audit=plan.audit||{};plan.audit['cancel-'+Date.now()]={action:'CANCEL_SS',stage,reason:reason.trim(),at:Date.now()};return v;
  },undefined,false);if(!tx.committed){const latest=(await dbRef.once('value')).val();if(bs28StageHasHistory(latest,stage))throw Error(stage+' now has saved result or penalty history. Cancellation was blocked.');throw Error('The event changed during cancellation. Refresh and review the stage.')}if(tx.snapshot?.val)data=normalizeData(tx.snapshot.val());persist();render();bs28RenderMain();bs28Show(stage+' CANCELLED. No result or penalty history was deleted.')}catch(e){bs28Show('Cancel failed: '+e.message,true)}
@@ -2123,7 +2123,7 @@ async function bs28RemoveLastStage(){
    if(!queueOk){pending=previousPending;savePendingQueue();data=normalizeData(previousData);stage=previousStage;localStorage.setItem('bs28-stage',String(stage));persist();render();bs28RenderMain();return bs28Show('Could not save the offline sync queue. The SS removal was rolled back. Export a backup and reconnect before trying again.',true)}
    render();bs28RenderMain();setMsg('SS removal saved locally for Event ID '+eventId+'. Reconnect Main Control to Firebase to sync the change before starting the race.');bs28Show(stageName+' removed from the empty new event. The change is queued and will sync when Firebase reconnects.');return;
   }
-  const tx=await dbRef.transaction(current=>bs28BuildLastStageRemoval(current,index,stageName),undefined,false);
+  const tx=await dbRef.transaction(current=>bs28BuildLastStageRemoval(current,index,stageName)??undefined,undefined,false);
   if(!tx.committed){const latest=(await dbRef.once('value')).val()||data;throw Error(bs28LastStageRemovalReason(latest)||'The event changed during removal. Refresh and check the last SS before trying again.')}
   if(tx.snapshot?.val)data=normalizeData(tx.snapshot.val());stage=Math.min(stage,index-1);localStorage.setItem('bs28-stage',String(Math.max(0,index-1)));persist();render();bs28RenderMain();bs28Show(stageName+' removed successfully. Other SS, groups and historical records were preserved.');
  }catch(e){bs28Show('Remove SS failed: '+e.message,true)}
